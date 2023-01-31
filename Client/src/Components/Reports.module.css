@@ -11,3 +11,11 @@ ul {
     background-color: lightgrey;
     border-radius: 14px;
 }
+
+.icons {
+    text-align: right;
+}
+
+.penIcon {
+    margin-right: 1rem;
+}

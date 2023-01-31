@@ -50,13 +50,13 @@ function App() {
 
   useEffect(() => {
 
-    const google = window.google;
-    google.accounts.id.initialize({
+    //const google = window.google;
+    window.google.accounts.id.initialize({
       client_id: "843401142734-cp1pr3dg56c2m9o2g635jq3gmk3t2q0t.apps.googleusercontent.com",
       callback: handleCallbackResponse
     })
 
-    google.accounts.id.renderButton(
+    window.google.accounts.id.renderButton(
       document.getElementById("signInDiv"),
       {theme: "filled_black", size: "large", shape: "pill"}
     )

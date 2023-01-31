@@ -1,6 +1,8 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import classes from './Reports.module.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCoffee, faPen, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 
 const Reports = (props) => {
     const [reports, setReports] = useState([])
@@ -37,6 +39,12 @@ const Reports = (props) => {
           <p>{report.dateAndTime} {report.institution}</p>          
           <p><b>{report.title}</b></p>
           <p>{report.description}</p>
+          <div className={classes.icons}>
+            <span className={classes.penIcon}>
+              <FontAwesomeIcon icon={faPen} size = 'lg'/>
+            </span>
+            <FontAwesomeIcon icon={faTrashCan} size = 'lg'/>
+          </div>
         </li>
       ))}
     </ul>
