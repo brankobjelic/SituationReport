@@ -1,0 +1,13 @@
+ul {
+    text-align: justify;
+    padding-left: 0;
+    color: black;
+    list-style: none;
+    
+}
+.reportItem {
+    margin: 0.5rem;
+    padding: 0.5rem;
+    background-color: lightgrey;
+    border-radius: 14px;
+}
