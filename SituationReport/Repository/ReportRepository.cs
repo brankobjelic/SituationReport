@@ -90,14 +90,16 @@ namespace SituationReport.Repository
 
         public List<UserReportsDTO> GetAllByUserEmail(string email)
         {
-            string query = "select DateAndTime, Causes.Name as Institution, Title, Reports.Description as Description " +
+            string query = "select Reports.Id As Id, DateAndTime, Causes.Name as Institution, Title, Reports.Description as Description " +
                 "from reports left join causes on causeid=causes.id " +
-                "left join users on userid=users.id where users.email='" + email + "'";
+                "left join users on userid=users.id where users.email=@email";
 
             string connectionString = Configuration.GetConnectionString("AppConnectionString");
 
             SqlConnection connection = new SqlConnection(connectionString);
             SqlCommand command = connection.CreateCommand();
+            command.Parameters.AddWithValue("@email", email);
+
 
             connection.Open();
 
@@ -121,6 +123,7 @@ namespace SituationReport.Repository
             foreach (DataRow dr in dt.Rows)
             {
                 UserReportsDTO ur = new UserReportsDTO();
+                ur.Id = Int32.Parse(dr["Id"].ToString());
                 ur.DateAndTime = DateTime.Parse(dr["DateAndTime"].ToString());
                 ur.Institution = dr["Institution"].ToString();
                 ur.Title = dr["Title"].ToString();
