@@ -56,7 +56,7 @@ const Form = (props) => {
         .then(response => {
             if(response.status === 201){
                 console.log("Successfuly added Report");
-                alert("Successfuly added Report");
+                //alert("Successfuly added Report");
                 props.onAdd(true)
             }else{
                 console.log("Error occured with code " + response.status);

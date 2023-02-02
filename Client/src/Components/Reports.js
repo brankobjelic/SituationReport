@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import classes from './Reports.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee, faPen, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import DeleteReportButton from './DeleteReportButton';
 
 const Reports = (props) => {
     const [reports, setReports] = useState([])
@@ -28,6 +29,7 @@ const Reports = (props) => {
         .catch(error => console.log(error));
     }
 
+
     useEffect(() => {
       fetchReports()
     },[props.addedReport]);
@@ -43,7 +45,7 @@ const Reports = (props) => {
             <span className={classes.penIcon}>
               <FontAwesomeIcon icon={faPen} size = 'lg'/>
             </span>
-            <FontAwesomeIcon icon={faTrashCan} size = 'lg'/>
+            <DeleteReportButton onDelete={fetchReports} report={report} />
           </div>
         </li>
       ))}
