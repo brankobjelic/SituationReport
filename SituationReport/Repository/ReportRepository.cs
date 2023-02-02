@@ -40,7 +40,18 @@ namespace SituationReport.Repository
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            string query = "DELETE FROM Reports WHERE id=@Id;";
+
+            string connectionString = Configuration.GetConnectionString("AppConnectionString");
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = connection.CreateCommand();
+            command.Parameters.AddWithValue("@Id", id);
+            connection.Open();
+            command.CommandText = query;
+            command.ExecuteNonQuery();
+            command.Dispose();
+            connection.Close();
         }
 
         public Report Get(int id)
