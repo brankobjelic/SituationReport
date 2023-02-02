@@ -63,5 +63,17 @@ namespace SituationReport.Controllers
             _reportRepository.Create(report);
             return CreatedAtAction("GetReport", new {  Id = report.Id }, report);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteReport(int id)
+        {
+            var report = _reportRepository.Get(id);
+            if (report == null)
+            {
+                return NotFound();
+            }
+            _reportRepository.Delete(id);
+            return Ok();    //moze i return NoContent();
+        }
     }
 }
