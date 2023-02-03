@@ -23,7 +23,7 @@ namespace SituationReport.Controllers
             {
                 return BadRequest();
             }
-            User u = _userRepository.getByEmail(user.Email);
+            User? u = _userRepository.getByEmail(user.Email);
             if (u.Email is null)
             {
                 _userRepository.Create(user);

@@ -101,9 +101,11 @@ namespace SituationReport.Repository
 
         public List<UserReportsDTO> GetAllByUserEmail(string email)
         {
-            string query = "select Reports.Id As Id, DateAndTime, Causes.Name as Institution, Title, Reports.Description as Description " +
-                "from reports left join causes on causeid=causes.id " +
-                "left join users on userid=users.id where users.email=@email";
+            string query = "select Reports.Id As Id, Institutions.name as Institution, Causes.Description " +
+                "as CauseDescription, DateAndTime, Location, Title, Reports.Description as Description " +
+                "from reports left join causes on causeid = causes.id left join institutions " +
+                "on causes.InstitutionId = institutions.id left join users on userid = users.id " +
+                "where users.email = @email";
 
             string connectionString = Configuration.GetConnectionString("AppConnectionString");
 

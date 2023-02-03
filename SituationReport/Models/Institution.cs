@@ -2,12 +2,13 @@
 
 namespace SituationReport.Models
 {
-    public class User
+    public class Institution
     {
         public int Id { get; set; }
+        [Required]
         public string? Name { get; set; }
         [EmailAddress]
-        [Required(ErrorMessage = "Email is required")]
         public string? Email { get; set; }
+        public string? Phone { get; set; }
     }
 }
