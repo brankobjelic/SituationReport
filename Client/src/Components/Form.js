@@ -14,6 +14,7 @@ const Form = (props) => {
 
     const titleRef = useRef('')
     const descriptionRef = useRef('')
+    const locationRef = useRef('')
 
     useEffect(getDataForDropdown, [])
     
@@ -43,6 +44,7 @@ const Form = (props) => {
         event.preventDefault()
         const title = titleRef.current.value
         const description = descriptionRef.current.value
+        const location = locationRef.current.value
         if (!causeId){
             document.getElementById('cause').style.backgroundColor="salmon"
             return
@@ -50,14 +52,14 @@ const Form = (props) => {
         var requestUrl = host + port + reportsEndpoint;
         var headers = {};
         headers["Content-Type"] = 'application/json'
-        var sendData = {"userEmail": props.email, "title": title, "description": description, "causeId": causeId};
+        var sendData = {"userEmail": props.email, "title": title, "description": description, "location": location, "causeId": causeId};
         console.log(sendData)
         fetch(requestUrl, {method: "POST", headers: headers, body: JSON.stringify(sendData)})
         .then(response => {
             if(response.status === 201){
                 console.log("Successfuly added Report");
                 //alert("Successfuly added Report");
-                props.onAdd(true)
+                props.onAddedReport(true)
             }else{
                 console.log("Error occured with code " + response.status);
                 console.log(response);
@@ -71,20 +73,21 @@ const Form = (props) => {
 
   return (
     <form onSubmit={submitReportHandler} className={classes['form-style-1']}>
-        <label htmlFor="cause">Ustanova</label>
+        <label htmlFor="cause">Razlog prijave</label>
         <select id="cause" className={classes['field-select']} defaultValue={'DEFAULT'} onChange={handleChange} required>
-            <option value="DEFAULT" disabled>Izaberite ustanovu ...</option>
+            <option value="DEFAULT" disabled>Izaberite razlog za prijavu...</option>
             {causes.map((cause, index) => {
                 return (
-                    <option key={cause.id} value={cause.id}>{cause.name}</option>
+                    <option key={cause.id} value={cause.id}>{cause.description}</option>
                 )
             })}
         </select><br />
 
-        <label htmlFor="name" >Naslov</label>
+        <label htmlFor="title" >Naslov</label>
         <input id="title"  className={classes['field-long']} type="text" ref={titleRef} required /><br />
-
-        <label htmlFor="description">Opis</label>
+        <label htmlFor='location' >Adresa ili opis lokacije</label>
+        <input id='location' className={classes['field-long']} type="text" ref={locationRef} required></input>
+        <label htmlFor="description">Tekst prijave</label>
         <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} ref={descriptionRef} required/>
             <button className={classes.button}>Sačuvaj</button>
             <button type="button" className={classes.button} style={{float: "right"}} onClick={e => props.onLeaveForm(false)}>Odustajanje</button>
