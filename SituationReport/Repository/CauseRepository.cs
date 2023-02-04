@@ -61,8 +61,8 @@ namespace SituationReport.Repository
             {
                 Cause c = new Cause();
                 c.Id = (int)dr["Id"];
-                c.Name = dr["Name"].ToString();
-                c.Email = dr["Email"].ToString();
+                c.InstitutionId = (int)dr["InstitutionId"];
+                //c.Email = dr["Email"].ToString();
                 c.Description = dr["Description"].ToString();
                 causes.Add(c);
             }

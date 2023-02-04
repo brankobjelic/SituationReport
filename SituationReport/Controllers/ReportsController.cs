@@ -58,6 +58,7 @@ namespace SituationReport.Controllers
                 CauseId = reportDTO.causeId,
                 UserId = user.Id,
                 Title = reportDTO.Title,
+                Location = reportDTO.Location,
                 Description = reportDTO.Description
             };
             _reportRepository.Create(report);

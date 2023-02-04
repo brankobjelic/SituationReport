@@ -16,8 +16,8 @@ namespace SituationReport.Repository
         }
         public void Create(Report report)
         {
-            string query = "INSERT INTO Reports(CauseId, UserId, DateAndTime, Title, Description) " +
-                "values (@CauseId, @UserId, CURRENT_TIMESTAMP, @Title, @Description)";
+            string query = "INSERT INTO Reports(CauseId, UserId, DateAndTime, Location, Title, Description) " +
+                "values (@CauseId, @UserId, CURRENT_TIMESTAMP, @Location, @Title, @Description)";
 
             string connectionString = Configuration.GetConnectionString("AppConnectionString");
 
@@ -29,6 +29,7 @@ namespace SituationReport.Repository
             command.CommandText = query;
             command.Parameters.AddWithValue("@CauseId", report.CauseId);
             command.Parameters.AddWithValue("@UserId", report.UserId);
+            command.Parameters.AddWithValue("@Location", report.Location);
             command.Parameters.AddWithValue("@Title", report.Title);
             command.Parameters.AddWithValue("@Description", report.Description);
 
@@ -139,6 +140,7 @@ namespace SituationReport.Repository
                 ur.Id = Int32.Parse(dr["Id"].ToString());
                 ur.DateAndTime = DateTime.Parse(dr["DateAndTime"].ToString());
                 ur.Institution = dr["Institution"].ToString();
+                ur.CauseDescription = dr["CauseDescription"].ToString();
                 ur.Title = dr["Title"].ToString();
                 ur.Description = dr["Description"].ToString();
                 reports.Add(ur);
