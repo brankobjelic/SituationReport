@@ -1,43 +1,20 @@
 import React from 'react'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import classes from './Reports.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {  faPen } from '@fortawesome/free-solid-svg-icons'
 import DeleteReportButton from './DeleteReportButton';
 
 const Reports = (props) => {
-    const [reports, setReports] = useState([])
+  console.log(props.reports)
 
-    function fetchReports(){
-        var host = "https://localhost:";
-        var port = "7281/";
-        var loginEndpoint = "api/reports/allbyuser?email=" + props.email;
-        var requestUrl = host + port + loginEndpoint;
-        console.log(requestUrl)
-        fetch(requestUrl)
-        .then(response => {
-            if(response.status === 200){
-                response.json().then((data) => {
-                  //console.log(data)
-                  setReports(data)
-                });
-            }else{
-                console.log("Error occured with code " + response.status);
-                console.log(response);
-                alert("Desila se greska!");
-            }
-        })
-        .catch(error => console.log(error));
+    function onDel(){
+      props.onDel(true)
     }
-
-
-    useEffect(() => {
-      fetchReports()
-    },[props.onAdded]);
 
   return (
     <ul>
-      {reports.slice(0).reverse().map(report => (
+      {props.reports.slice(0).reverse().map(report => (
         <li className={classes.reportItem} key={report.dateAndTime}>
           <p>{report.dateAndTime} {report.institution} - {report.causeDescription}</p>      
           <p><b>{report.title}</b></p>
@@ -46,7 +23,7 @@ const Reports = (props) => {
             <span className={classes.penIcon}>
               <FontAwesomeIcon icon={faPen} size = 'lg'/>
             </span>
-            <DeleteReportButton onDelete={fetchReports} report={report} />
+            <DeleteReportButton onDel={onDel} report={report} />
           </div>
         </li>
       ))}

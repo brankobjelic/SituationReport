@@ -1,9 +1,10 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { useState } from 'react'
 
 const DeleteReportButton = (props) => {
-
+  const [deletedReport, setDeletedReport] = useState(false)
   var host = "https://localhost:";
   var port = "7281/";
   var reportsEndpoint = "api/Reports/" + props.report.id;
@@ -18,7 +19,8 @@ const DeleteReportButton = (props) => {
           .then((response) => {
               if (response.status === 200) {
                   //alert("Brisanje uspesno izvrseno!")
-                  props.onDelete()
+                  setDeletedReport(true)
+                  props.onDel()
               } else {
                   console.log("Error occured with code " + response.status);
                   alert("Doslo je do greske!");
