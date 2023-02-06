@@ -65,6 +65,38 @@ namespace SituationReport.Controllers
             return CreatedAtAction("GetReport", new {  Id = report.Id }, report);
         }
 
+        [HttpPut]
+        public IActionResult PutReport(int id, ReportDTO reportDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            User user = _userRepository.getByEmail(reportDTO.userEmail);
+            if (user == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Report r = _reportRepository.Get(id);
+            if (r == null)
+            {
+                return BadRequest(ModelState);
+            }
+            Report report = new Report()
+            {
+                Id = id,
+                CauseId = reportDTO.causeId,
+                UserId = user.Id,
+                Title = reportDTO.Title,
+                Location = reportDTO.Location,
+                Description = reportDTO.Description
+            };
+            _reportRepository.Update(report);
+            return Ok();
+        }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteReport(int id)
         {

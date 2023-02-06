@@ -141,6 +141,7 @@ namespace SituationReport.Repository
                 ur.DateAndTime = DateTime.Parse(dr["DateAndTime"].ToString());
                 ur.Institution = dr["Institution"].ToString();
                 ur.CauseDescription = dr["CauseDescription"].ToString();
+                ur.Location = dr["Location"].ToString();
                 ur.Title = dr["Title"].ToString();
                 ur.Description = dr["Description"].ToString();
                 reports.Add(ur);
@@ -150,7 +151,26 @@ namespace SituationReport.Repository
 
         public void Update(Report report)
         {
-            throw new NotImplementedException();
+            string query = "Update Reports set CauseId=@CauseId, DateAndTime=CURRENT_TIMESTAMP, Title=@Title, Location=@Location, Description=@Description where Id=@Id;";
+
+            string connectionString = Configuration.GetConnectionString("AppConnectionString");
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = connection.CreateCommand();
+
+            connection.Open();
+
+            command.CommandText = query;
+            command.Parameters.AddWithValue("@CauseId", report.CauseId);
+            command.Parameters.AddWithValue("@Title", report.Title);
+            command.Parameters.AddWithValue("@Location", report.Location);
+            command.Parameters.AddWithValue("@Description", report.Description);
+            command.Parameters.AddWithValue("@Id", report.Id);
+
+            command.ExecuteNonQuery();
+
+            command.Dispose();
+            connection.Close();
         }
     }
 }
