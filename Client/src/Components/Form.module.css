@@ -1,7 +1,33 @@
+.modal, .overlay {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+}
+
+.overlay {
+    background: rgba(49,49,49,0.8);
+}
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1.4;
+    background: #f1f1f1;
+    padding: 14px 28px;
+    border-radius: 14px;
+    max-width: 600px;
+    min-width: 300px;
+}
+
 .form-style-1 {
 	margin:10px auto;
-	max-width: 400px;
-	padding: 20px 12px 10px 20px;
+	/*max-width: 600px;*/
+	padding: 20px 10px 10px 10px;
 	font: 13px "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 .form-style-1 li {
@@ -23,8 +49,8 @@
 .form-style-1 input[type=search],
 .form-style-1 input[type=time],
 .form-style-1 input[type=url],
-.form-style-1 input[type=email],
-textarea, 
+.form-style-1 input[type=email], 
+textarea,
 select{
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -37,7 +63,9 @@ select{
 	-ms-transition: all 0.30s ease-in-out;
 	-o-transition: all 0.30s ease-in-out;
 	outline: none;	
+	
 }
+
 .form-style-1 input[type=text]:focus, 
 .form-style-1 input[type=date]:focus,
 .form-style-1 input[type=datetime]:focus,
@@ -64,7 +92,8 @@ select{
 	width: 100%;
 }
 .form-style-1 .field-textarea{
-	height: 100px;
+	resize: none;
+	height: 200px;
 }
 .form-style-1 input[type=submit], .form-style-1 input[type=button]{
 	background: #4B99AD;

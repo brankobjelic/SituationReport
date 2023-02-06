@@ -1,16 +1,13 @@
 import React from 'react'
-import { useState } from 'react';
+//import { useState } from 'react';
 import classes from './Reports.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {  faPen } from '@fortawesome/free-solid-svg-icons'
 import DeleteReportButton from './DeleteReportButton';
+import EditReportButton from './EditReportButton';
 
 const Reports = (props) => {
-  console.log(props.reports)
-
-    function onDel(){
-      props.onDel(true)
-    }
+  //console.log(props.reports)
 
   return (
     <ul>
@@ -20,10 +17,11 @@ const Reports = (props) => {
           <p><b>{report.title}</b></p>
           <p>{report.description}</p>
           <div className={classes.icons}>
+
             <span className={classes.penIcon}>
-              <FontAwesomeIcon icon={faPen} size = 'lg'/>
+              <EditReportButton report={report} />
             </span>
-            <DeleteReportButton onDel={onDel} report={report} />
+            <DeleteReportButton onDel={props.onDel} report={report} />
           </div>
         </li>
       ))}

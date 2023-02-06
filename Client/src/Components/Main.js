@@ -7,8 +7,7 @@ import { useState, useEffect } from 'react';
 const Main = (props) => {
   const [showForm, setShowForm] = useState(false)
   const [addedReport, setAddedReport] = useState(false)
-  const [reports, setReports] = useState(false)
-  const [deletedReport, setDeletedReport] = useState(false)
+  const [reports, setReports] = useState([])
 
   function fetchReports(){
     var host = "https://localhost:";
@@ -20,7 +19,7 @@ const Main = (props) => {
     .then(response => {
         if(response.status === 200){
             response.json().then((data) => {
-              console.log(data)
+              //console.log(data)
               setReports(data)
             });
         }else{
@@ -32,16 +31,24 @@ const Main = (props) => {
     .catch(error => console.log(error));
   }
 
+  function addedReportHandler(){
+    setAddedReport(!addedReport)
+  }
   useEffect(() => {
     fetchReports()
-  },[addedReport, deletedReport]);
+  },[addedReport]);
 
+  if (showForm){
+    document.body.style.overflow = "hidden";
+  }else{
+    document.body.style.overflow = "scroll";
+  }
 
   return (
     <div>
       {!showForm && <button className={classes.button} onClick={e =>{setShowForm(true)}}>Nova prijava</button>}
-      {showForm && <Form onLeaveForm={setShowForm} email={props.email} onAddedReport={setAddedReport}></Form>}
-      {reports && <Reports email={props.email} reports={reports} onDel={setDeletedReport}></Reports>}
+      {showForm && <Form onLeaveForm={setShowForm} email={props.email} onAddedReport={addedReportHandler}></Form>}
+      {reports && <Reports email={props.email} reports={reports} onDel={addedReportHandler}></Reports>}
     </div>
   )
 }
