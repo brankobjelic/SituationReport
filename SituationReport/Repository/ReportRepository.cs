@@ -102,7 +102,7 @@ namespace SituationReport.Repository
 
         public List<UserReportsDTO> GetAllByUserEmail(string email)
         {
-            string query = "select Reports.Id As Id, Institutions.name as Institution, Causes.Description " +
+            string query = "select Reports.Id As Id, Institutions.name as Institution, CauseId, Causes.Description " +
                 "as CauseDescription, DateAndTime, Location, Title, Reports.Description as Description " +
                 "from reports left join causes on causeid = causes.id left join institutions " +
                 "on causes.InstitutionId = institutions.id left join users on userid = users.id " +
@@ -140,6 +140,7 @@ namespace SituationReport.Repository
                 ur.Id = Int32.Parse(dr["Id"].ToString());
                 ur.DateAndTime = DateTime.Parse(dr["DateAndTime"].ToString());
                 ur.Institution = dr["Institution"].ToString();
+                ur.CauseId = Int32.Parse(dr["CauseId"].ToString());
                 ur.CauseDescription = dr["CauseDescription"].ToString();
                 ur.Location = dr["Location"].ToString();
                 ur.Title = dr["Title"].ToString();
