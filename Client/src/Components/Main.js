@@ -48,7 +48,7 @@ const Main = (props) => {
     <div>
       {!showForm && <button className={classes.button} onClick={e =>{setShowForm(true)}}>Nova prijava</button>}
       {showForm && <Form onLeaveForm={setShowForm} email={props.email} onAddedReport={addedReportHandler}></Form>}
-      {reports && <Reports email={props.email} reports={reports} onDel={addedReportHandler}></Reports>}
+      {reports && <Reports email={props.email} reports={reports} onDel={addedReportHandler} ></Reports>}
     </div>
   )
 }

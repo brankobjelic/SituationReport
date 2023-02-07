@@ -16,6 +16,8 @@ const Form = (props) => {
     const descriptionRef = useRef('')
     const locationRef = useRef('')
 
+    console.log(props.report)
+
     useEffect(getDataForDropdown, [])
 
     function getDataForDropdown() {
@@ -68,6 +70,7 @@ const Form = (props) => {
                 }
                 titleRef.current.value = ''
                 descriptionRef.current.value = ''
+                locationRef.current.value = ''
                 props.onLeaveForm(false)
             })
     }
@@ -77,7 +80,7 @@ const Form = (props) => {
             <div className={classes.overlay}></div>
             <form onSubmit={submitReportHandler} className={`${classes['modal-content']} ${classes['form-style-1']}`}>
                 <label htmlFor="cause">Razlog prijave</label>
-                <select id="cause" className={classes['field-select']} defaultValue={'DEFAULT'} onChange={handleChange} required>
+                <select id="cause" className={classes['field-select']} value={props.report ? props.report.causeId : 'DEFAULT'} onChange={handleChange} required>
                     <option value="DEFAULT" disabled>Izaberite razlog za prijavu...</option>
                     {causes.map((cause, index) => {
                         return (
@@ -85,13 +88,12 @@ const Form = (props) => {
                         )
                     })}
                 </select><br />
-
                 <label htmlFor="title" >Naslov</label>
-                <input id="title" className={classes['field-long']} type="text" ref={titleRef} required /><br />
+                <input id="title" className={classes['field-long']} type="text" defaultValue={props.report ? props.report.title : ''} ref={titleRef} required /><br />
                 <label htmlFor='location' >Adresa ili opis lokacije</label>
-                <input id='location' className={classes['field-long']} type="text" ref={locationRef} required></input>
+                <input id='location' className={classes['field-long']} type="text" defaultValue={props.report ? props.report.location : ''} ref={locationRef} required></input>
                 <label htmlFor="description">Tekst prijave</label>
-                <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} ref={descriptionRef} required />
+                <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} defaultValue={props.report ? props.report.description : ''} ref={descriptionRef} required />
                 <button className={classes.button}>Sačuvaj</button>
                 <button type="button" className={classes.button} style={{ float: "right" }} onClick={e => props.onLeaveForm(false)}>Odustajanje</button>
             </form>

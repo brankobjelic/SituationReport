@@ -5,17 +5,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {  faPen } from '@fortawesome/free-solid-svg-icons'
 
 
-const EditReportButton = () => {
+const EditReportButton = (props) => {
 
   const [showForm, setShowForm] = useState(false)
 
   
 
   return (
-    <button onClick={e =>{setShowForm(true)}}>
-    <FontAwesomeIcon icon={faPen} size = 'lg'/>
-    {showForm && <Form></Form>}
-  </button>
+    <>
+      <FontAwesomeIcon icon={faPen} size = 'lg' onClick={e =>{setShowForm(true)}}/>
+      {showForm && <Form report={props.report} onLeaveForm={setShowForm}></Form>}
+    </>
   )
 }
 
