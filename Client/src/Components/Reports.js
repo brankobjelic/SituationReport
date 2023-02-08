@@ -19,7 +19,7 @@ const Reports = (props) => {
           <div className={classes.icons}>
 
             <span className={classes.penIcon}>
-              <EditReportButton report={report} />
+              <EditReportButton email={props.email} report={report} />
             </span>
             <DeleteReportButton onDel={props.onDel} report={report} />
           </div>

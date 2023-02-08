@@ -8,15 +8,25 @@ const Form = (props) => {
     var port = "7281/";
     var causesEndpoint = "api/causes";
     var reportsEndpoint = "api/Reports"
+    var updatingReportId = ""
+    var method = "POST"
+    var initialCauseId
 
+    if(props.report){
+        updatingReportId = "?" + props.report.id
+        method = "PUT"
+        initialCauseId = props.report.causeId
+    }
     const [causes, setCauses] = useState([])
-    const [causeId, setCauseId] = useState()
-
+    const [causeId, setCauseId] = useState(initialCauseId)
+    
     const titleRef = useRef('')
     const descriptionRef = useRef('')
     const locationRef = useRef('')
 
     console.log(props.report)
+    console.log(props.email)
+
 
     useEffect(getDataForDropdown, [])
 
@@ -52,18 +62,20 @@ const Form = (props) => {
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
         }
-        var requestUrl = host + port + reportsEndpoint;
+        var requestUrl = host + port + reportsEndpoint + updatingReportId;
         var headers = {};
         headers["Content-Type"] = 'application/json'
         var sendData = { "userEmail": props.email, "title": title, "description": description, "location": location, "causeId": causeId };
         console.log(sendData)
-        fetch(requestUrl, { method: "POST", headers: headers, body: JSON.stringify(sendData) })
+        fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
             .then(response => {
                 if (response.status === 201) {
                     console.log("Successfuly added Report");
                     //alert("Successfuly added Report");
                     props.onAddedReport(true)
-                } else {
+                } else if(response.status === 200){
+                    console.log("Successfuly updated Report");
+                } else{
                     console.log("Error occured with code " + response.status);
                     console.log(response);
                     alert("Desila se greska!");

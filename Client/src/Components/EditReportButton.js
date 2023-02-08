@@ -14,7 +14,7 @@ const EditReportButton = (props) => {
   return (
     <>
       <FontAwesomeIcon icon={faPen} size = 'lg' onClick={e =>{setShowForm(true)}}/>
-      {showForm && <Form report={props.report} onLeaveForm={setShowForm}></Form>}
+      {showForm && <Form email={props.email} report={props.report} onLeaveForm={setShowForm}></Form>}
     </>
   )
 }
