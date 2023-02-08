@@ -88,7 +88,6 @@ namespace SituationReport.Controllers
             {
                 Id = id,
                 CauseId = reportDTO.causeId,
-                UserId = user.Id,
                 Title = reportDTO.Title,
                 Location = reportDTO.Location,
                 Description = reportDTO.Description
