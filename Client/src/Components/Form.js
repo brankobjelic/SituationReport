@@ -13,7 +13,7 @@ const Form = (props) => {
     var initialCauseId
 
     if(props.report){
-        updatingReportId = "?" + props.report.id
+        updatingReportId = "?id=" + props.report.id
         method = "PUT"
         initialCauseId = props.report.causeId
     }
@@ -24,22 +24,22 @@ const Form = (props) => {
     const descriptionRef = useRef('')
     const locationRef = useRef('')
 
-    console.log(props.report)
-    console.log(props.email)
+    //console.log(props.report)
+    //console.log(props.email)
 
 
     useEffect(getDataForDropdown, [])
 
     function getDataForDropdown() {
         var requesturl = host + port + causesEndpoint;
-        console.log(requesturl);
+        //console.log(requesturl);
         var headers = {};
         fetch(requesturl, { headers: headers })
             .then((response) => {
                 if (response.status === 200) {
                     response.json()
                         .then((data) => {
-                            console.log(data);
+                            //console.log(data);
                             setCauses(data);
                         });
                 } else {
@@ -63,10 +63,11 @@ const Form = (props) => {
             return
         }
         var requestUrl = host + port + reportsEndpoint + updatingReportId;
+        //console.log(requestUrl)
         var headers = {};
         headers["Content-Type"] = 'application/json'
         var sendData = { "userEmail": props.email, "title": title, "description": description, "location": location, "causeId": causeId };
-        console.log(sendData)
+        //console.log(sendData)
         fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
             .then(response => {
                 if (response.status === 201) {
@@ -75,6 +76,7 @@ const Form = (props) => {
                     props.onAddedReport(true)
                 } else if(response.status === 200){
                     console.log("Successfuly updated Report");
+                    props.onUpdatedReport(true)
                 } else{
                     console.log("Error occured with code " + response.status);
                     console.log(response);
@@ -92,7 +94,7 @@ const Form = (props) => {
             <div className={classes.overlay}></div>
             <form onSubmit={submitReportHandler} className={`${classes['modal-content']} ${classes['form-style-1']}`}>
                 <label htmlFor="cause">Razlog prijave</label>
-                <select id="cause" className={classes['field-select']} value={props.report ? props.report.causeId : 'DEFAULT'} onChange={handleChange} required>
+                <select id="cause" className={classes['field-select']} value={causeId} defaultValue={'DEFAULT'} onChange={handleChange} required>
                     <option value="DEFAULT" disabled>Izaberite razlog za prijavu...</option>
                     {causes.map((cause, index) => {
                         return (

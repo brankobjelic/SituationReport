@@ -7,14 +7,12 @@ import {  faPen } from '@fortawesome/free-solid-svg-icons'
 
 const EditReportButton = (props) => {
 
-  const [showForm, setShowForm] = useState(false)
-
-  
+  const [showForm, setShowForm] = useState(false) 
 
   return (
     <>
       <FontAwesomeIcon icon={faPen} size = 'lg' onClick={e =>{setShowForm(true)}}/>
-      {showForm && <Form email={props.email} report={props.report} onLeaveForm={setShowForm}></Form>}
+      {showForm && <Form email={props.email} report={props.report} onLeaveForm={setShowForm} onUpdatedReport={props.onUpdatedReport}></Form>}
     </>
   )
 }

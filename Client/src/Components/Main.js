@@ -14,7 +14,7 @@ const Main = (props) => {
     var port = "7281/";
     var loginEndpoint = "api/reports/allbyuser?email=" + props.email;
     var requestUrl = host + port + loginEndpoint;
-    console.log(requestUrl)
+    //console.log(requestUrl)
     fetch(requestUrl)
     .then(response => {
         if(response.status === 200){
