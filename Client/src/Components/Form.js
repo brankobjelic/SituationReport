@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useRef, useEffect } from 'react';
 import classes from './Form.module.css'
 
+const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
 const Form = (props) => {
     var host = "https://localhost:";
@@ -11,6 +12,9 @@ const Form = (props) => {
     var updatingReportId = ""
     var method = "POST"
     var initialCauseId
+
+    const [file, setFile] = useState(null);
+    const [fileDataURL, setFileDataURL] = useState(null);
 
     if(props.report){
         updatingReportId = "?id=" + props.report.id
@@ -29,6 +33,26 @@ const Form = (props) => {
 
 
     useEffect(getDataForDropdown, [])
+    useEffect(() => {
+        let fileReader, isCancel = false;
+        if (file) {
+          fileReader = new FileReader();
+          fileReader.onload = (e) => {
+            const { result } = e.target;
+            if (result && !isCancel) {
+              setFileDataURL(result)
+            }
+          }
+          fileReader.readAsDataURL(file);
+        }
+        return () => {
+          isCancel = true;
+          if (fileReader && fileReader.readyState === 1) {
+            fileReader.abort();
+          }
+        }
+    
+      }, [file]);
 
     function getDataForDropdown() {
         var requesturl = host + port + causesEndpoint;
@@ -51,6 +75,15 @@ const Form = (props) => {
 
     function handleChange(e) {
         setCauseId(e.target.value)
+    }
+
+    function handleFileChange(e) {
+        const file = e.target.files[0];
+        if (!file.type.match(imageMimeType)) {
+          alert("Image mime type is not valid");
+          return;
+        }
+        setFile(file);
     }
 
     function submitReportHandler(event) {
@@ -92,6 +125,12 @@ const Form = (props) => {
     return (
         <div className={classes.modal}>
             <div className={classes.overlay}></div>
+            {fileDataURL ?
+                <p className="img-preview-wrapper">
+                {
+                    <img src={fileDataURL} alt="preview" />
+                }
+                </p> : null}
             <form onSubmit={submitReportHandler} className={`${classes['modal-content']} ${classes['form-style-1']}`}>
                 <label htmlFor="cause">Razlog prijave</label>
                 <select id="cause" className={classes['field-select']} value={causeId} defaultValue={'DEFAULT'} onChange={handleChange} required>
@@ -108,9 +147,18 @@ const Form = (props) => {
                 <input id='location' className={classes['field-long']} type="text" defaultValue={props.report ? props.report.location : ''} ref={locationRef} required></input>
                 <label htmlFor="description">Tekst prijave</label>
                 <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} defaultValue={props.report ? props.report.description : ''} ref={descriptionRef} required />
+                <div>
+                    <input type="file" accept='image/*' onChange={handleFileChange} />
+                </div>
                 <button className={classes.button}>Sačuvaj</button>
                 <button type="button" className={classes.button} style={{ float: "right" }} onClick={e => props.onLeaveForm(false)}>Odustajanje</button>
             </form>
+            {fileDataURL ?
+                <p className="img-preview-wrapper">
+                {
+                    <img src={fileDataURL} alt="preview" />
+                }
+                </p> : null}
         </div>
     )
 }
