@@ -1,8 +1,11 @@
 import React from 'react'
 import { useState, useRef, useEffect } from 'react';
 import classes from './Form.module.css'
+import ImageModal from './ImageModal';
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
+var fileDataUrl
+var imageId
 
 const Form = (props) => {
     var host = "https://localhost:";
@@ -13,8 +16,12 @@ const Form = (props) => {
     var method = "POST"
     var initialCauseId
 
-    const [file, setFile] = useState(null);
-    const [fileDataURL, setFileDataURL] = useState(null);
+    const [file1, setFile1] = useState(null);
+    const [file2, setFile2] = useState(null);
+    const [file3, setFile3] = useState(null);
+    const [fileDataURL1, setFileDataURL1] = useState(null);
+    const [fileDataURL2, setFileDataURL2] = useState(null);
+    const [fileDataURL3, setFileDataURL3] = useState(null);
     const [showImageModal, setShowImageModal] = useState(false)
 
     if(props.report){
@@ -36,15 +43,16 @@ const Form = (props) => {
     useEffect(getDataForDropdown, [])
     useEffect(() => {
         let fileReader, isCancel = false;
-        if (file) {
+        if (file1) {
           fileReader = new FileReader();
           fileReader.onload = (e) => {
+            console.log(e.target)
             const { result } = e.target;
             if (result && !isCancel) {
-              setFileDataURL(result)
+              setFileDataURL1(result)
             }
           }
-          fileReader.readAsDataURL(file);
+          fileReader.readAsDataURL(file1);
         }
         return () => {
           isCancel = true;
@@ -53,7 +61,7 @@ const Form = (props) => {
           }
         }
     
-      }, [file]);
+      }, [file1, file2, file3]);
 
     function getDataForDropdown() {
         var requesturl = host + port + causesEndpoint;
@@ -80,11 +88,38 @@ const Form = (props) => {
 
     function handleFileChange(e) {
         const file = e.target.files[0];
+        console.log(e.target.id)
         if (!file.type.match(imageMimeType)) {
           alert("Image mime type is not valid");
           return;
         }
-        setFile(file);
+        switch(e.target.id) {
+            case "img1":
+                setFile1(file)
+              break
+              case "image1":
+                setFile1(file)
+              break
+            case "img2":
+                setFile2(file)
+              break
+            case "img3":
+                setFile3(file)
+            break
+        }
+        handleUnsetShowImageModal()
+    }
+
+    function handleShowImageModal(e) {
+        fileDataUrl = e.target.src
+        imageId = e.target.id
+        setShowImageModal(true)
+        console.log(imageId)
+    }
+
+    function handleUnsetShowImageModal(){
+        setShowImageModal(false)
+
     }
 
     function submitReportHandler(event) {
@@ -144,31 +179,29 @@ const Form = (props) => {
                 <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} defaultValue={props.report ? props.report.description : ''} ref={descriptionRef} required />
                 <div className={classes.imgUploads}>
                     <span className={classes.hiddenFileInput}>
-                     {fileDataURL ?
-                        <img src={fileDataURL} alt="preview" onClick={e =>{setShowImageModal(true)}}/> 
+                     {fileDataURL1 ?
+                        <img src={fileDataURL1} id="image1" alt="preview" onClick={e => {handleShowImageModal(e)}}/> 
                         :
-                        <input type="file" accept='image/*' onChange={handleFileChange} />
+                        <input type="file" accept='image/*' id="img1" onChange={handleFileChange} />
                     }   
                     </span>
                     <span className={classes.hiddenFileInput}>
-                        <input type="file" accept='image/*' onChange={handleFileChange} />
+                        <input type="file" accept='image/*' id="img2" onChange={handleFileChange} />
                     </span>
                     <span className={classes.hiddenFileInput}>
-                        <input type="file" accept='image/*' onChange={handleFileChange} />
+                        <input type="file" accept='image/*' id="img3" onChange={handleFileChange} />
                     </span>
                 </div>
                 <button className={classes.button}>Sačuvaj</button>
                 <button type="button" className={classes.button} style={{ float: "right" }} onClick={e => props.onLeaveForm(false)}>Odustajanje</button>
             </form>}
-            {showImageModal && <div   className={`${classes['modal-content']} ${classes['form-style-1']}`}>
-                <img src={fileDataURL} className={classes.imageBig} alt="preview" onClick={e =>{setShowImageModal(false)}}/> 
-                <div className={classes.break}></div>
-                <div className={classes.centeringDiv}>
-                    <button className={classes.button} onClick={e =>{setShowImageModal(false)}}>Zatvori</button>
-                    <button type="button" className={classes.button} onClick={e => document.getElementById('changeFileInput').click()}>Izmeni</button>
-                    <input type="file" id="changeFileInput" accept='image/*' style={{display:"none"}} onChange={handleFileChange} />
-                </div>
-                </div>}
+            {showImageModal && <ImageModal 
+                                    fileDataUrl={fileDataUrl}
+                                    id={imageId}
+                                    handleFileChange={handleFileChange}
+                                    unsetShowImageModal={handleUnsetShowImageModal}
+                                />
+            }
         </div>
     )
 }
