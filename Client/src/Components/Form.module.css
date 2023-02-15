@@ -20,9 +20,31 @@
     background: #f1f1f1;
     padding: 14px 28px;
     border-radius: 14px;
-    max-width: 600px;
-    min-width: 300px;
+	overflow:auto;
+
+
+    width: 90vw;
+	min-width: 300px;
+	max-width: 600px;
+
+	max-height: 90vh;
 }
+.imageBig {
+	display: flex;
+	width: 100%;
+	max-width: 100%;
+	max-height: 600px;
+	object-fit:contain;
+	
+}
+.break {
+	flex-basis: 100%;
+	height: 0;
+  }
+
+  .centeringDiv {
+	text-align: center;
+  }
 
 .form-style-1 {
 	margin:10px auto;
@@ -131,3 +153,38 @@ select{
 .button:active {
   background-color: #2c0d00;
 }
+
+.hiddenFileInput > input	{
+	height: 100%;
+	width: 100;
+	opacity: 0;
+	cursor: pointer;
+}
+  .hiddenFileInput	{
+	border: 1px solid #ccc;
+	width: 90px;
+	height: 90px;
+	display: inline-block;
+	overflow: hidden;
+	cursor: pointer;
+	margin-right: .5rem;
+	background: center center no-repeat;
+  background-size: 75% 75%;
+  background-image:  url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACPklEQVR4nO2YP0gcQRTGf5rOP42VQSRNFBHTHAQUmytCojZ2JgS1MI2JkMLybBQtbFJYJUUsjWAsLA7TJRDEgEVqFVRsBC+FhQFzoLcy8BaGdXdvbr273Q3zwWtu3uy87+Z7780MWFhYWFhY/KeYBA6AEuDEZCVgH5ioNPjhGIN2AmyoEgLrCQjY8dhaJQR+aBPfEh/eaXGomCIRyBIfspYA4TvgVqoL4CvQnqYdGPZJtF2ggZQQWA+oFt2khMBaAIEuqoeslRDhSTwhrV4l8UbakrgeyFoC2B24gyZgBvgEzAGdpEhCfcCRp+xeAq/SQOAp8Cfk4jJbTwLquPAa+CxSGCnzvRfAX4Mz/0I9CLQB330W3xB9e/ESKBpeWs6BUW1uL/AbuK4Wgcdy+gwKYM/TzKaBG4PAd+TK2BgQz0Ng7L4EBkM0rNsp8EQqTDnfoty69BNsqyT7APCokqDDCCgZXBnKwA3MxGdIW7MfyAP/PH7HQA5ojkpgq0ZPK0peyL+/ZLDGIdAThUAt7Kcmm0WfcbULJz6/nwEdSSDwXJNNyWf8g+SC39x83AQKwANZJx/gMy/jQd/IlCPwpYYEtmWNFp+ENSWgZBfb0+JHWUOVWr0irQDLYs/EZ1mzX5r/pomM3NtWtSuQqjiu/h2xE9F8GN5r/t9IAFSTciJKaJWE4CgigXESglwEAgUDudUNzdJh/V74dM3r9oaEoUc6rEkBUA0ukegIaWqubKZIATLSpDal4a1KOU+M5i3w4BZ+tJlzrplQSwAAAABJRU5ErkJggg==)
+}
+.hiddenFileInput img{
+		width:100%;
+		height:100%;
+		object-fit: contain;
+}
+
+.imgUploads {
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+/*.imageBig {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
+}*/

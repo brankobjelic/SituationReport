@@ -15,6 +15,7 @@ const Form = (props) => {
 
     const [file, setFile] = useState(null);
     const [fileDataURL, setFileDataURL] = useState(null);
+    const [showImageModal, setShowImageModal] = useState(false)
 
     if(props.report){
         updatingReportId = "?id=" + props.report.id
@@ -125,13 +126,7 @@ const Form = (props) => {
     return (
         <div className={classes.modal}>
             <div className={classes.overlay}></div>
-            {fileDataURL ?
-                <p className="img-preview-wrapper">
-                {
-                    <img src={fileDataURL} alt="preview" />
-                }
-                </p> : null}
-            <form onSubmit={submitReportHandler} className={`${classes['modal-content']} ${classes['form-style-1']}`}>
+            {!showImageModal && <form onSubmit={submitReportHandler} className={`${classes['modal-content']} ${classes['form-style-1']}`}>
                 <label htmlFor="cause">Razlog prijave</label>
                 <select id="cause" className={classes['field-select']} value={causeId} defaultValue={'DEFAULT'} onChange={handleChange} required>
                     <option value="DEFAULT" disabled>Izaberite razlog za prijavu...</option>
@@ -147,18 +142,33 @@ const Form = (props) => {
                 <input id='location' className={classes['field-long']} type="text" defaultValue={props.report ? props.report.location : ''} ref={locationRef} required></input>
                 <label htmlFor="description">Tekst prijave</label>
                 <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} defaultValue={props.report ? props.report.description : ''} ref={descriptionRef} required />
-                <div>
-                    <input type="file" accept='image/*' onChange={handleFileChange} />
+                <div className={classes.imgUploads}>
+                    <span className={classes.hiddenFileInput}>
+                     {fileDataURL ?
+                        <img src={fileDataURL} alt="preview" onClick={e =>{setShowImageModal(true)}}/> 
+                        :
+                        <input type="file" accept='image/*' onChange={handleFileChange} />
+                    }   
+                    </span>
+                    <span className={classes.hiddenFileInput}>
+                        <input type="file" accept='image/*' onChange={handleFileChange} />
+                    </span>
+                    <span className={classes.hiddenFileInput}>
+                        <input type="file" accept='image/*' onChange={handleFileChange} />
+                    </span>
                 </div>
                 <button className={classes.button}>Sačuvaj</button>
                 <button type="button" className={classes.button} style={{ float: "right" }} onClick={e => props.onLeaveForm(false)}>Odustajanje</button>
-            </form>
-            {fileDataURL ?
-                <p className="img-preview-wrapper">
-                {
-                    <img src={fileDataURL} alt="preview" />
-                }
-                </p> : null}
+            </form>}
+            {showImageModal && <div   className={`${classes['modal-content']} ${classes['form-style-1']}`}>
+                <img src={fileDataURL} className={classes.imageBig} alt="preview" onClick={e =>{setShowImageModal(false)}}/> 
+                <div className={classes.break}></div>
+                <div className={classes.centeringDiv}>
+                    <button className={classes.button} onClick={e =>{setShowImageModal(false)}}>Zatvori</button>
+                    <button type="button" className={classes.button} onClick={e => document.getElementById('changeFileInput').click()}>Izmeni</button>
+                    <input type="file" id="changeFileInput" accept='image/*' style={{display:"none"}} onChange={handleFileChange} />
+                </div>
+                </div>}
         </div>
     )
 }
