@@ -54,6 +54,28 @@ const Form = (props) => {
           }
           fileReader.readAsDataURL(file1);
         }
+        if (file2) {
+            fileReader = new FileReader();
+            fileReader.onload = (e) => {
+              console.log(e.target)
+              const { result } = e.target;
+              if (result && !isCancel) {
+                setFileDataURL2(result)
+              }
+            }
+            fileReader.readAsDataURL(file2);
+        }
+        if (file3) {
+            fileReader = new FileReader();
+            fileReader.onload = (e) => {
+              console.log(e.target)
+              const { result } = e.target;
+              if (result && !isCancel) {
+                setFileDataURL3(result)
+              }
+            }
+            fileReader.readAsDataURL(file3);
+        }
         return () => {
           isCancel = true;
           if (fileReader && fileReader.readyState === 1) {
@@ -103,7 +125,13 @@ const Form = (props) => {
             case "img2":
                 setFile2(file)
               break
+              case "image2":
+                setFile2(file)
+              break
             case "img3":
+                setFile3(file)
+            break
+            case "image3":
                 setFile3(file)
             break
         }
@@ -186,10 +214,18 @@ const Form = (props) => {
                     }   
                     </span>
                     <span className={classes.hiddenFileInput}>
+                    {fileDataURL2 ?
+                        <img src={fileDataURL2} id="image2" alt="preview" onClick={e => {handleShowImageModal(e)}}/> 
+                        :
                         <input type="file" accept='image/*' id="img2" onChange={handleFileChange} />
+                    }
                     </span>
                     <span className={classes.hiddenFileInput}>
+                    {fileDataURL3 ?
+                        <img src={fileDataURL3} id="image3" alt="preview" onClick={e => {handleShowImageModal(e)}}/> 
+                        :
                         <input type="file" accept='image/*' id="img3" onChange={handleFileChange} />
+                    }
                     </span>
                 </div>
                 <button className={classes.button}>Sačuvaj</button>
