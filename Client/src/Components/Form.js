@@ -145,9 +145,28 @@ const Form = (props) => {
         console.log(imageId)
     }
 
+    function handleCancelImage(image){
+        console.log(image)
+        switch(image){
+            case 'image1':
+                setFile1(null)
+                setFileDataURL1(null)
+            break
+            case 'image2':
+                setFile2(null)
+                setFileDataURL2(null)
+            break
+            case 'image3':
+                setFile3(null)
+                setFileDataURL3(null)
+            break
+        }
+        handleUnsetShowImageModal()
+
+    }
+
     function handleUnsetShowImageModal(){
         setShowImageModal(false)
-
     }
 
     function submitReportHandler(event) {
@@ -236,6 +255,7 @@ const Form = (props) => {
                                     id={imageId}
                                     handleFileChange={handleFileChange}
                                     unsetShowImageModal={handleUnsetShowImageModal}
+                                    onCancelImage={handleCancelImage}
                                 />
             }
         </div>
