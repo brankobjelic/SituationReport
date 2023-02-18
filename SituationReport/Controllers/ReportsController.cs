@@ -12,10 +12,12 @@ namespace SituationReport.Controllers
     {
         private readonly IReportRepository _reportRepository;
         private readonly IUserRepository _userRepository;
-        public ReportsController(IReportRepository reportRepository, IUserRepository userRepository)
+        private readonly IFileRepository _fileRepository;
+        public ReportsController(IReportRepository reportRepository, IUserRepository userRepository, IFileRepository fileRepository)
         {
             _reportRepository = reportRepository;
             _userRepository = userRepository;
+            _fileRepository = fileRepository;
         }
 
         [HttpGet]
@@ -59,8 +61,23 @@ namespace SituationReport.Controllers
                 UserId = user.Id,
                 Title = reportDTO.Title,
                 Location = reportDTO.Location,
-                Description = reportDTO.Description
+                Description = reportDTO.Description,
+                Pic1 = reportDTO.Pic1,
+                Pic2= reportDTO.Pic2,
+                Pic3= reportDTO.Pic3
             };
+            if (reportDTO.Pic1 != null)
+            {
+                _fileRepository.Save(reportDTO.Pic1);
+            }
+            if (reportDTO.Pic2 != null)
+            {
+                _fileRepository.Save(reportDTO.Pic2);
+            }
+            if (reportDTO.Pic3 != null)
+            {
+                _fileRepository.Save(reportDTO.Pic3);
+            }
             _reportRepository.Create(report);
             return CreatedAtAction("GetReport", new {  Id = report.Id }, report);
         }

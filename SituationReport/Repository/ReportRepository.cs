@@ -10,14 +10,16 @@ namespace SituationReport.Repository
     public class ReportRepository : IReportRepository
     {
         IConfiguration Configuration { get; }
-        public ReportRepository(IConfiguration configuration)
+        IFileRepository fileRepository { get; }
+        public ReportRepository(IConfiguration configuration, IFileRepository fileRepository)
         {
             Configuration = configuration;
+            this.fileRepository = fileRepository;
         }
         public void Create(Report report)
         {
-            string query = "INSERT INTO Reports(CauseId, UserId, DateAndTime, Location, Title, Description) " +
-                "values (@CauseId, @UserId, CURRENT_TIMESTAMP, @Location, @Title, @Description)";
+            string query = "INSERT INTO Reports(CauseId, UserId, DateAndTime, Location, Title, Description, Pic1, Pic2, Pic3) " +
+                "values (@CauseId, @UserId, CURRENT_TIMESTAMP, @Location, @Title, @Description, @Pic1, @Pic2, @Pic3)";
 
             string connectionString = Configuration.GetConnectionString("AppConnectionString");
 
@@ -32,6 +34,9 @@ namespace SituationReport.Repository
             command.Parameters.AddWithValue("@Location", report.Location);
             command.Parameters.AddWithValue("@Title", report.Title);
             command.Parameters.AddWithValue("@Description", report.Description);
+            command.Parameters.AddWithValue("@Pic1", fileRepository.Sha256Hash(report.Pic1));
+            command.Parameters.AddWithValue("@Pic2", fileRepository.Sha256Hash(report.Pic2));
+            command.Parameters.AddWithValue("@Pic3", fileRepository.Sha256Hash(report.Pic3));
 
             command.ExecuteNonQuery();
 
