@@ -1,6 +1,9 @@
 ﻿using SituationReport.Interfaces;
+using System.Collections;
+using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SituationReport.Repository
 {
@@ -26,7 +29,11 @@ namespace SituationReport.Repository
 
             byte[] imageBytes = Convert.FromBase64String(base64);
 
-            File.WriteAllBytes(imgPath, imageBytes);
+            var stream = new MemoryStream(imageBytes);
+            System.Drawing.Image img = new Bitmap(stream);
+            img.Save(imgPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+            //File.WriteAllBytes(imgPath, imageBytes);
         }
 
         public string Sha256Hash(string file)
