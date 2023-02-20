@@ -10,11 +10,11 @@ namespace SituationReport.Repository
     public class ReportRepository : IReportRepository
     {
         IConfiguration Configuration { get; }
-        IFileRepository fileRepository { get; }
+        IFileRepository FileRepository { get; }
         public ReportRepository(IConfiguration configuration, IFileRepository fileRepository)
         {
             Configuration = configuration;
-            this.fileRepository = fileRepository;
+            FileRepository = fileRepository;
         }
         public void Create(Report report)
         {
@@ -34,9 +34,9 @@ namespace SituationReport.Repository
             command.Parameters.AddWithValue("@Location", report.Location);
             command.Parameters.AddWithValue("@Title", report.Title);
             command.Parameters.AddWithValue("@Description", report.Description);
-            command.Parameters.AddWithValue("@Pic1", string.IsNullOrEmpty(report.Pic1) ? (object)DBNull.Value : fileRepository.Sha256Hash(report.Pic1));
-            command.Parameters.AddWithValue("@Pic2", string.IsNullOrEmpty(report.Pic2) ? (object)DBNull.Value : fileRepository.Sha256Hash(report.Pic2));
-            command.Parameters.AddWithValue("@Pic3", string.IsNullOrEmpty(report.Pic3) ? (object)DBNull.Value : fileRepository.Sha256Hash(report.Pic3));
+            command.Parameters.AddWithValue("@Pic1", string.IsNullOrEmpty(report.Pic1) ? (object)DBNull.Value : FileRepository.Sha256Hash(report.Pic1));
+            command.Parameters.AddWithValue("@Pic2", string.IsNullOrEmpty(report.Pic2) ? (object)DBNull.Value : FileRepository.Sha256Hash(report.Pic2));
+            command.Parameters.AddWithValue("@Pic3", string.IsNullOrEmpty(report.Pic3) ? (object)DBNull.Value : FileRepository.Sha256Hash(report.Pic3));
 
             command.ExecuteNonQuery();
 
