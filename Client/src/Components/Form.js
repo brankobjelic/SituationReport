@@ -31,16 +31,21 @@ const Form = (props) => {
     }
     const [causes, setCauses] = useState([])
     const [causeId, setCauseId] = useState(initialCauseId)
-    
-    const titleRef = useRef('')
-    const descriptionRef = useRef('')
-    const locationRef = useRef('')
 
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+    const [location, setLocation] = useState('')
+
+    //const titleRef = useRef('')
+    //const descriptionRef  =useRef('')
+    //const locationRef = useRef('')
     //console.log(props.report)
     //console.log(props.email)
 
 
-    useEffect(getDataForDropdown, [])
+    useEffect(
+        getDataForDropdown
+    , [])
     useEffect(() => {
         let fileReader, isCancel = false;
         if (file1) {
@@ -85,6 +90,15 @@ const Form = (props) => {
     
       }, [file1, file2, file3]);
 
+    useEffect(() => {
+        if(props.report){
+           setTitle(props.report.title)
+           setLocation(props.report.location)
+           setDescription(props.report.description)
+        }
+    }
+    , [])
+
     function getDataForDropdown() {
         var requesturl = host + port + causesEndpoint;
         //console.log(requesturl);
@@ -106,6 +120,18 @@ const Form = (props) => {
 
     function handleChange(e) {
         setCauseId(e.target.value)
+    }
+
+    function handleTitleChange(e) {
+        setTitle(e.target.value)
+    }
+
+    function handleLocationChange(e) {
+        setLocation(e.target.value)
+    }
+
+    function handleDescriptionChange(e) {
+        setDescription(e.target.value)
     }
 
     function handleFileChange(e) {
@@ -171,9 +197,9 @@ const Form = (props) => {
 
     function submitReportHandler(event) {
         event.preventDefault()
-        const title = titleRef.current.value
-        const description = descriptionRef.current.value
-        const location = locationRef.current.value
+        //const title = titleRef.current.value
+        //const description = descriptionRef.current.value
+        //const location = locationRef.current.value
         if (!causeId) {
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
@@ -184,7 +210,7 @@ const Form = (props) => {
         headers["Content-Type"] = 'application/json'
         var sendData = { "userEmail": props.email, "title": title, "description": description,
          "location": location, "causeId": causeId, "pic1": fileDataURL1, "pic2": fileDataURL2, "pic3": fileDataURL3 };
-        console.log(sendData)
+        //console.log(sendData)
         fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
             .then(response => {
                 if (response.status === 201) {
@@ -199,9 +225,9 @@ const Form = (props) => {
                     console.log(response);
                     alert("Desila se greska!");
                 }
-                titleRef.current.value = ''
-                descriptionRef.current.value = ''
-                locationRef.current.value = ''
+                //titleRef.current.value = ''
+                //descriptionRef.current.value = ''
+                //locationRef.current.value = ''
                 props.onLeaveForm(false)
             })
     }
@@ -220,11 +246,11 @@ const Form = (props) => {
                     })}
                 </select><br />
                 <label htmlFor="title" >Naslov</label>
-                <input id="title" className={classes['field-long']} type="text" defaultValue={props.report ? props.report.title : ''} ref={titleRef} required /><br />
+                <input id="title" className={classes['field-long']} type="text" value={title} onChange={handleTitleChange} required /><br />
                 <label htmlFor='location' >Adresa ili opis lokacije</label>
-                <input id='location' className={classes['field-long']} type="text" defaultValue={props.report ? props.report.location : ''} ref={locationRef} required></input>
+                <input id='location' className={classes['field-long']} type="text" value={location} onChange={handleLocationChange} required></input>
                 <label htmlFor="description">Tekst prijave</label>
-                <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} defaultValue={props.report ? props.report.description : ''} ref={descriptionRef} required />
+                <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} value={description} onChange={handleDescriptionChange} required />
                 <div className={classes.imgUploads}>
                     <span className={classes.hiddenFileInput}>
                      {fileDataURL1 ?
