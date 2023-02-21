@@ -12,10 +12,29 @@ ul {
     border-radius: 14px;
 }
 
-.icons {
-    text-align: right;
+.liFooter {
+    display:flex; 
+    flex-flow:row wrap;
 }
 
 .penIcon {
     margin-right: 1rem;
+}
+
+.alignRight {
+    width: 50%;
+    text-align: right;
+    margin-bottom: 0;
+    display: inline-block;
+}
+
+.alignLeft {
+    width: 50%;
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.liHeader {
+    margin-top: 0;
 }
