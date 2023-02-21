@@ -30,15 +30,12 @@ const Form = (props) => {
         initialCauseId = props.report.causeId
     }
     const [causes, setCauses] = useState([])
-    const [causeId, setCauseId] = useState(initialCauseId)
+    const [causeId, setCauseId] = useState('DEFAULT')
 
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [location, setLocation] = useState('')
 
-    //const titleRef = useRef('')
-    //const descriptionRef  =useRef('')
-    //const locationRef = useRef('')
     //console.log(props.report)
     //console.log(props.email)
 
@@ -92,6 +89,7 @@ const Form = (props) => {
 
     useEffect(() => {
         if(props.report){
+            setCauseId(props.report.causeId)
            setTitle(props.report.title)
            setLocation(props.report.location)
            setDescription(props.report.description)
@@ -237,7 +235,7 @@ const Form = (props) => {
             <div className={classes.overlay}></div>
             {!showImageModal && <form onSubmit={submitReportHandler} className={`${classes['modal-content']} ${classes['form-style-1']}`}>
                 <label htmlFor="cause">Razlog prijave</label>
-                <select id="cause" className={classes['field-select']} value={causeId} defaultValue={'DEFAULT'} onChange={handleChange} required>
+                <select id="cause" className={classes['field-select']} value={causeId} onChange={handleChange} required>
                     <option value="DEFAULT" disabled>Izaberite razlog za prijavu...</option>
                     {causes.map((cause, index) => {
                         return (
