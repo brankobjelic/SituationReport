@@ -44,7 +44,7 @@ namespace SituationReport.Controllers
         }
 
         [HttpGet]
-        [Route("~/api/reports/getImage")]
+        [Route("~/api/reports/getimage")]
         public IActionResult GetImage(string name)
         {
             Byte[] b = System.IO.File.ReadAllBytes($@"Content\Images\{name}");   // You can use your own method over here.         
