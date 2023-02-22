@@ -43,6 +43,14 @@ namespace SituationReport.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("~/api/reports/getImage")]
+        public IActionResult GetImage(string name)
+        {
+            Byte[] b = System.IO.File.ReadAllBytes($@"Content\Images\{name}");   // You can use your own method over here.         
+            return File(b, "image/jpeg");
+        }
+
         [HttpPost]
         public IActionResult AddReport(ReportDTO reportDTO)
         {
