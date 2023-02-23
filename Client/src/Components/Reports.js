@@ -18,7 +18,7 @@ const Reports = (props) => {
             <p className={classes.alignLeft}><small>Fotografije: </small><b>{report.pic1 ? '☑' : '☐'}{report.pic2 ? '☑' : '☐'}{report.pic3 ? '☑' : '☐'}</b></p>
             <span className={classes.alignRight}>
               <span className={classes.penIcon}>
-                <EditReportButton email={props.email} report={report} onUpdatedReport={props.onDel} />
+                <EditReportButton email={props.email} report={report} onUpdatedReport={props.onDel} onShowform={props.showFormHandler} showForm={props.showForm} onLeaveForm={props.onLeaveForm}/>
               </span>  
               <DeleteReportButton onDel={props.onDel} report={report} />
             </span>

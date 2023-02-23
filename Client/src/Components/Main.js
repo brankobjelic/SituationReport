@@ -38,17 +38,29 @@ const Main = (props) => {
     fetchReports()
   },[addedReport]);
 
-  if (showForm){
-    document.body.style.overflow = "hidden";
-  }else{
-    document.body.style.overflow = "scroll";
+  useEffect(() => {
+    if (showForm){
+      document.body.style.overflow = "hidden";
+    }else{
+      document.body.style.overflow = "scroll";
+    }
+  },[showForm])
+
+  function showFormHandler(){
+    setShowForm(true)
   }
+
+  function hideFormHandler(){
+    setShowForm(false)
+  }
+
+
 
   return (
     <div>
-      {!showForm && <button className={classes.button} onClick={e =>{setShowForm(true)}}>Nova prijava</button>}
-      {showForm && <Form onLeaveForm={setShowForm} email={props.email} onAddedReport={addedReportHandler}></Form>}
-      {reports && <Reports email={props.email} reports={reports} onDel={addedReportHandler} ></Reports>}
+      {!showForm && <button className={classes.button} onClick={showFormHandler}>Nova prijava</button>}
+      {showForm && <Form onLeaveForm={hideFormHandler} email={props.email} onAddedReport={addedReportHandler}></Form>}
+      {reports && <Reports email={props.email} reports={reports} onDel={addedReportHandler} onShowForm={showFormHandler} onLeaveForm={hideFormHandler}></Reports>}
     </div>
   )
 }

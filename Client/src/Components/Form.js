@@ -269,7 +269,7 @@ const Form = (props) => {
                     console.log(response);
                     alert("Desila se greska!");
                 }
-                props.onLeaveForm(false)
+                props.onLeaveForm()
             })
     }
 
@@ -316,7 +316,7 @@ const Form = (props) => {
                     </span>
                 </div>
                 <button className={classes.button}>Sačuvaj</button>
-                <button type="button" className={classes.button} style={{ float: "right" }} onClick={e => props.onLeaveForm(false)}>Odustajanje</button>
+                <button type="button" className={classes.button} style={{ float: "right" }} onClick={props.onLeaveForm}>Odustajanje</button>
             </form>}
             {showImageModal && <ImageModal 
                                     fileDataUrl={fileDataUrl}
