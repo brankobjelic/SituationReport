@@ -1,3 +1,4 @@
+import { faHouseMedicalCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import React from 'react'
 import { useState, useRef, useEffect } from 'react';
 import classes from './Form.module.css'
@@ -48,7 +49,7 @@ const Form = (props) => {
         if (file1) {
           fileReader = new FileReader();
           fileReader.onload = (e) => {
-            console.log(e.target)
+            //console.log(e.target)
             const { result } = e.target;
             if (result && !isCancel) {
               setFileDataURL1(result)
@@ -59,7 +60,7 @@ const Form = (props) => {
         if (file2) {
             fileReader = new FileReader();
             fileReader.onload = (e) => {
-              console.log(e.target)
+              //console.log(e.target)
               const { result } = e.target;
               if (result && !isCancel) {
                 setFileDataURL2(result)
@@ -70,7 +71,7 @@ const Form = (props) => {
         if (file3) {
             fileReader = new FileReader();
             fileReader.onload = (e) => {
-              console.log(e.target)
+              //console.log(e.target)
               const { result } = e.target;
               if (result && !isCancel) {
                 setFileDataURL3(result)
@@ -89,10 +90,20 @@ const Form = (props) => {
 
     useEffect(() => {
         if(props.report){
+            //console.log(props.report)
             setCauseId(props.report.causeId)
            setTitle(props.report.title)
            setLocation(props.report.location)
            setDescription(props.report.description)
+           if(props.report.pic1){
+                getImage(props.report.pic1, setFileDataURL1)
+           }
+           if(props.report.pic2){
+                getImage(props.report.pic2, setFileDataURL2)
+            }
+            if(props.report.pic3){
+                getImage(props.report.pic3, setFileDataURL3)
+            }
         }
     }
     , [])
@@ -116,6 +127,38 @@ const Form = (props) => {
             .catch(error => console.log(error));
     }
 
+
+    /*Fetching image from server*/
+
+    function getImage(imageFileName, setFileDataURL){
+        var host = "https://localhost:";
+        var port = "7281/";
+        var imageEndpoint = "api/reports/getimage?name=" + imageFileName;
+        var requestUrl = host + port + imageEndpoint;
+
+        //console.log(requestUrl)
+        fetch(requestUrl)
+        .then(response => {
+            if(response.status === 200){
+                //console.log(response)
+                response.blob().then((data) => {
+                    //console.log(data)
+                    var reader = new window.FileReader();
+                    reader.readAsDataURL(data);
+                    reader.onloadend = function() {
+                        var base64data = reader.result;
+                        setFileDataURL(base64data)
+                    };
+                });
+            }else{
+                console.log("Error occured with code " + response.status);
+                console.log(response);
+                alert("Desila se greska!");
+            }
+        })
+        .catch(error => console.log(error));
+    }
+
     function handleChange(e) {
         setCauseId(e.target.value)
     }
@@ -134,13 +177,15 @@ const Form = (props) => {
 
     function handleFileChange(e) {
         const file = e.target.files[0];
-        console.log(e.target.id)
+        //console.log(file)
+        //console.log(e.target.id)
         if (!file.type.match(imageMimeType)) {
           alert("Image mime type is not valid");
           return;
         }
         switch(e.target.id) {
             case "img1":
+                console.log(file)
                 setFile1(file)
               break
               case "image1":
@@ -163,14 +208,15 @@ const Form = (props) => {
     }
 
     function handleShowImageModal(e) {
+        //console.log(e.target)
         fileDataUrl = e.target.src
         imageId = e.target.id
         setShowImageModal(true)
-        console.log(imageId)
+        //console.log(imageId)
     }
 
     function handleCancelImage(image){
-        console.log(image)
+        //console.log(image)
         switch(image){
             case 'image1':
                 setFile1(null)
@@ -223,9 +269,6 @@ const Form = (props) => {
                     console.log(response);
                     alert("Desila se greska!");
                 }
-                //titleRef.current.value = ''
-                //descriptionRef.current.value = ''
-                //locationRef.current.value = ''
                 props.onLeaveForm(false)
             })
     }
