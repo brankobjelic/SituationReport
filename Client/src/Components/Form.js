@@ -241,9 +241,6 @@ const Form = (props) => {
 
     function submitReportHandler(event) {
         event.preventDefault()
-        //const title = titleRef.current.value
-        //const description = descriptionRef.current.value
-        //const location = locationRef.current.value
         if (!causeId) {
             document.getElementById('cause').style.backgroundColor = "salmon"
             return

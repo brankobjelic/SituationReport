@@ -115,7 +115,10 @@ namespace SituationReport.Controllers
                 CauseId = reportDTO.causeId,
                 Title = reportDTO.Title,
                 Location = reportDTO.Location,
-                Description = reportDTO.Description
+                Description = reportDTO.Description,
+                Pic1= reportDTO.Pic1,
+                Pic2= reportDTO.Pic2,
+                Pic3= reportDTO.Pic3
             };
             _reportRepository.Update(report);
             return Ok();
