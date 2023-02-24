@@ -34,9 +34,9 @@ namespace SituationReport.Repository
             command.Parameters.AddWithValue("@Location", report.Location);
             command.Parameters.AddWithValue("@Title", report.Title);
             command.Parameters.AddWithValue("@Description", report.Description);
-            command.Parameters.AddWithValue("@Pic1", string.IsNullOrEmpty(report.Pic1) ? (object)DBNull.Value : FileRepository.GetImageName(report.Pic1));
-            command.Parameters.AddWithValue("@Pic2", string.IsNullOrEmpty(report.Pic2) ? (object)DBNull.Value : FileRepository.GetImageName(report.Pic2));
-            command.Parameters.AddWithValue("@Pic3", string.IsNullOrEmpty(report.Pic3) ? (object)DBNull.Value : FileRepository.GetImageName(report.Pic3));
+            command.Parameters.AddWithValue("@Pic1", string.IsNullOrEmpty(report.Pic1) ? (object)DBNull.Value : report.Pic1);
+            command.Parameters.AddWithValue("@Pic2", string.IsNullOrEmpty(report.Pic2) ? (object)DBNull.Value : report.Pic2);
+            command.Parameters.AddWithValue("@Pic3", string.IsNullOrEmpty(report.Pic3) ? (object)DBNull.Value : report.Pic3);
 
             command.ExecuteNonQuery();
 
@@ -95,6 +95,9 @@ namespace SituationReport.Repository
                 r.UserId = int.Parse(dr["UserId"].ToString());
                 r.Title = dr["Title"].ToString();
                 r.Description = dr["Description"].ToString();
+                r.Pic1 = dr["Pic1"].ToString();
+                r.Pic2 = dr["Pic2"].ToString();
+                r.Pic3 = dr["Pic3"].ToString();
             }
 
             return r;

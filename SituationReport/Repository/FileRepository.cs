@@ -62,7 +62,7 @@ namespace SituationReport.Repository
 
         
 
-        public void Save(string file)
+        public string Save(string file)
         {
             string newFileName = GetImageName(file);
             bool found = FindImageInFolder(newFileName);
@@ -98,9 +98,9 @@ namespace SituationReport.Repository
                 img.Save(imgPath, System.Drawing.Imaging.ImageFormat.Jpeg);
 
                 //File.WriteAllBytes(imgPath, imageBytes);
-            
+                return imageName;
             }
-
+            return newFileName;
         }
 
         public string Sha256Hash(byte[] file)

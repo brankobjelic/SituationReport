@@ -28,6 +28,7 @@ namespace SituationReport.Controllers
             reports = _reportRepository.GetAllByUserEmail(email);
             return Ok(reports);
         }
+
         [HttpGet]
         [Route("~/api/reports/getreport")]
         public IActionResult GetReport(int id)
@@ -76,15 +77,15 @@ namespace SituationReport.Controllers
             };
             if (reportDTO.Pic1 != null)
             {
-                _fileRepository.Save(reportDTO.Pic1);
+                report.Pic1 = _fileRepository.Save(reportDTO.Pic1);
             }
             if (reportDTO.Pic2 != null)
             {
-                _fileRepository.Save(reportDTO.Pic2);
+                report.Pic2 = _fileRepository.Save(reportDTO.Pic2);
             }
             if (reportDTO.Pic3 != null)
             {
-                _fileRepository.Save(reportDTO.Pic3);
+                report.Pic3 = _fileRepository.Save(reportDTO.Pic3);
             }
             _reportRepository.Create(report);
             return CreatedAtAction("GetReport", new {  Id = report.Id }, report);
