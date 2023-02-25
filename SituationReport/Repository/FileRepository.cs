@@ -4,6 +4,7 @@ using System.Collections;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 using Image = System.Drawing.Image;
 
@@ -28,15 +29,13 @@ namespace SituationReport.Repository
         public string GetImageName(string data)
         {
             string base64 = data.Substring(data.IndexOf(',') + 1);
-            byte[] imageBytes = Convert.FromBase64String(base64);
-            return Sha256Hash(imageBytes);
+
+            return Sha256Hash(base64);
         }
 
-        public byte[] ResizeImage(Image image)
+        public Image ResizeImage(Image image)
         {
-            //using (var ms = new MemoryStream(data))
-            //{
-                //var image = Image.FromStream(ms);
+
 
                 var ratioX = (double)1024 / image.Width;
                 var ratioY = (double)1024 / image.Height;
@@ -50,24 +49,17 @@ namespace SituationReport.Repository
 
                 Graphics.FromImage(newImage).DrawImage(image, 0, 0, width, height);
 
-                Bitmap bmp = new Bitmap(newImage);
-
-                ImageConverter converter = new ImageConverter();
-
-                return (byte[])converter.ConvertTo(bmp, typeof(byte[]));
-
-                //return "data:image/*;base64," + Convert.ToBase64String(data);
-            //}
+                Image img = new Bitmap(newImage);
+                return img;
         }
 
-        
 
         public string Save(string file)
         {
-            string newFileName = GetImageName(file);
-            bool found = FindImageInFolder(newFileName);
-            if (!found) 
-            { 
+            string imageName = GetImageName(file);
+            bool found = FindImageInFolder(imageName);
+            if (!found)
+            {
                 String path = Path.GetFullPath("~/Content/Images").Replace("~\\", "");
 
                 //Check if directory exist
@@ -76,31 +68,38 @@ namespace SituationReport.Repository
                     Directory.CreateDirectory(path); //Create directory if it doesn't exist
                 }
 
-                //string imageName = Sha256Hash(file);
-
-                //set the image path
-                //string imgPath = Path.Combine(path, imageName);
-
                 string base64 = file.Substring(file.IndexOf(',') + 1);
-                //base64 = base64.Trim('\0');
 
                 byte[] imageBytes = Convert.FromBase64String(base64);
+
                 var stream1 = new MemoryStream(imageBytes);
-                System.Drawing.Image img1 = new Bitmap(stream1);
+                Image img1 = new Bitmap(stream1);
+                string base64String = Convert.ToBase64String(imageBytes);
+
                 img1.ExifRotate();
 
-                byte[] resizedImageBytes = ResizeImage(img1);
+                string resizedImageName = GetImageName(base64String);
 
-                string imageName = Sha256Hash(resizedImageBytes);
-                string imgPath = Path.Combine(path, imageName);
-                var stream = new MemoryStream(resizedImageBytes);
-                System.Drawing.Image img = new Bitmap(stream);
-                img.Save(imgPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+                Image resizedImage = ResizeImage(img1);
 
-                //File.WriteAllBytes(imgPath, imageBytes);
-                return imageName;
+                string imgPath = Path.Combine(path, resizedImageName);
+
+                resizedImage.Save(imgPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+                Byte[] b = System.IO.File.ReadAllBytes($@"Content\Images\{resizedImageName}");
+                var base64OfFile = Convert.ToBase64String(b);
+                string finalImageName = GetImageName(base64OfFile);
+                if (!File.Exists($@"Content\Images\{finalImageName}"))
+                {
+                    File.Move($@"Content\Images\{resizedImageName}", $@"Content\Images\{finalImageName}");
+                }
+                else
+                {
+                    File.Delete($@"Content\Images\{resizedImageName}");
+                }
+
+                return finalImageName;
             }
-            return newFileName;
+            return imageName;
         }
 
         public string Sha256Hash(byte[] file)
@@ -109,7 +108,6 @@ namespace SituationReport.Repository
 
             using (SHA256 hash = SHA256.Create())
             {
-                Encoding enc = Encoding.UTF8;
                 Byte[] result = hash.ComputeHash(file);
 
                 foreach (Byte b in result)
@@ -117,6 +115,28 @@ namespace SituationReport.Repository
             }
 
             return Sb.ToString();
+        }
+
+        public string Sha256Hash(string base64string)
+        {
+            StringBuilder Sb = new StringBuilder();
+
+            using (SHA256 hash = SHA256.Create())
+            {
+                Byte[] result = hash.ComputeHash(Encoding.UTF8.GetBytes(base64string));
+
+                foreach (Byte b in result)
+                    Sb.Append(b.ToString("x2"));
+            }
+
+            return Sb.ToString();
+        }
+
+        public static byte[] ImageToByteArray(Image x)
+        {
+            ImageConverter _imageConverter = new ImageConverter();
+            byte[] xByte = (byte[])_imageConverter.ConvertTo(x, typeof(byte[]));
+            return xByte;
         }
     }
 }

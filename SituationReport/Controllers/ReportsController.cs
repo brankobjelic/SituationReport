@@ -22,7 +22,7 @@ namespace SituationReport.Controllers
 
         [HttpGet]
         [Route("~/api/reports/allbyuser")]
-        public IActionResult GetReportsByUSerEmail(string email)
+        public IActionResult GetReportsByUserEmail(string email)
         {
             List<UserReportsDTO> reports= new List<UserReportsDTO>();
             reports = _reportRepository.GetAllByUserEmail(email);
@@ -48,7 +48,7 @@ namespace SituationReport.Controllers
         [Route("~/api/reports/getimage")]
         public IActionResult GetImage(string name)
         {
-            Byte[] b = System.IO.File.ReadAllBytes($@"Content\Images\{name}");   // You can use your own method over here.         
+            Byte[] b = System.IO.File.ReadAllBytes($@"Content\Images\{name}");        
             return File(b, "image/jpeg");
         }
 
@@ -71,21 +71,48 @@ namespace SituationReport.Controllers
                 Title = reportDTO.Title,
                 Location = reportDTO.Location,
                 Description = reportDTO.Description,
-                Pic1 = reportDTO.Pic1,
-                Pic2= reportDTO.Pic2,
-                Pic3= reportDTO.Pic3
             };
             if (reportDTO.Pic1 != null)
             {
-                report.Pic1 = _fileRepository.Save(reportDTO.Pic1);
+                string name1 = _fileRepository.GetImageName(reportDTO.Pic1);
+                if (!System.IO.File.Exists($@"Content\Images\{name1}"))
+                {
+                    report.Pic1 = _fileRepository.Save(reportDTO.Pic1);
+
+                }
+                else
+                {
+                    report.Pic1 = name1;
+                }
+
             }
             if (reportDTO.Pic2 != null)
             {
-                report.Pic2 = _fileRepository.Save(reportDTO.Pic2);
+                string name1 = _fileRepository.GetImageName(reportDTO.Pic2);
+                if (!System.IO.File.Exists($@"Content\Images\{name1}"))
+                {
+                    report.Pic2 = _fileRepository.Save(reportDTO.Pic2);
+
+                }
+                else
+                {
+                    report.Pic2 = name1;
+                }
+
             }
             if (reportDTO.Pic3 != null)
             {
-                report.Pic3 = _fileRepository.Save(reportDTO.Pic3);
+                string name1 = _fileRepository.GetImageName(reportDTO.Pic3);
+                if (!System.IO.File.Exists($@"Content\Images\{name1}"))
+                {
+                    report.Pic3 = _fileRepository.Save(reportDTO.Pic3);
+
+                }
+                else
+                {
+                    report.Pic3 = name1;
+                }
+
             }
             _reportRepository.Create(report);
             return CreatedAtAction("GetReport", new {  Id = report.Id }, report);
@@ -121,6 +148,45 @@ namespace SituationReport.Controllers
                 Pic2= reportDTO.Pic2,
                 Pic3= reportDTO.Pic3
             };
+
+            if (report.Pic1 != null)
+            {
+                string name1 = _fileRepository.GetImageName(report.Pic1);
+                if (name1 != r.Pic1)
+                {
+                    report.Pic1 = _fileRepository.Save(reportDTO.Pic1); //save file to disk
+                }
+                else
+                {
+                    report.Pic1 = r.Pic1;
+                }
+            }
+            if (report.Pic2 != null)
+            {
+                string name2 = _fileRepository.GetImageName(report.Pic2);
+
+                if (name2 != r.Pic2)
+                {
+                    report.Pic2 = _fileRepository.Save(reportDTO.Pic2); //save file to disk
+                }
+                else
+                {
+                    report.Pic2 = r.Pic2;
+                }
+            }
+            if (report.Pic3 != null)
+            {
+                string name3 = _fileRepository.GetImageName(report.Pic3);
+
+                if (name3 != r.Pic3)
+                {
+                    report.Pic3 = _fileRepository.Save(reportDTO.Pic3); //save file to disk
+                }
+                else
+                {
+                    report.Pic3 = r.Pic3;
+                }
+            }
             _reportRepository.Update(report);
             return Ok();
         }

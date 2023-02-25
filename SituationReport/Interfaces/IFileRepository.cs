@@ -6,7 +6,7 @@ namespace SituationReport.Interfaces
     {
         string Save(string file);
         string Sha256Hash(byte[] file);
-        byte[] ResizeImage(Image data);
+        Image ResizeImage(Image data);
         string GetImageName(string data);
         bool FindImageInFolder(string image);
     }

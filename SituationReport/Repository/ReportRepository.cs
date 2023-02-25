@@ -163,7 +163,8 @@ namespace SituationReport.Repository
 
         public void Update(Report report)
         {
-            string query = "Update Reports set CauseId=@CauseId, DateAndTime=CURRENT_TIMESTAMP, Title=@Title, Location=@Location, Description=@Description where Id=@Id;";
+            string query = "Update Reports set CauseId=@CauseId, DateAndTime=CURRENT_TIMESTAMP, Title=@Title, " +
+                "Location=@Location, Description=@Description, Pic1=@Pic1, Pic2=@Pic2, Pic3=@Pic3 where Id=@Id;";
 
             string connectionString = Configuration.GetConnectionString("AppConnectionString");
 
@@ -178,7 +179,9 @@ namespace SituationReport.Repository
             command.Parameters.AddWithValue("@Location", report.Location);
             command.Parameters.AddWithValue("@Description", report.Description);
             command.Parameters.AddWithValue("@Id", report.Id);
-
+            command.Parameters.AddWithValue("@Pic1", string.IsNullOrEmpty(report.Pic1) ? (object)DBNull.Value : report.Pic1);
+            command.Parameters.AddWithValue("@Pic2", string.IsNullOrEmpty(report.Pic2) ? (object)DBNull.Value : report.Pic2);
+            command.Parameters.AddWithValue("@Pic3", string.IsNullOrEmpty(report.Pic3) ? (object)DBNull.Value : report.Pic3);
             command.ExecuteNonQuery();
 
             command.Dispose();
