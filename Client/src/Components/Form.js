@@ -251,7 +251,7 @@ const Form = (props) => {
         headers["Content-Type"] = 'application/json'
         var sendData = { "userEmail": props.email, "title": title, "description": description,
          "location": location, "causeId": causeId, "pic1": fileDataURL1, "pic2": fileDataURL2, "pic3": fileDataURL3 };
-        //console.log(sendData)
+        console.log(sendData)
         fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
             .then(response => {
                 if (response.status === 201) {

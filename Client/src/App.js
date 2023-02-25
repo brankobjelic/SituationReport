@@ -48,7 +48,7 @@ function App() {
     document.getElementById("signInDiv").hidden = false
   }
 
-  useEffect(() => {
+   useEffect(() => {
     window.onload = function(e){ 
     //const google = window.google;
     window.google.accounts.id.initialize({
@@ -61,7 +61,7 @@ function App() {
       document.getElementById("signInDiv"),
       {theme: "filled_black", size: "large", shape: "pill"}
     )}
-  }, [])
+   }, [])
 
   return (
     <div className="App">
