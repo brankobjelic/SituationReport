@@ -1,6 +1,7 @@
 import { faHouseMedicalCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import React from 'react'
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
+import FetchContext from '../Store/fetch-context';
 import classes from './Form.module.css'
 import ImageModal from './ImageModal';
 
@@ -9,8 +10,9 @@ var fileDataUrl
 var imageId
 
 const Form = (props) => {
-    var host = "https://localhost:";
-    var port = "7281/";
+    const ctx = useContext(FetchContext)
+    //var host = "https://localhost:";
+    //var port = "7281/";
     var causesEndpoint = "api/causes";
     var reportsEndpoint = "api/Reports"
     var updatingReportId = ""
@@ -109,7 +111,7 @@ const Form = (props) => {
     , [])
 
     function getDataForDropdown() {
-        var requesturl = host + port + causesEndpoint;
+        var requesturl = ctx.protocol + ctx.host + ctx.port + causesEndpoint;
         //console.log(requesturl);
         var headers = {};
         fetch(requesturl, { headers: headers })
@@ -131,10 +133,10 @@ const Form = (props) => {
     /*Fetching image from server*/
 
     function getImage(imageFileName, setFileDataURL){
-        var host = "https://localhost:";
-        var port = "7281/";
+        //var host = "https://localhost:";
+        //var port = "7281/";
         var imageEndpoint = "api/reports/getimage?name=" + imageFileName;
-        var requestUrl = host + port + imageEndpoint;
+        var requestUrl = ctx.protocol + ctx.host + ctx.port + imageEndpoint;
 
         //console.log(requestUrl)
         fetch(requestUrl)
@@ -245,7 +247,7 @@ const Form = (props) => {
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
         }
-        var requestUrl = host + port + reportsEndpoint + updatingReportId;
+        var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
         //console.log(requestUrl)
         var headers = {};
         headers["Content-Type"] = 'application/json'

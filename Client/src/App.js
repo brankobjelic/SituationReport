@@ -1,11 +1,14 @@
 import React from 'react'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import jwt_decode from "jwt-decode"
 import './App.css';
 import Header from './Components/Header';
 import Main from './Components/Main';
+import FetchContext from './Store/fetch-context';
 
 function App() {
+  const ctx = useContext(FetchContext)
+
   const [ user, setUser] = useState({})
 
   function handleCallbackResponse(response){
@@ -18,22 +21,13 @@ function App() {
   }
 
   function sendUserToServer(user){
-    var host = "https://localhost:";
-    var port = "7281/";
     var loginEndpoint = "api/users/check";
-    var requestUrl = host + port + loginEndpoint;
+    var requestUrl = ctx.protocol + ctx.host + ctx.port + loginEndpoint;
     var sendData = {"name": user.name, "email": user.email};
     fetch(requestUrl, {method: "POST", headers: {'Content-Type':'application/json'}, body: JSON.stringify(sendData)})
     .then(response => {
         if(response.status === 200){
             console.log("Successful login on server");
-            //alert("Successful login");
-            // response.json().then((data) => {
-            //     console.log(data);
-            //     authCtx.login(data.token)
-            //     authCtx.onReceivedUsername(data.username)
-            //     props.onToggleLoginForm()             
-            // });
         }else{
             console.log("Error occured with code " + response.status);
             console.log(response);
@@ -64,12 +58,12 @@ function App() {
    }, [])
 
   return (
-    <div className="App">
-      <Header user={user} handleSignOut={handleSignOut}></Header>
-      {Object.keys(user).length !== 0 &&
-        <Main email={user.email}></Main>
-      }
-    </div>
+      <div className="App">
+        <Header user={user} handleSignOut={handleSignOut}></Header>
+        {Object.keys(user).length !== 0 &&
+          <Main email={user.email}></Main>
+        }
+      </div>
   );
 }
 

@@ -2,18 +2,20 @@ import React from 'react'
 import Reports from './Reports';
 import Form from './Form';
 import classes from './Main.module.css'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import FetchContext from '../Store/fetch-context';
 
 const Main = (props) => {
+  const ctx = useContext(FetchContext)
   const [showForm, setShowForm] = useState(false)
   const [addedReport, setAddedReport] = useState(false)
   const [reports, setReports] = useState([])
 
   function fetchReports(){
-    var host = "https://localhost:";
-    var port = "7281/";
+    //var host = "https://brankobjelic.duckdns.org:";
+    //var port = "7281/";
     var loginEndpoint = "api/reports/allbyuser?email=" + props.email;
-    var requestUrl = host + port + loginEndpoint;
+    var requestUrl = ctx.protocol + ctx.host + ctx.port + loginEndpoint;
     //console.log(requestUrl)
     fetch(requestUrl)
     .then(response => {
