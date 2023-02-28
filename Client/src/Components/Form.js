@@ -1,6 +1,6 @@
 import { faHouseMedicalCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import React from 'react'
-import { useState, useRef, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import FetchContext from '../Store/fetch-context';
 import classes from './Form.module.css'
 import ImageModal from './ImageModal';
@@ -11,27 +11,21 @@ var imageId
 
 const Form = (props) => {
     const ctx = useContext(FetchContext)
-    //var host = "https://localhost:";
-    //var port = "7281/";
     var causesEndpoint = "api/causes";
     var reportsEndpoint = "api/Reports"
     var updatingReportId = ""
     var method = "POST"
     var initialCauseId
 
-    const [file1, setFile1] = useState(null);
-    const [file2, setFile2] = useState(null);
-    const [file3, setFile3] = useState(null);
-    const [fileDataURL1, setFileDataURL1] = useState(null);
-    const [fileDataURL2, setFileDataURL2] = useState(null);
-    const [fileDataURL3, setFileDataURL3] = useState(null);
-    const [showImageModal, setShowImageModal] = useState(false)
-
     if(props.report){
         updatingReportId = "?id=" + props.report.id
         method = "PUT"
         initialCauseId = props.report.causeId
     }
+
+    const [file, setFile] = useState(null);
+    const [fileDataURLs, setFileDataURLs] = useState([])
+
     const [causes, setCauses] = useState([])
     const [causeId, setCauseId] = useState('DEFAULT')
 
@@ -39,47 +33,25 @@ const Form = (props) => {
     const [description, setDescription] = useState('')
     const [location, setLocation] = useState('')
 
-    //console.log(props.report)
-    //console.log(props.email)
-
+    const [showImageModal, setShowImageModal] = useState(false)
 
     useEffect(
         getDataForDropdown
     , [])
+
     useEffect(() => {
         let fileReader, isCancel = false;
-        if (file1) {
-          fileReader = new FileReader();
-          fileReader.onload = (e) => {
-            //console.log(e.target)
-            const { result } = e.target;
-            if (result && !isCancel) {
-              setFileDataURL1(result)
-            }
-          }
-          fileReader.readAsDataURL(file1);
-        }
-        if (file2) {
+        if(file){
+            //console.log(file)
             fileReader = new FileReader();
             fileReader.onload = (e) => {
-              //console.log(e.target)
-              const { result } = e.target;
-              if (result && !isCancel) {
-                setFileDataURL2(result)
-              }
+                const { result } = e.target;
+                console.log(e.target.result)
+                if (result && !isCancel) {
+                    setFileDataURLs(fileDataURLs => [...fileDataURLs, result])
+                }
             }
-            fileReader.readAsDataURL(file2);
-        }
-        if (file3) {
-            fileReader = new FileReader();
-            fileReader.onload = (e) => {
-              //console.log(e.target)
-              const { result } = e.target;
-              if (result && !isCancel) {
-                setFileDataURL3(result)
-              }
-            }
-            fileReader.readAsDataURL(file3);
+            fileReader.readAsDataURL(file);
         }
         return () => {
           isCancel = true;
@@ -88,23 +60,23 @@ const Form = (props) => {
           }
         }
     
-      }, [file1, file2, file3]);
+      }, [file]);
 
     useEffect(() => {
         if(props.report){
             //console.log(props.report)
             setCauseId(props.report.causeId)
-           setTitle(props.report.title)
-           setLocation(props.report.location)
-           setDescription(props.report.description)
-           if(props.report.pic1){
-                getImage(props.report.pic1, setFileDataURL1)
-           }
-           if(props.report.pic2){
-                getImage(props.report.pic2, setFileDataURL2)
+            setTitle(props.report.title)
+            setLocation(props.report.location)
+            setDescription(props.report.description)
+            if(props.report.pic1){
+                    getImage(props.report.pic1)
             }
+            if(props.report.pic2){
+                    getImage(props.report.pic2)
+                }
             if(props.report.pic3){
-                getImage(props.report.pic3, setFileDataURL3)
+                getImage(props.report.pic3)
             }
         }
     }
@@ -132,12 +104,11 @@ const Form = (props) => {
 
     /*Fetching image from server*/
 
-    function getImage(imageFileName, setFileDataURL){
-        //var host = "https://localhost:";
-        //var port = "7281/";
+    function getImage(imageFileName){
+
         var imageEndpoint = "api/reports/getimage?name=" + imageFileName;
         var requestUrl = ctx.protocol + ctx.host + ctx.port + imageEndpoint;
-
+        console.log(requestUrl)
         //console.log(requestUrl)
         fetch(requestUrl)
         .then(response => {
@@ -149,7 +120,8 @@ const Form = (props) => {
                     reader.readAsDataURL(data);
                     reader.onloadend = function() {
                         var base64data = reader.result;
-                        setFileDataURL(base64data)
+                        setFileDataURLs(fileDataURLs => [...fileDataURLs, base64data])
+                        console.log(fileDataURLs[0])
                     };
                 });
             }else{
@@ -177,62 +149,30 @@ const Form = (props) => {
         setDescription(e.target.value)
     }
 
-    function handleFileChange(e) {
-        const file = e.target.files[0];
+    function handleAddFile(e) {
+        const newFile = e.target.files[0];
         //console.log(file)
         //console.log(e.target.id)
-        if (!file.type.match(imageMimeType)) {
+        if (!newFile.type.match(imageMimeType)) {
           alert("Image mime type is not valid");
           return;
         }
-        switch(e.target.id) {
-            case "img1":
-                console.log(file)
-                setFile1(file)
-              break
-              case "image1":
-                setFile1(file)
-              break
-            case "img2":
-                setFile2(file)
-              break
-              case "image2":
-                setFile2(file)
-              break
-            case "img3":
-                setFile3(file)
-            break
-            case "image3":
-                setFile3(file)
-            break
-        }
+        
+        setFile(newFile)
+
         handleUnsetShowImageModal()
+    
     }
 
     function handleShowImageModal(e) {
-        //console.log(e.target)
         fileDataUrl = e.target.src
         imageId = e.target.id
         setShowImageModal(true)
-        //console.log(imageId)
     }
 
     function handleCancelImage(image){
         //console.log(image)
-        switch(image){
-            case 'image1':
-                setFile1(null)
-                setFileDataURL1(null)
-            break
-            case 'image2':
-                setFile2(null)
-                setFileDataURL2(null)
-            break
-            case 'image3':
-                setFile3(null)
-                setFileDataURL3(null)
-            break
-        }
+        setFileDataURLs(prev => {return prev.filter(fileDataURL => fileDataURL !== image)})
         handleUnsetShowImageModal()
 
     }
@@ -252,17 +192,16 @@ const Form = (props) => {
         var headers = {};
         headers["Content-Type"] = 'application/json'
         var sendData = { "userEmail": props.email, "title": title, "description": description,
-         "location": location, "causeId": causeId, "pic1": fileDataURL1, "pic2": fileDataURL2, "pic3": fileDataURL3 };
+         "location": location, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
         console.log(sendData)
         fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
             .then(response => {
                 if (response.status === 201) {
                     console.log("Successfuly added Report");
-                    //alert("Successfuly added Report");
-                    props.onAddedReport(true)
+                    props.onAddedReport()
                 } else if(response.status === 200){
                     console.log("Successfuly updated Report");
-                    props.onUpdatedReport(true)
+                    props.onUpdatedReport()
                 } else{
                     console.log("Error occured with code " + response.status);
                     console.log(response);
@@ -292,27 +231,18 @@ const Form = (props) => {
                 <label htmlFor="description">Tekst prijave</label>
                 <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} value={description} onChange={handleDescriptionChange} required />
                 <div className={classes.imgUploads}>
+                    {fileDataURLs.map((fileDataURL, index) => 
+                        <span key={index} className={classes.hiddenFileInput}>
+                            <img src={fileDataURL} id={`image${index+1}`} alt="preview" 
+                                onClick={e => {handleShowImageModal(e)}}/>
+                        </span>                           
+                    )}   
+                    {fileDataURLs.length <3 &&
+
                     <span className={classes.hiddenFileInput}>
-                     {fileDataURL1 ?
-                        <img src={fileDataURL1} id="image1" alt="preview" onClick={e => {handleShowImageModal(e)}}/> 
-                        :
-                        <input type="file" accept='image/*' id="img1" onChange={handleFileChange} />
-                    }   
-                    </span>
-                    <span className={classes.hiddenFileInput}>
-                    {fileDataURL2 ?
-                        <img src={fileDataURL2} id="image2" alt="preview" onClick={e => {handleShowImageModal(e)}}/> 
-                        :
-                        <input type="file" accept='image/*' id="img2" onChange={handleFileChange} />
+                        <input type="file" accept='image/*' id={`img${fileDataURLs.length+1}`} onChange={handleAddFile} />
+                        </span>
                     }
-                    </span>
-                    <span className={classes.hiddenFileInput}>
-                    {fileDataURL3 ?
-                        <img src={fileDataURL3} id="image3" alt="preview" onClick={e => {handleShowImageModal(e)}}/> 
-                        :
-                        <input type="file" accept='image/*' id="img3" onChange={handleFileChange} />
-                    }
-                    </span>
                 </div>
                 <button className={classes.button}>Sačuvaj</button>
                 <button type="button" className={classes.button} style={{ float: "right" }} onClick={props.onLeaveForm}>Odustajanje</button>
@@ -320,9 +250,10 @@ const Form = (props) => {
             {showImageModal && <ImageModal 
                                     fileDataUrl={fileDataUrl}
                                     id={imageId}
-                                    handleFileChange={handleFileChange}
+                                    //handleFileChange={handleFileChange}
                                     unsetShowImageModal={handleUnsetShowImageModal}
                                     onCancelImage={handleCancelImage}
+                                    onAddFile={handleAddFile}
                                 />
             }
         </div>

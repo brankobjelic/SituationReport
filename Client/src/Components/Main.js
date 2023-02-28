@@ -61,7 +61,7 @@ const Main = (props) => {
   return (
     <div>
       {!showForm && <button className={classes.button} onClick={showFormHandler}>Nova prijava</button>}
-      {showForm && <Form onLeaveForm={hideFormHandler} email={props.email} onAddedReport={addedReportHandler}></Form>}
+      {showForm && <Form onLeaveForm={() =>{hideFormHandler()}} email={props.email} onAddedReport={() =>{addedReportHandler()}}></Form>}
       {reports && <Reports email={props.email} reports={reports} onDel={addedReportHandler} onShowForm={showFormHandler} onLeaveForm={hideFormHandler}></Reports>}
     </div>
   )
