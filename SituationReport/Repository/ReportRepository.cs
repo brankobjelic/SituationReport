@@ -114,7 +114,7 @@ namespace SituationReport.Repository
                 "as CauseDescription, DateAndTime, Location, Title, Reports.Description as Description, Pic1, Pic2, Pic3 " +
                 "from reports left join causes on causeid = causes.id left join institutions " +
                 "on causes.InstitutionId = institutions.id left join users on userid = users.id " +
-                "where users.email = @email";
+                "where users.email = @email ORDER BY DateAndTime DESC;";
 
             string connectionString = Configuration.GetConnectionString("AppConnectionString");
 
