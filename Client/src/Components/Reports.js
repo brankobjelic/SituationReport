@@ -1,17 +1,21 @@
 import React from 'react'
-//import { useState } from 'react';
 import classes from './Reports.module.css'
 import DeleteReportButton from './DeleteReportButton';
 import EditReportButton from './EditReportButton';
 
 const Reports = (props) => {
-  //console.log(props.reports)
-
+    
+    const reports = props.reports.map((report) => {
+      let dateAndTime = new Date(report.dateAndTime)
+      report.dateAndTime = dateAndTime.toLocaleString('sr-RS')
+      return report
+    })
   return (
     <ul>
-      {props.reports.slice(0).reverse().map(report => (
-        <li className={classes.reportItem} key={report.dateAndTime}>
-          <p className={classes.liHeader}>{report.dateAndTime}<br /><small>{report.institution} <br /> {report.causeDescription} <br />Lokacija: {report.location}</small> </p>      
+      {reports.slice(0).map(report => (
+        <li className={classes.reportItem} key={report.id}>
+          <p className={classes.liHeader}>{report.dateAndTime}<br />
+          <small>{report.institution} <br /> {report.causeDescription} <br />Lokacija: {report.location}</small> </p>      
           <p><b>{report.title}</b></p>
           <p>{report.description}</p>
           <div className={classes.liFooter}>          
