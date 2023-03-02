@@ -1,4 +1,5 @@
-import { faHouseMedicalCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
 import { useState, useEffect, useContext } from 'react';
 import FetchContext from '../Store/fetch-context';
@@ -211,6 +212,19 @@ const Form = (props) => {
             })
     }
 
+    function handleGeoLocation(){
+        if ("geolocation" in navigator) {
+            console.log("Geolocation is available!")
+            navigator.geolocation.getCurrentPosition((position) => {
+              console.log(position)
+              setLocation(`GPS koordinate: ${position.coords.latitude},${position.coords.longitude}  ${location}`)
+            });
+          } else {
+            console.log("Geolocation is not available!")
+      
+          }
+    }
+
     return (
         <div className={classes.modal}>
             <div className={classes.overlay}></div>
@@ -226,8 +240,11 @@ const Form = (props) => {
                 </select><br />
                 <label htmlFor="title" >Naslov</label>
                 <input id="title" className={classes['field-long']} type="text" value={title} onChange={handleTitleChange} required /><br />
-                <label htmlFor='location' >Adresa ili opis lokacije</label>
-                <input id='location' className={classes['field-long']} type="text" value={location} onChange={handleLocationChange} required></input>
+                    <label htmlFor='location' >Adresa ili opis lokacije</label>
+                <div className={classes.locationDiv}>
+                    <input id='location' className={classes['field-long']} type="text" value={location} onChange={handleLocationChange} required></input>
+                    <button type="button" onClick={handleGeoLocation}><FontAwesomeIcon icon={faLocationDot} size = 'lg' /></button>
+                </div>
                 <label htmlFor="description">Tekst prijave</label>
                 <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} value={description} onChange={handleDescriptionChange} required />
                 <div className={classes.imgUploads}>
