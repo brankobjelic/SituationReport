@@ -9,7 +9,7 @@ const Main = (props) => {
   const ctx = useContext(FetchContext)
   const [showForm, setShowForm] = useState(false)
   const [addedReport, setAddedReport] = useState(false)
-  const [reports, setReports] = useState([])
+  const [reports, setReports] = useState()
 
   function fetchReports(){
     //var host = "https://brankobjelic.duckdns.org:";
@@ -57,7 +57,7 @@ const Main = (props) => {
   }
 
 
-
+  //console.log(reports)
   return (
     <div>
       {!showForm && <button className={classes.button} onClick={showFormHandler}>Nova prijava</button>}
