@@ -10,6 +10,7 @@ const Reports = (props) => {
       report.dateAndTime = dateAndTime.toLocaleString('sr-RS')
       return report
     })
+
   return (
     <ul>
       {reports.slice(0).map(report => (
