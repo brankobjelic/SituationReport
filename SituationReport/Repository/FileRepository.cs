@@ -26,11 +26,12 @@ namespace SituationReport.Repository
         }
 
         //file data from http request converts to byte array and returns hash
-        public string GetImageName(string data)
+        public string GetImageName(string data, int userId)
         {
             string base64 = data.Substring(data.IndexOf(',') + 1);
-
-            return Sha256Hash(base64);
+            string hashed = Sha256Hash(base64);
+            string imageName = userId.ToString() + '-' + hashed;
+            return imageName;
         }
 
         public Image ResizeImage(Image image)
@@ -54,9 +55,9 @@ namespace SituationReport.Repository
         }
 
 
-        public string Save(string file)
+        public string Save(string file, int userId)
         {
-            string imageName = GetImageName(file);
+            string imageName = GetImageName(file, userId);
             bool found = FindImageInFolder(imageName);
             if (!found)
             {
@@ -78,7 +79,7 @@ namespace SituationReport.Repository
 
                 img1.ExifRotate();
 
-                string resizedImageName = GetImageName(base64String);
+                string resizedImageName = GetImageName(base64String, userId);
 
                 Image resizedImage = ResizeImage(img1);
 
@@ -87,7 +88,7 @@ namespace SituationReport.Repository
                 resizedImage.Save(imgPath, System.Drawing.Imaging.ImageFormat.Jpeg);
                 Byte[] b = System.IO.File.ReadAllBytes($@"Content\Images\{resizedImageName}");
                 var base64OfFile = Convert.ToBase64String(b);
-                string finalImageName = GetImageName(base64OfFile);
+                string finalImageName = GetImageName(base64OfFile, userId);
                 if (!File.Exists($@"Content\Images\{finalImageName}"))
                 {
                     File.Move($@"Content\Images\{resizedImageName}", $@"Content\Images\{finalImageName}");

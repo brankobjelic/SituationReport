@@ -74,11 +74,10 @@ namespace SituationReport.Controllers
             };
             if (reportDTO.Pic1 != null)
             {
-                string name1 = _fileRepository.GetImageName(reportDTO.Pic1);
+                string name1 = _fileRepository.GetImageName(reportDTO.Pic1, user.Id);
                 if (!System.IO.File.Exists($@"Content\Images\{name1}"))
                 {
-                    report.Pic1 = _fileRepository.Save(reportDTO.Pic1);
-
+                    report.Pic1 = _fileRepository.Save(reportDTO.Pic1, user.Id);
                 }
                 else
                 {
@@ -88,10 +87,10 @@ namespace SituationReport.Controllers
             }
             if (reportDTO.Pic2 != null)
             {
-                string name1 = _fileRepository.GetImageName(reportDTO.Pic2);
+                string name1 = _fileRepository.GetImageName(reportDTO.Pic2, user.Id);
                 if (!System.IO.File.Exists($@"Content\Images\{name1}"))
                 {
-                    report.Pic2 = _fileRepository.Save(reportDTO.Pic2);
+                    report.Pic2 = _fileRepository.Save(reportDTO.Pic2, user.Id);
 
                 }
                 else
@@ -102,10 +101,10 @@ namespace SituationReport.Controllers
             }
             if (reportDTO.Pic3 != null)
             {
-                string name1 = _fileRepository.GetImageName(reportDTO.Pic3);
+                string name1 = _fileRepository.GetImageName(reportDTO.Pic3, user.Id);
                 if (!System.IO.File.Exists($@"Content\Images\{name1}"))
                 {
-                    report.Pic3 = _fileRepository.Save(reportDTO.Pic3);
+                    report.Pic3 = _fileRepository.Save(reportDTO.Pic3, user.Id);
 
                 }
                 else
@@ -151,10 +150,10 @@ namespace SituationReport.Controllers
 
             if (report.Pic1 != null)
             {
-                string name1 = _fileRepository.GetImageName(report.Pic1);
+                string name1 = _fileRepository.GetImageName(report.Pic1, user.Id);
                 if (name1 != r.Pic1)
                 {
-                    report.Pic1 = _fileRepository.Save(reportDTO.Pic1); //save file to disk
+                    report.Pic1 = _fileRepository.Save(reportDTO.Pic1, user.Id); //save file to disk
                 }
                 else
                 {
@@ -163,11 +162,11 @@ namespace SituationReport.Controllers
             }
             if (report.Pic2 != null)
             {
-                string name2 = _fileRepository.GetImageName(report.Pic2);
+                string name2 = _fileRepository.GetImageName(report.Pic2, user.Id);
 
                 if (name2 != r.Pic2)
                 {
-                    report.Pic2 = _fileRepository.Save(reportDTO.Pic2); //save file to disk
+                    report.Pic2 = _fileRepository.Save(reportDTO.Pic2, user.Id); //save file to disk
                 }
                 else
                 {
@@ -176,11 +175,11 @@ namespace SituationReport.Controllers
             }
             if (report.Pic3 != null)
             {
-                string name3 = _fileRepository.GetImageName(report.Pic3);
+                string name3 = _fileRepository.GetImageName(report.Pic3, user.Id);
 
                 if (name3 != r.Pic3)
                 {
-                    report.Pic3 = _fileRepository.Save(reportDTO.Pic3); //save file to disk
+                    report.Pic3 = _fileRepository.Save(reportDTO.Pic3, user.Id); //save file to disk
                 }
                 else
                 {
