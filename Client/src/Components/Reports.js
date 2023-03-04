@@ -3,6 +3,7 @@ import classes from './Reports.module.css'
 import DeleteReportButton from './DeleteReportButton';
 import EditReportButton from './EditReportButton';
 import Thumbnails from './Thumbnails';
+import ReadMore from './ReadMore';
 
 const Reports = (props) => {
     
@@ -20,7 +21,9 @@ const Reports = (props) => {
           <p className={classes.liHeader}>{report.dateAndTime}<br />
           <small>{report.institution} <br /> {report.causeDescription} <br />Lokacija: {report.location}</small> </p>      
           <p><b>{report.title}</b></p>
-          <p>{report.description}</p>
+          <ReadMore>
+            {report.description}
+          </ReadMore>
           <div className={classes.liFooter}>          
             <p className={classes.alignLeft}>
               <Thumbnails pic1={report.pic1} pic2={report.pic2} pic3={report.pic3} />
