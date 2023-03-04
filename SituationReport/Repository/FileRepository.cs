@@ -34,12 +34,12 @@ namespace SituationReport.Repository
             return imageName;
         }
 
-        public Image ResizeImage(Image image)
+        public Image ResizeImage(Image image, int maxResolution)
         {
 
 
-                var ratioX = (double)1024 / image.Width;
-                var ratioY = (double)1024 / image.Height;
+                var ratioX = (double)maxResolution / image.Width;
+                var ratioY = (double)maxResolution / image.Height;
 
                 var ratio = Math.Min(ratioX, ratioY);
 
@@ -81,7 +81,7 @@ namespace SituationReport.Repository
 
                 string resizedImageName = GetImageName(base64String, userId);
 
-                Image resizedImage = ResizeImage(img1);
+                Image resizedImage = ResizeImage(img1, 1024);
 
                 string imgPath = Path.Combine(path, resizedImageName);
 
@@ -92,6 +92,10 @@ namespace SituationReport.Repository
                 if (!File.Exists($@"Content\Images\{finalImageName}"))
                 {
                     File.Move($@"Content\Images\{resizedImageName}", $@"Content\Images\{finalImageName}");
+                    Image resizedThumbnailImage = ResizeImage(img1, 64);
+                    string thumbnailImageName = finalImageName + "_tn";
+                    string thumbnailImagePath = Path.Combine(path, thumbnailImageName);
+                    resizedThumbnailImage.Save(thumbnailImagePath, System.Drawing.Imaging.ImageFormat.Jpeg);
                 }
                 else
                 {

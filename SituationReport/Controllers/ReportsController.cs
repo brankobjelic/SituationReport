@@ -52,6 +52,7 @@ namespace SituationReport.Controllers
             return File(b, "image/jpeg");
         }
 
+
         [HttpPost]
         public IActionResult AddReport(ReportDTO reportDTO)
         {
