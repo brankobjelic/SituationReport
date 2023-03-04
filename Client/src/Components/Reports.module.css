@@ -26,6 +26,7 @@ ul {
     text-align: right;
     margin-bottom: 0;
     display: inline-block;
+    align-self: flex-end;
 }
 
 .alignLeft {

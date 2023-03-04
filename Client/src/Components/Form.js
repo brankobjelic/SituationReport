@@ -265,7 +265,6 @@ const Form = (props) => {
             {showImageModal && <ImageModal 
                                     fileDataUrl={fileDataUrl}
                                     id={imageId}
-                                    //handleFileChange={handleFileChange}
                                     unsetShowImageModal={handleUnsetShowImageModal}
                                     onCancelImage={handleCancelImage}
                                     onAddFile={handleAddFile}
