@@ -22,7 +22,7 @@ ul {
 }
 
 .alignRight {
-    width: 50%;
+    width: 25%;
     text-align: right;
     margin-bottom: 0;
     display: inline-block;
@@ -30,7 +30,7 @@ ul {
 }
 
 .alignLeft {
-    width: 50%;
+    width: 75%;
     text-align: left;
     margin-top: 0;
     margin-bottom: 0;
