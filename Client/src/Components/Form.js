@@ -16,12 +16,10 @@ const Form = (props) => {
     var reportsEndpoint = "api/Reports"
     var updatingReportId = ""
     var method = "POST"
-    var initialCauseId
 
     if(props.report){
         updatingReportId = "?id=" + props.report.id
         method = "PUT"
-        initialCauseId = props.report.causeId
     }
 
     const [file, setFile] = useState(null);
@@ -267,7 +265,6 @@ const Form = (props) => {
             {showImageModal && <ImageModal 
                                     fileDataUrl={fileDataUrl}
                                     id={imageId}
-                                    //handleFileChange={handleFileChange}
                                     unsetShowImageModal={handleUnsetShowImageModal}
                                     onCancelImage={handleCancelImage}
                                     onAddFile={handleAddFile}
