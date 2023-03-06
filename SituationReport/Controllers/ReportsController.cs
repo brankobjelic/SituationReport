@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SituationReport.Interfaces;
 using SituationReport.Models;
 using SituationReport.Repository;
+using System.Text.Json;
 
 namespace SituationReport.Controllers
 {
@@ -26,6 +27,24 @@ namespace SituationReport.Controllers
         {
             List<UserReportsDTO> reports= new List<UserReportsDTO>();
             reports = _reportRepository.GetAllByUserEmail(email);
+            return Ok(reports);
+        }
+
+        [HttpGet]
+        [Route("~/api/reports/paginatedbyuser")]
+        public IActionResult GetPaginatedReportsByUserEmail([FromQuery]PaginationParameters paginationParameters, string email)
+        {
+            var reports = _reportRepository.GetPaginatedByUserEmail(paginationParameters, email);
+            var metadata = new
+            {
+                reports.TotalCount,
+                reports.PageSize,
+                reports.CurrentPage,
+                reports.TotalPages,
+                reports.HasNext,
+                reports.HasPrevious
+            };
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(metadata));
             return Ok(reports);
         }
 
@@ -200,7 +219,7 @@ namespace SituationReport.Controllers
                 return NotFound();
             }
             _reportRepository.Delete(id);
-            return Ok();    //moze i return NoContent();
+            return Ok();    //or return NoContent();
         }
     }
 }

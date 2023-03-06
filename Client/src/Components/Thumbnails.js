@@ -57,7 +57,7 @@ const ThumbNails = (props) => {
         <>
             {fileDataURLs.map((fileDataURL, index) => 
                 <span key={index}>
-                    <img src={fileDataURL} style={classes.img} id={`image${index+1}`} alt='' />
+                    <img src={fileDataURL} className={classes.img} id={`image${index+1}`} alt='' />
                 </span>                           
             )}   
         </>
