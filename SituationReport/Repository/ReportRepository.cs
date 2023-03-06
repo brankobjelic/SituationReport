@@ -4,6 +4,7 @@ using SituationReport.Models;
 using System.Data.SqlClient;
 using System.Data;
 using Microsoft.VisualBasic;
+using static SituationReport.Models.PaginationParameters;
 
 namespace SituationReport.Repository
 {
@@ -186,6 +187,67 @@ namespace SituationReport.Repository
 
             command.Dispose();
             connection.Close();
+        }
+
+        public PagedList<UserReportsDTO> GetPaginatedByUserEmail(PaginationParameters paginationParameters, string email)
+        {
+            int offset = (paginationParameters.PageNumber - 1) * paginationParameters.PageSize;
+            string query = "select Reports.Id As Id, Institutions.name as Institution, CauseId, Causes.Description " +
+                "as CauseDescription, DateAndTime, Location, Title, Reports.Description as Description, Pic1, Pic2, Pic3, " +
+                "count(*) OVER() AS full_count " +
+                "from reports left join causes on causeid = causes.id left join institutions " +
+                "on causes.InstitutionId = institutions.id left join users on userid = users.id " +
+                "where users.email = @email ORDER BY DateAndTime DESC " +
+                "OFFSET @offset ROWS " +
+                "FETCH NEXT @pageSize ROWS ONLY;";
+
+            string connectionString = Configuration.GetConnectionString("AppConnectionString");
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = connection.CreateCommand();
+            command.Parameters.AddWithValue("@email", email);
+            command.Parameters.AddWithValue("@offset", offset);
+            command.Parameters.AddWithValue("@pagesize", paginationParameters.PageSize);
+
+
+            connection.Open();
+
+            command.CommandText = query;
+
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = command;
+
+            adapter.Fill(ds, "Reports");
+            dt = ds.Tables["Reports"];
+
+            command.Dispose();
+            connection.Close();
+
+
+            List<UserReportsDTO> reports = new List<UserReportsDTO>();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                UserReportsDTO ur = new UserReportsDTO();
+                ur.Id = Int32.Parse(dr["Id"].ToString());
+                ur.DateAndTime = DateTime.Parse(dr["DateAndTime"].ToString());
+                ur.Institution = dr["Institution"].ToString();
+                ur.CauseId = Int32.Parse(dr["CauseId"].ToString());
+                ur.CauseDescription = dr["CauseDescription"].ToString();
+                ur.Location = dr["Location"].ToString();
+                ur.Title = dr["Title"].ToString();
+                ur.Description = dr["Description"].ToString();
+                ur.Pic1 = dr["Pic1"].ToString();
+                ur.Pic2 = dr["Pic2"].ToString();
+                ur.Pic3 = dr["Pic3"].ToString();
+                reports.Add(ur);
+            }
+            int totalCount = Int32.Parse(dt.Rows[0]["full_count"].ToString());
+
+            return PagedList<UserReportsDTO>.ToPagedList(reports, paginationParameters.PageNumber, paginationParameters.PageSize, totalCount);
         }
     }
 }

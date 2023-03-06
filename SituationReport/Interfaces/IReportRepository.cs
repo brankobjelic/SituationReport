@@ -10,5 +10,7 @@ namespace SituationReport.Interfaces
         void Update(Report report);
         void Delete(int id);
         List<UserReportsDTO> GetAllByUserEmail(string email);
+        PagedList<UserReportsDTO> GetPaginatedByUserEmail(PaginationParameters paginationParameters, string email);
+
     }
 }
