@@ -14,8 +14,8 @@ const Main = (props) => {
   function fetchReports(){
     //var host = "https://brankobjelic.duckdns.org:";
     //var port = "7281/";
-    var loginEndpoint = "api/reports/allbyuser?email=" + props.email;
-    var requestUrl = ctx.protocol + ctx.host + ctx.port + loginEndpoint;
+    var endpoint = "api/reports/allbyuser?email=" + props.email;
+    var requestUrl = ctx.protocol + ctx.host + ctx.port + endpoint;
     //console.log(requestUrl)
     fetch(requestUrl)
     .then(response => {
@@ -36,9 +36,9 @@ const Main = (props) => {
   function addedReportHandler(){
     setAddedReport(!addedReport)
   }
-  useEffect(() => {
-    fetchReports()
-  },[addedReport]);
+  // useEffect(() => {
+  //   fetchReports()
+  // },[addedReport]);
 
   useEffect(() => {
     if (showForm){
@@ -62,7 +62,7 @@ const Main = (props) => {
     <div>
       {!showForm && <button className={classes.button} onClick={showFormHandler}>Nova prijava</button>}
       {showForm && <Form onLeaveForm={() =>{hideFormHandler()}} email={props.email} onAddedReport={() =>{addedReportHandler()}}></Form>}
-      {reports && <Reports email={props.email} reports={reports} onDel={addedReportHandler} onShowForm={showFormHandler} onLeaveForm={hideFormHandler}></Reports>}
+      <Reports email={props.email} reports={reports} onDel={addedReportHandler} onShowForm={showFormHandler} onLeaveForm={hideFormHandler}></Reports>
     </div>
   )
 }
