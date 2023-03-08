@@ -22,6 +22,7 @@ const ThumbNails = (props) => {
             getImage(`${props.pic3}_tn`)
         }
     }, [props])
+        
 
         function getImage(imageFileName){
 
@@ -41,7 +42,7 @@ const ThumbNails = (props) => {
                             var base64data = reader.result;
                             
                             setFileDataURLs(fileDataURLs => [...fileDataURLs, base64data])
-                            // console.log(fileDataURLs[0])
+                            console.log(fileDataURLs)
                         };
                     });
                 }else{

@@ -8,8 +8,7 @@ import {usePaginationFetch} from '../Hooks/use-pagination'
 
 const Reports = (props) => {
 
-  const {results, page, setPage, nextPage, previousPage} = usePaginationFetch(props.email)
-    
+  const {results, page, totalPages, nextPage, previousPage, firstPage, lastPage} = usePaginationFetch(props.email, props.addedReport, props.deletedReport)
     const reports = results.map((report) => {
       let dateAndTime = new Date(report.dateAndTime)
       report.dateAndTime = dateAndTime.toLocaleString('sr-RS')
@@ -42,9 +41,11 @@ const Reports = (props) => {
           </li>
         ))}
       </ul>
-      <div>
-          <button disabled={page === 1} onClick={previousPage}>Prethodna strana</button>
-          <button onClick={nextPage} >Sledeca strana</button>
+      <div className={classes.paginationDiv}>
+          <button disabled={page === 1} onClick={firstPage}>⯇⯇</button>
+          <button disabled={page === 1} onClick={previousPage}>⯇</button><span> {page}/{totalPages} </span>
+          <button disabled={page === totalPages} onClick={nextPage} >⯈</button>
+          <button disabled={page === totalPages} onClick={lastPage} >⯈⯈</button>
       </div>   
     </>
   )
