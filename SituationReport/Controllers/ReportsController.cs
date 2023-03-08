@@ -45,6 +45,7 @@ namespace SituationReport.Controllers
                 reports.HasPrevious
             };
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(metadata));
+            Response.Headers.Add("Access-Control-Expose-Headers", "X-Pagination");
             return Ok(reports);
         }
 

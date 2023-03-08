@@ -39,3 +39,9 @@ ul {
 .liHeader {
     margin-top: 0;
 }
+
+.paginationDiv {
+    text-align: center;
+    margin: 1rem;
+
+}
