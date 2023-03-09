@@ -34,14 +34,30 @@ const ThumbNails = (props) => {
             .then(response => {
                 if(response.status === 200){
                     //console.log(response)
+                    // response.blob().then((data) => {
+                    //     //console.log(data)
+                    //     var reader = new window.FileReader();
+                    //     reader.readAsDataURL(data);
+                    //     reader.onloadend = function() {
+                    //         var base64data = reader.result;
+                            
+                    //         setFileDataURLs(fileDataURLs => [...fileDataURLs, base64data])
+                    //         console.log(fileDataURLs)
+                    //     };
+                    // });
                     response.blob().then((data) => {
                         //console.log(data)
                         var reader = new window.FileReader();
-                        reader.readAsDataURL(data);
+                        reader.readAsArrayBuffer(data);
                         reader.onloadend = function() {
-                            var base64data = reader.result;
+                            var data = reader.result;
+
+                            var arrayBufferView = new Uint8Array( data );
+                            var blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
+                            var urlCreator = window.URL || window.webkitURL;
+                            var imageUrl = urlCreator.createObjectURL( blob );
                             
-                            setFileDataURLs(fileDataURLs => [...fileDataURLs, base64data])
+                            setFileDataURLs(fileDataURLs => [...fileDataURLs, imageUrl])
                             console.log(fileDataURLs)
                         };
                     });
