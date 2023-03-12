@@ -3,7 +3,7 @@ import classes from './Thumbnails.module.css'
 import { useState, useContext, useEffect } from 'react'
 import FetchContext from '../Store/fetch-context';
 
-const ThumbNails = (props) => {
+const Thumbnails = (props) => {
 
     const ctx = useContext(FetchContext)
     //console.log(props)
@@ -81,4 +81,4 @@ const ThumbNails = (props) => {
     )
 }
 
-export default ThumbNails
+export default React.memo(Thumbnails)
