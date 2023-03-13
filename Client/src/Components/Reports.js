@@ -9,19 +9,13 @@ import {usePaginationFetch} from '../Hooks/use-pagination'
 const Reports = (props) => {
 
   const {results, page, totalPages, nextPage, previousPage, firstPage, lastPage} = usePaginationFetch(props.email, props.addedReport, props.deletedReport)
-    const reports = results.map((report) => {
-      let dateAndTime = new Date(report.dateAndTime)
-      report.dateAndTime = dateAndTime.toLocaleString('sr-RS')
-      return report
-    })
-
 
   return (
     <>
       <ul>
-        {reports.slice(0).map(report => (
+        {results.slice(0).map(report => (
           <li className={classes.reportItem} key={report.id}>
-            <p className={classes.liHeader}>{report.dateAndTime}<br />
+            <p className={classes.liHeader}>{new Date(report.dateAndTime).toLocaleString('sr-RS')}<br />
             <small>{report.institution} <br /> {report.causeDescription} <br />Lokacija: {report.location}</small> </p>      
             <p><b>{report.title}</b></p>
             <ReadMore>
@@ -51,4 +45,4 @@ const Reports = (props) => {
   )
 }
 
-export default Reports
+export default React.memo(Reports)

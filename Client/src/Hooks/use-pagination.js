@@ -26,7 +26,7 @@ export const usePaginationFetch = (
             left: 0,
             behavior: 'smooth',
           });
-    }, [page, deletedReport])
+    }, [page, deletedReport, addedReport])
 
     function fetchReports(){
         var endpoint = `api/reports/paginatedbyuser?PageNumber=${page}&PageSize=${pageSize}&email=${email}`;
@@ -34,9 +34,8 @@ export const usePaginationFetch = (
         console.log(requestUrl)
         fetch(requestUrl)
         .then(response => {
-            let header = JSON.parse(response.headers.get('x-pagination'))
-            console.log(header)
-           setTotalPages(header.TotalPages)
+            let paginationHeader = JSON.parse(response.headers.get('x-pagination'))
+           setTotalPages(paginationHeader.TotalPages)
             if(response.status === 200){
                 //console.log(response)
                 response.json().then((data) => {
