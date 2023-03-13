@@ -51,4 +51,4 @@ const Reports = (props) => {
   )
 }
 
-export default Reports
+export default React.memo(Reports)
