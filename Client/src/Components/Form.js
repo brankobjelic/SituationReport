@@ -181,7 +181,9 @@ const Form = (props) => {
     }
 
     function submitReportHandler(event) {
-        event.preventDefault()
+        if(event){
+            event.preventDefault()
+        }
         if (!causeId) {
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
@@ -224,6 +226,7 @@ const Form = (props) => {
     }
 
     function sendReportHandler(){
+        submitReportHandler()
         var email = document.createElement("a");
         email.href = `mailto:abc@mail.com?subject=${title}&body=Lokacija: ${location}%0D%0A%0D%0A${description}%0D%0A%0D%0A`
         email.click();
