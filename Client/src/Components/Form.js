@@ -45,7 +45,7 @@ const Form = (props) => {
             fileReader = new FileReader();
             fileReader.onload = (e) => {
                 const { result } = e.target;
-                console.log(e.target.result)
+                //console.log(e.target.result)
                 if (result && !isCancel) {
                     setFileDataURLs(fileDataURLs => [...fileDataURLs, result])
                 }
@@ -120,7 +120,7 @@ const Form = (props) => {
                     reader.onloadend = function() {
                         var base64data = reader.result;
                         setFileDataURLs(fileDataURLs => [...fileDataURLs, base64data])
-                        console.log(fileDataURLs[0])
+                        //console.log(fileDataURLs[0])
                     };
                 });
             }else{
@@ -223,10 +223,20 @@ const Form = (props) => {
           }
     }
 
+    function sendReportHandler(){
+        var email = document.createElement("a");
+        email.href = `mailto:abc@mail.com?subject=${title}&body=Lokacija: ${location}%0D%0A%0D%0A${description}%0D%0A%0D%0A`
+        email.click();
+    }
+
+
+
     return (
         <div className={classes.modal}>
             <div className={classes.overlay}></div>
             {!showImageModal && <form onSubmit={submitReportHandler} className={`${classes['modal-content']} ${classes['form-style-1']}`}>
+                <a className={classes.boxclose} onClick={props.onLeaveForm}></a><br/><br/>
+                <div>
                 <label htmlFor="cause">Razlog prijave</label>
                 <select id="cause" className={classes['field-select']} value={causeId} onChange={handleChange} required>
                     <option value="DEFAULT" disabled>Izaberite razlog za prijavu...</option>
@@ -235,10 +245,11 @@ const Form = (props) => {
                             <option key={cause.id} value={cause.id}>{cause.description}</option>
                         )
                     })}
-                </select><br />
+                </select>
+                </div>
                 <label htmlFor="title" >Naslov</label>
                 <input id="title" className={classes['field-long']} type="text" value={title} onChange={handleTitleChange} required /><br />
-                    <label htmlFor='location' >Adresa ili opis lokacije</label>
+                <label htmlFor='location' >Adresa ili opis lokacije</label>
                 <div className={classes.locationDiv}>
                     <input id='location' className={classes['field-long']} type="text" value={location} onChange={handleLocationChange} required></input>
                     <button type="button" onClick={handleGeoLocation}><FontAwesomeIcon icon={faLocationDot} size = 'lg' /></button>
@@ -260,7 +271,7 @@ const Form = (props) => {
                     }
                 </div>
                 <button className={classes.button}>Sačuvaj</button>
-                <button type="button" className={classes.button} style={{ float: "right" }} onClick={props.onLeaveForm}>Odustajanje</button>
+                <button type="button" className={classes.button} style={{ float: "right" }} onClick={sendReportHandler}>Pošalji prijavu</button>
             </form>}
             {showImageModal && <ImageModal 
                                     fileDataUrl={fileDataUrl}
