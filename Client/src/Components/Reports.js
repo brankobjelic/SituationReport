@@ -9,12 +9,6 @@ import {usePaginationFetch} from '../Hooks/use-pagination'
 const Reports = (props) => {
 
   const {results, page, totalPages, nextPage, previousPage, firstPage, lastPage} = usePaginationFetch(props.email, props.addedReport, props.deletedReport)
-    // const reports = results.map((report) => {
-    //   let dateAndTime = new Date(report.dateAndTime)
-    //   report.dateAndTime = dateAndTime.toLocaleString('sr-RS')
-    //   return report
-    // })
-
 
   return (
     <>
