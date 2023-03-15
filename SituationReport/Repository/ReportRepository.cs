@@ -17,10 +17,11 @@ namespace SituationReport.Repository
             Configuration = configuration;
             FileRepository = fileRepository;
         }
-        public void Create(Report report)
+        public int Create(Report report)
         {
             string query = "INSERT INTO Reports(CauseId, UserId, DateAndTime, Location, Title, Description, Pic1, Pic2, Pic3) " +
-                "values (@CauseId, @UserId, CURRENT_TIMESTAMP, @Location, @Title, @Description, @Pic1, @Pic2, @Pic3)";
+                "values (@CauseId, @UserId, CURRENT_TIMESTAMP, @Location, @Title, @Description, @Pic1, @Pic2, @Pic3) " +
+                "SELECT SCOPE_IDENTITY();";
 
             string connectionString = Configuration.GetConnectionString("AppConnectionString");
 
@@ -40,9 +41,11 @@ namespace SituationReport.Repository
             command.Parameters.AddWithValue("@Pic3", string.IsNullOrEmpty(report.Pic3) ? (object)DBNull.Value : report.Pic3);
 
             command.ExecuteNonQuery();
+            int newId = Convert.ToInt32(command.ExecuteScalar());
 
             command.Dispose();
             connection.Close();
+            return newId;
         }
 
         public void Delete(int id)
