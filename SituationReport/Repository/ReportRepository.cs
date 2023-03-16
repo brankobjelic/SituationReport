@@ -40,7 +40,7 @@ namespace SituationReport.Repository
             command.Parameters.AddWithValue("@Pic2", string.IsNullOrEmpty(report.Pic2) ? (object)DBNull.Value : report.Pic2);
             command.Parameters.AddWithValue("@Pic3", string.IsNullOrEmpty(report.Pic3) ? (object)DBNull.Value : report.Pic3);
 
-            command.ExecuteNonQuery();
+            //command.ExecuteNonQuery();
             int newId = Convert.ToInt32(command.ExecuteScalar());
 
             command.Dispose();
@@ -96,6 +96,7 @@ namespace SituationReport.Repository
             {
                 r.Id = int.Parse(dr["Id"].ToString());
                 r.CauseId = int.Parse(dr["CauseId"].ToString());
+                r.Location = dr["Location"].ToString();
                 r.UserId = int.Parse(dr["UserId"].ToString());
                 r.Title = dr["Title"].ToString();
                 r.Description = dr["Description"].ToString();
