@@ -73,5 +73,44 @@ namespace SituationReport.Repository
         {
             throw new NotImplementedException();
         }
+
+        public Institution GetInstitutionByCauseId(int id)
+        {
+            string query = "SELECT Name, Email, Phone from Causes LEFT JOIN Institutions\r\n\t" +
+                "ON Causes.InstitutionId=Institutions.Id\r\n\tWHERE Causes.Id= @Id;";
+
+            string connectionString = Configuration.GetConnectionString("AppConnectionString");
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = connection.CreateCommand();
+            command.Parameters.AddWithValue("@Id", id);
+
+            connection.Open();
+
+            command.CommandText = query;
+
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = command;
+
+            adapter.Fill(ds, "Institutions");
+            dt = ds.Tables["Institutions"];
+
+            command.Dispose();
+            connection.Close();
+
+            Institution i = new Institution();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                i.Name = dr["Name"].ToString();
+                i.Email = dr["Email"].ToString();
+                i.Phone = dr["Phone"].ToString();
+            }
+
+            return i;
+        }
     }
 }

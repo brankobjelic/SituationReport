@@ -9,5 +9,6 @@ namespace SituationReport.Interfaces
         void Create(Cause cause);
         void Update(Cause cause);
         void Delete(int id);
+        Institution GetInstitutionByCauseId(int id);
     }
 }

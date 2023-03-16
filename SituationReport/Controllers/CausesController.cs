@@ -23,5 +23,14 @@ namespace SituationReport.Controllers
             causes = _causeRepository.GetAll();
             return Ok(causes);
         }
+
+        [HttpGet]
+        [Route("~/api/InstitutionByCauseId")]
+        public IActionResult GetInstitutionByCauseId(int id) 
+        {
+            Institution institution = new Institution();
+            institution = _causeRepository.GetInstitutionByCauseId(id);
+            return Ok(institution);
+        }
     }
 }
