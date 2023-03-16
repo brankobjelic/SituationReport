@@ -49,8 +49,8 @@ namespace SituationReport.Controllers
             return Ok(reports);
         }
 
-        [HttpGet]
-        [Route("~/api/reports/getreport")]
+        [HttpGet("{id}")]
+        //[Route("~/api/reports/getreport")]
         public IActionResult GetReport(int id)
         {
             var report = _reportRepository.Get(id);
@@ -134,11 +134,14 @@ namespace SituationReport.Controllers
                 }
 
             }
-            _reportRepository.Create(report);
-            return CreatedAtAction("GetReport", new {  Id = report.Id }, report);
+            int newId = _reportRepository.Create(report);
+            string uri = $"https://localhost:7281/api/Reports/{newId}";
+            //return CreatedAtAction("GetReport", new {  id = newId }, report);
+            return Created(uri, new {Id = newId});
+
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public IActionResult PutReport(int id, ReportDTO reportDTO)
         {
             if (!ModelState.IsValid)
@@ -208,7 +211,7 @@ namespace SituationReport.Controllers
                 }
             }
             _reportRepository.Update(report);
-            return Ok();
+            return Ok(report);
         }
 
         [HttpDelete("{id}")]
