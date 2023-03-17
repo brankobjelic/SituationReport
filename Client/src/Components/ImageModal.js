@@ -24,7 +24,7 @@ const ImageModal = (props) => {
             <button className={classes.button} onClick={props.unsetShowImageModal}>Zatvori</button>
             <button type="button" className={classes.button} onClick={handleClick}>Izmeni</button>
             <input type="file" id={props.id} accept='image/*' ref={hiddenFileInput} style={{display:"none"}} onChange={e => {handleFileChange(e, props.fileDataUrl)}} />
-            <button className={classes.button} onClick={e => {props.onCancelImage(props.fileDataUrl)}} >Otkaži</button>
+            <button className={classes.button} onClick={e => {props.onCancelImage(props.fileDataUrl)}}>Obriši</button>
         </div>
     </div>
   )
