@@ -6,15 +6,13 @@ import FetchContext from '../Store/fetch-context';
 const Thumbnails = (props) => {
 
     const ctx = useContext(FetchContext)
-    //console.log(props)
 
-    //const [fileDataURLs, setFileDataURLs] = useState([])
     const [fileDataUrl1, setFileDataUrl1] = useState()
     const [fileDataUrl2, setFileDataUrl2] = useState()
     const [fileDataUrl3, setFileDataUrl3] = useState()
 
     useEffect(() => {
-        //setFileDataURLs([])
+
         setFileDataUrl1()
         setFileDataUrl2()
         setFileDataUrl3()

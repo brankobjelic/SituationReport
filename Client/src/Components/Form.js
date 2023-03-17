@@ -19,11 +19,6 @@ const Form = (props) => {
     var institutionByCauseIdEndpoint = "api/InstitutionByCauseId?id="
     var method = "POST"
 
-    if(props.report){
-        updatingReportId = props.report.id
-        method = "PUT"
-    }
-
     const [file, setFile] = useState(null);
     const [fileDataURLs, setFileDataURLs] = useState([])
 
@@ -39,9 +34,14 @@ const Form = (props) => {
     //const [isSubmitted, setIsSubmitted] = useState(false)
     const [reportForEmail, setReportForEmail] = useState(false)
 
-    useEffect(
-        getDataForDropdown
-    , [])
+    if(props.report){
+        updatingReportId = props.report.id
+        method = "PUT"
+    }
+    
+    useEffect(() =>{
+        getDataForDropdown()
+    }, [])
 
     useEffect(() => {
         let fileReader, isCancel = false;
@@ -64,6 +64,7 @@ const Form = (props) => {
     
       }, [file]);
 
+    /* If the form is entered to edit existing report, the form fields are populated here */
     useEffect(() => {
         if(props.report){
             //console.log(props.report)
@@ -84,7 +85,7 @@ const Form = (props) => {
     }
     , [])
 
-    //Here a report gets prepared for sending to coresponding institution by email
+    /*Here a report gets prepared for sending to coresponding institution by email*/
     useEffect(() => {
         if(reportForEmail){
             console.log(reportForEmail)
@@ -148,11 +149,8 @@ const Form = (props) => {
             .catch(error => console.log(error));
     }
 
-
     /*Fetching image from server*/
-
     function getImage(imageFileName){
-
         var imageEndpoint = "api/reports/getimage?name=" + imageFileName;
         var requestUrl = ctx.protocol + ctx.host + ctx.port + imageEndpoint;
         console.log(requestUrl)
@@ -217,16 +215,28 @@ const Form = (props) => {
         setShowImageModal(false)
     }
 
+    function handleGeoLocation(){
+        if ("geolocation" in navigator) {
+            console.log("Geolocation is available!")
+            navigator.geolocation.getCurrentPosition((position) => {
+              console.log(position)
+              setLocation(`GPS koordinate: ${position.coords.latitude},${position.coords.longitude}  ${location}`)
+            });
+          } else {
+            console.log("Geolocation is not available!")
+      
+          }
+    }
+
     function submitReportHandler(event) {
         if(event){
             event.preventDefault()
         }
-        if (!causeId) {
+        if (!causeId) {     //form validation - when cause not selected from dropdown menu
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
         }
         var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
-        //console.log(requestUrl)
         var headers = {};
         headers["Content-Type"] = 'application/json'
         var sendData = { "userEmail": props.email, "title": title, "description": description,
@@ -248,19 +258,6 @@ const Form = (props) => {
                 }
                 props.onLeaveForm()
             })
-    }
-
-    function handleGeoLocation(){
-        if ("geolocation" in navigator) {
-            console.log("Geolocation is available!")
-            navigator.geolocation.getCurrentPosition((position) => {
-              console.log(position)
-              setLocation(`GPS koordinate: ${position.coords.latitude},${position.coords.longitude}  ${location}`)
-            });
-          } else {
-            console.log("Geolocation is not available!")
-      
-          }
     }
 
     function sendReportHandler(){

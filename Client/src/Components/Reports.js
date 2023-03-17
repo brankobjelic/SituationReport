@@ -16,7 +16,7 @@ const Reports = (props) => {
         {results.slice(0).map(report => (
           <li className={classes.reportItem} key={report.id}>
             <p className={classes.liHeader}>{new Date(report.dateAndTime).toLocaleString('sr-RS')}<br />
-            <small>{report.institution} <br /> {report.causeDescription} <br />Lokacija: {report.location}</small> </p>      
+            <small>{report.institution} <br /> {report.causeDescription} <br />Lokacija: {report.location}</small> </p><hr />      
             <p><b>{report.title}</b></p>
             <ReadMore>
               {report.description}

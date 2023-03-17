@@ -7,12 +7,10 @@ export const usePaginationFetch = (
   ) => {
     const ctx = useContext(FetchContext)
 
-
     const [page, setPage] = useState(1)
     const [results, setResults] = useState([])
     const [totalPages, setTotalPages] = useState(1)
     const pageSize = 5
-
 
     //sets current page to first page if new report added so it's visible on screen
     useEffect(() => {
@@ -37,7 +35,6 @@ export const usePaginationFetch = (
             let paginationHeader = JSON.parse(response.headers.get('x-pagination'))
            setTotalPages(paginationHeader.TotalPages)
             if(response.status === 200){
-                //console.log(response)
                 response.json().then((data) => {
                   console.log(data)
                   setResults(data)
@@ -50,7 +47,6 @@ export const usePaginationFetch = (
         })
         .catch(error => console.log(error));
     }
-
 
     const nextPage = () => {setPage(prevState => Math.min(prevState + 1, totalPages))}
     const previousPage = () => {setPage(prevState => Math.max(0, prevState - 1))}
