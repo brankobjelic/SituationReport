@@ -9,13 +9,14 @@ import ImageModal from './ImageModal';
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 var fileDataUrl
 var imageId
-var imageLinksString
+
 
 const Form = (props) => {
     const ctx = useContext(FetchContext)
     var causesEndpoint = "api/causes";
     var reportsEndpoint = "api/Reports/"
     var updatingReportId = ""
+    var imageLinksString = ""
     var institutionByCauseIdEndpoint = "api/InstitutionByCauseId?id="
     var method = "POST"
 
@@ -38,7 +39,7 @@ const Form = (props) => {
         updatingReportId = props.report.id
         method = "PUT"
     }
-    
+
     useEffect(() =>{
         getDataForDropdown()
     }, [])
@@ -89,6 +90,7 @@ const Form = (props) => {
     useEffect(() => {
         if(reportForEmail){
             console.log(reportForEmail)
+            const desc = reportForEmail.description.replace(/\n/g, "%0D%0A")
             let requestUrl = ctx.protocol + ctx.host + ctx.port + institutionByCauseIdEndpoint +reportForEmail.causeId
             //fetching institution data
             fetch(requestUrl)
@@ -100,7 +102,7 @@ const Form = (props) => {
                             if(reportForEmail.pic1){
                                 const imageLinkElement1 = document.createElement("a");
                                 imageLinkElement1.href = `${ctx.protocol}${ctx.host}${ctx.port}api/reports/getimage?name=${reportForEmail.pic1}`
-                                imageLinksString = imageLinkElement1
+                                imageLinksString = "Fotografije uz prijavu:%0D%0A" + imageLinkElement1
                             }
                             if(reportForEmail.pic2){
                                 const imageLinkElement2 = document.createElement("a");
@@ -111,12 +113,15 @@ const Form = (props) => {
                                 const imageLinkElement3 = document.createElement("a");
                                 imageLinkElement3.href = `${ctx.protocol}${ctx.host}${ctx.port}api/reports/getimage?name=${reportForEmail.pic3}`
                                 imageLinksString = imageLinksString + "%0D%0A" + imageLinkElement3
-                            }                   
+                            }
+                            const coordinates = reportForEmail.location.substr(16,21)
+                            const googleMapsLinkElement = document.createElement("a");
+                            googleMapsLinkElement.href = `//google.com/maps/?q=${coordinates}`
+
 
                             var email = document.createElement("a");
-                            email.href = `mailto:${data.email}?subject=${reportForEmail.title}&body=Lokacija: ${reportForEmail.location}
-                                %0D%0A%0D%0A${reportForEmail.description}
-                                %0D%0A%0D%0AFotografije uz prijavu:%0D%0A${imageLinksString}`
+                            email.href = `mailto:${data.email}?subject=${reportForEmail.title}&body=Lokacija: ${reportForEmail.location} ${googleMapsLinkElement} %0D%0A%0D%0A${desc}
+                                %0D%0A%0D%0A${imageLinksString}`
                             email.click();
                             props.onLeaveForm()
                         });
@@ -239,6 +244,8 @@ const Form = (props) => {
         var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
         var headers = {};
         headers["Content-Type"] = 'application/json'
+        console.log(description)
+        //const desc = description.replace(/\n/g, "%0D%0A")
         var sendData = { "userEmail": props.email, "title": title, "description": description,
          "location": location, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
         console.log(sendData)
@@ -268,6 +275,7 @@ const Form = (props) => {
         var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
         var headers = {};
         headers["Content-Type"] = 'application/json'
+        //const desc = description.replace(/\n/g, "%0D%0A")
         var sendData = { "userEmail": props.email, "title": title, "description": description,
          "location": location, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
         console.log(sendData)
