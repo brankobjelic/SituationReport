@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { faLocationDot, faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
 import { useState, useEffect, useContext } from 'react';
 import FetchContext from '../Store/fetch-context';
@@ -9,20 +9,16 @@ import ImageModal from './ImageModal';
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 var fileDataUrl
 var imageId
-var imageLinksString
+
 
 const Form = (props) => {
     const ctx = useContext(FetchContext)
     var causesEndpoint = "api/causes";
     var reportsEndpoint = "api/Reports/"
     var updatingReportId = ""
+    var imageLinksString = ""
     var institutionByCauseIdEndpoint = "api/InstitutionByCauseId?id="
     var method = "POST"
-
-    if(props.report){
-        updatingReportId = props.report.id
-        method = "PUT"
-    }
 
     const [file, setFile] = useState(null);
     const [fileDataURLs, setFileDataURLs] = useState([])
@@ -39,9 +35,14 @@ const Form = (props) => {
     //const [isSubmitted, setIsSubmitted] = useState(false)
     const [reportForEmail, setReportForEmail] = useState(false)
 
-    useEffect(
-        getDataForDropdown
-    , [])
+    if(props.report){
+        updatingReportId = props.report.id
+        method = "PUT"
+    }
+
+    useEffect(() =>{
+        getDataForDropdown()
+    }, [])
 
     useEffect(() => {
         let fileReader, isCancel = false;
@@ -64,6 +65,7 @@ const Form = (props) => {
     
       }, [file]);
 
+    /* If the form is entered to edit existing report, the form fields are populated here */
     useEffect(() => {
         if(props.report){
             //console.log(props.report)
@@ -84,10 +86,11 @@ const Form = (props) => {
     }
     , [])
 
-    //Here a report gets prepared for sending to coresponding institution by email
+    /*Here a report gets prepared for sending to coresponding institution by email*/
     useEffect(() => {
         if(reportForEmail){
             console.log(reportForEmail)
+            const desc = reportForEmail.description.replace(/\n/g, "%0D%0A")
             let requestUrl = ctx.protocol + ctx.host + ctx.port + institutionByCauseIdEndpoint +reportForEmail.causeId
             //fetching institution data
             fetch(requestUrl)
@@ -99,7 +102,7 @@ const Form = (props) => {
                             if(reportForEmail.pic1){
                                 const imageLinkElement1 = document.createElement("a");
                                 imageLinkElement1.href = `${ctx.protocol}${ctx.host}${ctx.port}api/reports/getimage?name=${reportForEmail.pic1}`
-                                imageLinksString = imageLinkElement1
+                                imageLinksString = "Fotografije uz prijavu:%0D%0A" + imageLinkElement1
                             }
                             if(reportForEmail.pic2){
                                 const imageLinkElement2 = document.createElement("a");
@@ -110,12 +113,15 @@ const Form = (props) => {
                                 const imageLinkElement3 = document.createElement("a");
                                 imageLinkElement3.href = `${ctx.protocol}${ctx.host}${ctx.port}api/reports/getimage?name=${reportForEmail.pic3}`
                                 imageLinksString = imageLinksString + "%0D%0A" + imageLinkElement3
-                            }                   
+                            }
+                            const coordinates = reportForEmail.location.substr(16,21)
+                            const googleMapsLinkElement = document.createElement("a");
+                            googleMapsLinkElement.href = `//google.com/maps/?q=${coordinates}`
+
 
                             var email = document.createElement("a");
-                            email.href = `mailto:${data.email}?subject=${reportForEmail.title}&body=Lokacija: ${reportForEmail.location}
-                                %0D%0A%0D%0A${reportForEmail.description}
-                                %0D%0A%0D%0AFotografije uz prijavu:%0D%0A${imageLinksString}`
+                            email.href = `mailto:${data.email}?subject=${reportForEmail.title}&body=Lokacija: ${reportForEmail.location} ${googleMapsLinkElement} %0D%0A%0D%0A${desc}
+                                %0D%0A%0D%0A${imageLinksString}`
                             email.click();
                             props.onLeaveForm()
                         });
@@ -148,11 +154,8 @@ const Form = (props) => {
             .catch(error => console.log(error));
     }
 
-
     /*Fetching image from server*/
-
     function getImage(imageFileName){
-
         var imageEndpoint = "api/reports/getimage?name=" + imageFileName;
         var requestUrl = ctx.protocol + ctx.host + ctx.port + imageEndpoint;
         console.log(requestUrl)
@@ -217,18 +220,31 @@ const Form = (props) => {
         setShowImageModal(false)
     }
 
+    function handleGeoLocation(){
+        if ("geolocation" in navigator) {
+            console.log("Geolocation is available!")
+            navigator.geolocation.getCurrentPosition((position) => {
+              console.log(position)
+              setLocation(`GPS koordinate: ${position.coords.latitude},${position.coords.longitude}  ${location}`)
+            });
+          } else {
+            console.log("Geolocation is not available!")
+      
+          }
+    }
+
     function submitReportHandler(event) {
         if(event){
             event.preventDefault()
         }
-        if (!causeId) {
+        if (causeId === 'DEFAULT') {     //form validation - when cause not selected from dropdown menu
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
         }
         var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
-        //console.log(requestUrl)
         var headers = {};
         headers["Content-Type"] = 'application/json'
+        console.log(description)
         var sendData = { "userEmail": props.email, "title": title, "description": description,
          "location": location, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
         console.log(sendData)
@@ -250,27 +266,18 @@ const Form = (props) => {
             })
     }
 
-    function handleGeoLocation(){
-        if ("geolocation" in navigator) {
-            console.log("Geolocation is available!")
-            navigator.geolocation.getCurrentPosition((position) => {
-              console.log(position)
-              setLocation(`GPS koordinate: ${position.coords.latitude},${position.coords.longitude}  ${location}`)
-            });
-          } else {
-            console.log("Geolocation is not available!")
-      
-          }
-    }
-
-    function sendReportHandler(){
-        if (!causeId) {
+    function sendReportHandler(event){
+        if(event){
+            event.preventDefault()
+        }
+        if (causeId === 'DEFAULT') {
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
         }
         var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
         var headers = {};
         headers["Content-Type"] = 'application/json'
+        //const desc = description.replace(/\n/g, "%0D%0A")
         var sendData = { "userEmail": props.email, "title": title, "description": description,
          "location": location, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
         console.log(sendData)
@@ -321,9 +328,17 @@ const Form = (props) => {
     return (
         <div className={classes.modal}>
             <div className={classes.overlay}></div>
-            {!showImageModal && 
-                <form onSubmit={submitReportHandler} className={`${classes['modal-content']} ${classes['form-style-1']}`}>
-                    <a className={classes.boxclose} onClick={props.onLeaveForm}></a><br/><br/>
+            {!showImageModal &&
+            <>                    
+                <form onSubmit={(e) => {
+                                    const buttonName = e.nativeEvent.submitter.name //having two submit buttons
+                                    if (buttonName === "submitToServer") submitReportHandler(e)
+                                    if (buttonName === "sendEmail") sendReportHandler(e)
+                                }}
+                                 className={`${classes['modal-content']} ${classes['form-style-1']}`}
+                >
+                    <FontAwesomeIcon onClick={props.onLeaveForm} icon={faCircleXmark} className={classes.boxclose} size = '3x'/>
+                    <br />
                     <div>
                     <label htmlFor="cause">Razlog prijave</label>
                     <select id="cause" className={classes['field-select']} value={causeId} onChange={handleChange} required>
@@ -358,9 +373,10 @@ const Form = (props) => {
                             </span>
                         }
                     </div>
-                    <button className={classes.button}>Sačuvaj</button>
-                    <button type="button" className={classes.button} style={{ float: "right" }} onClick={sendReportHandler}>Pošalji prijavu</button>
+                    <button type="submit" name="submitToServer" className={classes.button}>Sačuvaj</button>
+                    <button type="submit" name="sendEmail" className={classes.button} style={{ float: "right" }}>Pošalji prijavu</button>
                 </form>
+            </>
             }
             {showImageModal && 
                 <ImageModal 
