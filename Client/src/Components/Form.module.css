@@ -201,12 +201,13 @@ textarea {
 	margin-left: 10px;
 }
 
-a.boxclose{
+.boxclose{
     float:right;
-    margin-top:-5px;
-    margin-right:0px;
-	margin-bottom: 00px;
-    cursor:pointer;
+    margin-top:-13px;
+    margin-right:-4px;
+	margin-bottom: 3px;
+	color:grey
+    /* cursor:pointer;
     color: #fff;
     border: 1px solid #AEAEAE;
     border-radius: 20px;
@@ -215,10 +216,7 @@ a.boxclose{
     font-weight: bold;
     display: block;
     line-height: 0px;
-    padding: 15px 3px;       
+    padding: 15px 3px;        */
 }
 
-.boxclose:before {
-    content: "×";
-}
 
