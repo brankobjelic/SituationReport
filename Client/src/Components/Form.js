@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { faLocationDot, faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
 import { useState, useEffect, useContext } from 'react';
 import FetchContext from '../Store/fetch-context';
@@ -237,7 +237,7 @@ const Form = (props) => {
         if(event){
             event.preventDefault()
         }
-        if (!causeId) {     //form validation - when cause not selected from dropdown menu
+        if (causeId === 'DEFAULT') {     //form validation - when cause not selected from dropdown menu
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
         }
@@ -245,7 +245,6 @@ const Form = (props) => {
         var headers = {};
         headers["Content-Type"] = 'application/json'
         console.log(description)
-        //const desc = description.replace(/\n/g, "%0D%0A")
         var sendData = { "userEmail": props.email, "title": title, "description": description,
          "location": location, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
         console.log(sendData)
@@ -267,8 +266,11 @@ const Form = (props) => {
             })
     }
 
-    function sendReportHandler(){
-        if (!causeId) {
+    function sendReportHandler(event){
+        if(event){
+            event.preventDefault()
+        }
+        if (causeId === 'DEFAULT') {
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
         }
@@ -326,9 +328,17 @@ const Form = (props) => {
     return (
         <div className={classes.modal}>
             <div className={classes.overlay}></div>
-            {!showImageModal && 
-                <form onSubmit={submitReportHandler} className={`${classes['modal-content']} ${classes['form-style-1']}`}>
-                    <a className={classes.boxclose} onClick={props.onLeaveForm}></a><br/><br/>
+            {!showImageModal &&
+            <>                    
+                <form onSubmit={(e) => {
+                                    const buttonName = e.nativeEvent.submitter.name //having two submit buttons
+                                    if (buttonName === "submitToServer") submitReportHandler(e)
+                                    if (buttonName === "sendEmail") sendReportHandler(e)
+                                }}
+                                 className={`${classes['modal-content']} ${classes['form-style-1']}`}
+                >
+                    <FontAwesomeIcon onClick={props.onLeaveForm} icon={faCircleXmark} className={classes.boxclose} size = '3x'/>
+                    <br />
                     <div>
                     <label htmlFor="cause">Razlog prijave</label>
                     <select id="cause" className={classes['field-select']} value={causeId} onChange={handleChange} required>
@@ -363,9 +373,10 @@ const Form = (props) => {
                             </span>
                         }
                     </div>
-                    <button className={classes.button}>Sačuvaj</button>
-                    <button type="button" className={classes.button} style={{ float: "right" }} onClick={sendReportHandler}>Pošalji prijavu</button>
+                    <button type="submit" name="submitToServer" className={classes.button}>Sačuvaj</button>
+                    <button type="submit" name="sendEmail" className={classes.button} style={{ float: "right" }}>Pošalji prijavu</button>
                 </form>
+            </>
             }
             {showImageModal && 
                 <ImageModal 
