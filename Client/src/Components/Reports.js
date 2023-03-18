@@ -8,7 +8,7 @@ import {usePaginationFetch} from '../Hooks/use-pagination'
 
 const Reports = (props) => {
 
-  const {results, page, totalPages, nextPage, previousPage, firstPage, lastPage} = usePaginationFetch(props.email, props.addedReport, props.deletedReport)
+  const {results, page, totalPages, nextPage, previousPage, firstPage, lastPage} = usePaginationFetch(props.email, props.addedReport, props.deletedReport, props.updatedReport)
 
   return (
     <>
@@ -27,7 +27,7 @@ const Reports = (props) => {
               </p>
               <span className={classes.alignRight}>
                 <span className={classes.penIcon}>
-                  <EditReportButton email={props.email} report={report} onUpdatedReport={props.onDel} onShowform={props.showFormHandler} showForm={props.showForm} onLeaveForm={props.onLeaveForm}/>
+                  <EditReportButton email={props.email} report={report} onUpdatedReport={props.onUpdate} onShowform={props.showFormHandler} showForm={props.showForm} onLeaveForm={props.onLeaveForm}/>
                 </span>  
                 <DeleteReportButton onDel={props.onDel} report={report} />
               </span>

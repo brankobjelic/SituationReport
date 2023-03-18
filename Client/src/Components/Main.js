@@ -2,17 +2,21 @@ import React from 'react'
 import Reports from './Reports';
 import Form from './Form';
 import classes from './Main.module.css'
-import { useState, useEffect, useContext } from 'react';
-import FetchContext from '../Store/fetch-context';
+import { useState, useEffect } from 'react';
 
 const Main = (props) => {
 
   const [showForm, setShowForm] = useState(false)
   const [addedReport, setAddedReport] = useState(false)
+  const [updatedReport, setUpdatedReport] = useState(false)
   const [deletedReport, setDeletedReport] = useState(false)
 
   function addedReportHandler(){
     setAddedReport(!addedReport)
+  }
+
+  function updatedReportHandler(){
+    setUpdatedReport(!updatedReport)
   }
 
   function deletedReportHandler(){
@@ -40,7 +44,7 @@ const Main = (props) => {
     <div>
       {!showForm && <button className={classes.button} onClick={showFormHandler}>Nova prijava</button>}
       {showForm && <Form onLeaveForm={() => {hideFormHandler()}} email={props.email} onAddedReport={() => {addedReportHandler()}}></Form>}
-      <Reports addedReport={addedReport} deletedReport={deletedReport} email={props.email} onDel={deletedReportHandler} onShowForm={showFormHandler} onLeaveForm={hideFormHandler}></Reports>
+      <Reports addedReport={addedReport} deletedReport={deletedReport} updatedReport={updatedReport} email={props.email} onDel={deletedReportHandler} onUpdate={updatedReportHandler} onShowForm={showFormHandler} onLeaveForm={hideFormHandler}></Reports>
     </div>
   )
 }

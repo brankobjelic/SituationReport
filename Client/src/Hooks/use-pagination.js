@@ -1,9 +1,9 @@
-import { useEffect, useMemo } from "react";
-import { useState, useContext, useRef } from "react";
+import { useEffect } from "react";
+import { useState, useContext } from "react";
 import FetchContext from '../Store/fetch-context';
 
 export const usePaginationFetch = (
-    email, addedReport, deletedReport
+    email, addedReport, deletedReport, updatedReport
   ) => {
     const ctx = useContext(FetchContext)
 
@@ -15,7 +15,7 @@ export const usePaginationFetch = (
     //sets current page to first page if new report added so it's visible on screen
     useEffect(() => {
         setPage(1)
-    },[addedReport])
+    },[addedReport, updatedReport])
 
     useEffect(() => {
         fetchReports()
@@ -24,7 +24,7 @@ export const usePaginationFetch = (
             left: 0,
             behavior: 'smooth',
           });
-    }, [page, deletedReport, addedReport])
+    }, [page, deletedReport, addedReport, updatedReport])
 
     function fetchReports(){
         var endpoint = `api/reports/paginatedbyuser?PageNumber=${page}&PageSize=${pageSize}&email=${email}`;
