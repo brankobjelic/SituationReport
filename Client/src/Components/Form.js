@@ -337,7 +337,7 @@ const Form = (props) => {
                                 }}
                                  className={`${classes['modal-content']} ${classes['form-style-1']}`}
                 >
-                    <FontAwesomeIcon onClick={props.onLeaveForm} icon={faCircleXmark} className={classes.boxclose} size = '3x'/>
+                    <FontAwesomeIcon onClick={props.onLeaveForm} icon={faCircleXmark} className={classes.boxclose} size = '2x'/>
                     <br />
                     <div>
                     <label htmlFor="cause">Razlog prijave</label>
