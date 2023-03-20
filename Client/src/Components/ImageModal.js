@@ -21,7 +21,6 @@ const ImageModal = (props) => {
   return (
     <div className={`${classes['modal-content']} ${classes['form-style-1']}`}>
         <FontAwesomeIcon onClick={props.unsetShowImageModal} icon={faCircleXmark} className={classes.boxclose} size = '2x'/>
-        {/* <a className={classes.boxclose} onClick={props.unsetShowImageModal}></a><br/><br/> */}
         <img src={props.fileDataUrl} className={classes.imageBig} alt="preview" onClick={props.unsetShowImageModal}/> 
         <div className={classes.break}></div>
         <div className={classes.centeringDiv}>

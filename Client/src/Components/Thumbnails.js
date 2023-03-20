@@ -92,15 +92,15 @@ const Thumbnails = (props) => {
                 </span>                           
             )}    */}
             {fileDataUrl1 && <span>
-                                <img src={fileDataUrl1} className={classes.img} id='image1' alt='' />
+                                <img src={fileDataUrl1} className={classes.img} id={props.pic1} alt='' onClick={props.expandImage} />
                             </span>
             }
             {fileDataUrl2 && <span>
-                                <img src={fileDataUrl2} className={classes.img} id='image2' alt='' />
+                                <img src={fileDataUrl2} className={classes.img} id={props.pic2} alt='' onClick={props.expandImage}/>
                             </span>  
             }
             {fileDataUrl3 && <span>
-                                <img src={fileDataUrl3} className={classes.img} id='image3' alt='' />
+                                <img src={fileDataUrl3} className={classes.img} id={props.pic3} alt='' onClick={props.expandImage}/>
                             </span>  
             }
         </>
