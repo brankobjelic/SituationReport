@@ -31,8 +31,6 @@ const Form = (props) => {
     const [location, setLocation] = useState('')
 
     const [showImageModal, setShowImageModal] = useState(false)
-
-    //const [isSubmitted, setIsSubmitted] = useState(false)
     const [reportForEmail, setReportForEmail] = useState(false)
 
     if(props.report){
@@ -48,13 +46,12 @@ const Form = (props) => {
         let fileReader, isCancel = false;
         if(file){
             fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
             fileReader.onload = (e) => {
                 const { result } = e.target;
-                if (result && !isCancel) {
-                    setFileDataURLs(fileDataURLs => [...fileDataURLs, result])
-                }
+                if (result && !isCancel)
+                     setFileDataURLs(fileDataURLs => [...fileDataURLs, result])
             }
-            fileReader.readAsDataURL(file);
         }
         return () => {
           isCancel = true;
@@ -68,7 +65,6 @@ const Form = (props) => {
     /* If the form is entered to edit existing report, the form fields are populated here */
     useEffect(() => {
         if(props.report){
-            //console.log(props.report)
             setCauseId(props.report.causeId)
             setTitle(props.report.title)
             setLocation(props.report.location)
@@ -117,11 +113,12 @@ const Form = (props) => {
                             const coordinates = reportForEmail.location.substr(16,21)
                             const googleMapsLinkElement = document.createElement("a");
                             googleMapsLinkElement.href = `//google.com/maps/?q=${coordinates}`
-
-
                             var email = document.createElement("a");
+
+                            //populating data for email in mailto link
                             email.href = `mailto:${data.email}?subject=${reportForEmail.title}&body=Lokacija: ${reportForEmail.location} ${googleMapsLinkElement} %0D%0A%0D%0A${desc}
                                 %0D%0A%0D%0A${imageLinksString}`
+
                             email.click();
                             props.onLeaveForm()
                         });
@@ -164,11 +161,20 @@ const Form = (props) => {
             if(response.status === 200){
                 response.blob().then((data) => {
                     var reader = new window.FileReader();
-                    reader.readAsDataURL(data);
+                    // reader.readAsDataURL(data);
+                    // reader.onloadend = function() {
+                    //     var base64data = reader.result;
+                    //     setFileDataURLs(fileDataURLs => [...fileDataURLs, base64data])
+                    // };
+                    reader.readAsArrayBuffer(data);
                     reader.onloadend = function() {
-                        var base64data = reader.result;
-                        setFileDataURLs(fileDataURLs => [...fileDataURLs, base64data])
-                    };
+                        var data = reader.result;
+                        var arrayBufferView = new Uint8Array( data );
+                        var blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
+                        var urlCreator = window.URL || window.webkitURL;
+                        var imageUrl = urlCreator.createObjectURL( blob );
+                        setFileDataURLs(fileDataURLs => [...fileDataURLs, imageUrl])
+                    }
                 });
             }else{
                 console.log("Error occured with code " + response.status);
@@ -197,6 +203,7 @@ const Form = (props) => {
 
     function handleAddFile(e) {
         const newFile = e.target.files[0];
+        console.log(newFile)
         if (!newFile.type.match(imageMimeType)) {
           alert("Image mime type is not valid");
           return;
@@ -277,7 +284,6 @@ const Form = (props) => {
         var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
         var headers = {};
         headers["Content-Type"] = 'application/json'
-        //const desc = description.replace(/\n/g, "%0D%0A")
         var sendData = { "userEmail": props.email, "title": title, "description": description,
          "location": location, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
         console.log(sendData)
@@ -290,16 +296,13 @@ const Form = (props) => {
                         requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + data.id
                         fetchReport(requestUrl)
                     })
-                    console.log("Successfuly added Report");
-                    
+                    console.log("Successfuly added Report");                   
                     props.onAddedReport()
-                    //setIsSubmitted(true)
                 } else if(response.status === 200){     //on updated report
                     console.log(response)
                     console.log("Successfuly updated Report");
                     fetchReport(response.url)
                     props.onUpdatedReport()
-                    //setIsSubmitted(true)
                 } else{
                     console.log("Error occured with code " + response.status);
                     console.log(response);
