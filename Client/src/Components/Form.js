@@ -161,20 +161,20 @@ const Form = (props) => {
             if(response.status === 200){
                 response.blob().then((data) => {
                     var reader = new window.FileReader();
-                    // reader.readAsDataURL(data);
-                    // reader.onloadend = function() {
-                    //     var base64data = reader.result;
-                    //     setFileDataURLs(fileDataURLs => [...fileDataURLs, base64data])
-                    // };
-                    reader.readAsArrayBuffer(data);
+                    reader.readAsDataURL(data);
                     reader.onloadend = function() {
-                        var data = reader.result;
-                        var arrayBufferView = new Uint8Array( data );
-                        var blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
-                        var urlCreator = window.URL || window.webkitURL;
-                        var imageUrl = urlCreator.createObjectURL( blob );
-                        setFileDataURLs(fileDataURLs => [...fileDataURLs, imageUrl])
-                    }
+                        var base64data = reader.result;
+                        setFileDataURLs(fileDataURLs => [...fileDataURLs, base64data])
+                    };
+                    // reader.readAsArrayBuffer(data);
+                    // reader.onloadend = function() {
+                    //     var data = reader.result;
+                    //     var arrayBufferView = new Uint8Array( data );
+                    //     var blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
+                    //     var urlCreator = window.URL || window.webkitURL;
+                    //     var imageUrl = urlCreator.createObjectURL( blob );
+                    //     setFileDataURLs(fileDataURLs => [...fileDataURLs, imageUrl])
+                    // }
                 });
             }else{
                 console.log("Error occured with code " + response.status);

@@ -153,9 +153,17 @@ textarea {
     font-weight: bold;
   }
 
-  .button:hover,
-.button:active {
-  background-color: #2c0d00;
+  /* .button:hover,
+  .button:active
+{
+  background-color: #61524d;
+} */
+
+button:disabled,
+button[disabled] {
+  background-color: #cccccc;
+	color: white;
+  pointer-events: none;
 }
 
 .hiddenFileInput > input	{
