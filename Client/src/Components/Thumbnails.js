@@ -42,7 +42,6 @@ const Thumbnails = (props) => {
 
 
     useEffect(() => {
-
         setFileDataUrl1()
         setFileDataUrl2()
         setFileDataUrl3()
@@ -106,7 +105,6 @@ const Thumbnails = (props) => {
                                 }
                             }else{
                                 setImageUrl(imgUrl)
-                                //setIndex(index)
                             }
                         };
                     });
