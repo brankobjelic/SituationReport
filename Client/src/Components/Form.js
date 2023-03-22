@@ -9,7 +9,8 @@ import ImageModal from './ImageModal';
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 var fileDataUrl
 var imageId
-
+const maxImages = 3
+var requestUrl
 
 const Form = (props) => {
     const ctx = useContext(FetchContext)
@@ -42,6 +43,7 @@ const Form = (props) => {
         getDataForDropdown()
     }, [])
 
+    /* When new file added to form, its fileDataURL is added to array */
     useEffect(() => {
         let fileReader, isCancel = false;
         if(file){
@@ -70,13 +72,13 @@ const Form = (props) => {
             setLocation(props.report.location)
             setDescription(props.report.description)
             if(props.report.pic1){
-                getImage(props.report.pic1)
+                getImage(props.report.pic1, 0)
             }
             if(props.report.pic2){
-                getImage(props.report.pic2)
+                getImage(props.report.pic2, 1)
                 }
             if(props.report.pic3){
-                getImage(props.report.pic3)
+                getImage(props.report.pic3, 2)
             }
         }
     }
@@ -152,7 +154,7 @@ const Form = (props) => {
     }
 
     /*Fetching image from server*/
-    function getImage(imageFileName){
+    function getImage(imageFileName, index){
         var imageEndpoint = "api/reports/getimage?name=" + imageFileName;
         var requestUrl = ctx.protocol + ctx.host + ctx.port + imageEndpoint;
         console.log(requestUrl)
@@ -164,7 +166,18 @@ const Form = (props) => {
                     reader.readAsDataURL(data);
                     reader.onloadend = function() {
                         var base64data = reader.result;
+                        //const updatedArray = fileDataURLs.map((val, idx) => idx === {index} ? base64data : val)
                         setFileDataURLs(fileDataURLs => [...fileDataURLs, base64data])
+                        //setFileDataURLs(base64data)
+                        // if (index === 1){
+                        //     setFileDataUrl1(base64data)
+                        // }
+                        // if (index === 2){
+                        //     setFileDataUrl2(base64data)
+                        // }
+                        // if (index === 3){
+                        //     setFileDataUrl3(base64data)
+                        // }
                     };
                     // reader.readAsArrayBuffer(data);
                     // reader.onloadend = function() {
@@ -294,14 +307,14 @@ const Form = (props) => {
                         console.log(data)
                         let reportsEndpoint = "api/Reports/"
                         requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + data.id
-                        fetchReport(requestUrl)
+                        fetchReport(requestUrl) //after succesfully submitting a report to db, fetching the report to email it 
                     })
                     console.log("Successfuly added Report");                   
                     props.onAddedReport()
                 } else if(response.status === 200){     //on updated report
                     console.log(response)
                     console.log("Successfuly updated Report");
-                    fetchReport(response.url)
+                    fetchReport(response.url)   //after succesfully updating a report to db, fetching the report to email it
                     props.onUpdatedReport()
                 } else{
                     console.log("Error occured with code " + response.status);
@@ -311,6 +324,7 @@ const Form = (props) => {
             })
     }
 
+    //fetching a report from db and and setting data to reportForEmail state
     function fetchReport(url){
         fetch(url)
         .then((response) => {
@@ -357,7 +371,8 @@ const Form = (props) => {
                     <input id="title" className={classes['field-long']} type="text" value={title} onChange={handleTitleChange} required /><br />
                     <label htmlFor='location' >Adresa ili opis lokacije</label>
                     <div className={classes.locationDiv}>
-                        <input id='location' className={classes['field-long']} type="text" value={location} onChange={handleLocationChange} required></input>
+                        <input id='location' className={classes['field-long']} type="text" onChange={handleLocationChange} required></input><br />
+                        <small>{location}</small>
                         <button type="button" onClick={handleGeoLocation}><FontAwesomeIcon icon={faLocationDot} size = 'lg' /></button>
                     </div>
                     <label htmlFor="description">Tekst prijave</label>
@@ -369,7 +384,7 @@ const Form = (props) => {
                                     onClick={e => {handleShowImageModal(e)}}/>
                             </span>                           
                         )}   
-                        {fileDataURLs.length <3 &&
+                        {fileDataURLs.length < maxImages &&
 
                         <span className={classes.hiddenFileInput}>
                             <input type="file" accept='image/*' id={`img${fileDataURLs.length+1}`} onChange={handleAddFile} />
