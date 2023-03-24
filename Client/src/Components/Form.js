@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLocationDot, faCircleXmark } from '@fortawesome/free-solid-svg-icons'
+import { faLocationDot, faCircleXmark, faSlash } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
 import { useState, useEffect, useContext } from 'react';
 import FetchContext from '../Store/fetch-context';
@@ -18,6 +18,7 @@ const Form = (props) => {
     var reportsEndpoint = "api/Reports/"
     var updatingReportId = ""
     var imageLinksString = ""
+    var locationTxt = ""
     var institutionByCauseIdEndpoint = "api/InstitutionByCauseId?id="
     var method = "POST"
 
@@ -30,6 +31,8 @@ const Form = (props) => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [location, setLocation] = useState('')
+    const [latitude, setLatitude] = useState()
+    const [longitude, setLongitude] = useState()
 
     const [showImageModal, setShowImageModal] = useState(false)
     const [reportForEmail, setReportForEmail] = useState(false)
@@ -70,6 +73,10 @@ const Form = (props) => {
             setCauseId(props.report.causeId)
             setTitle(props.report.title)
             setLocation(props.report.location)
+            if (props.report.latitude) 
+                setLatitude(props.report.latitude)           
+            if(props.report.longitude)
+                setLongitude(props.report.longitude)
             setDescription(props.report.description)
             if(props.report.pic1){
                 getImage(props.report.pic1, 0)
@@ -112,13 +119,15 @@ const Form = (props) => {
                                 imageLinkElement3.href = `${ctx.protocol}${ctx.host}${ctx.port}api/reports/getimage?name=${reportForEmail.pic3}`
                                 imageLinksString = imageLinksString + "%0D%0A" + imageLinkElement3
                             }
-                            const coordinates = reportForEmail.location.substr(16,21)
+                            if(reportForEmail.location){
+                                locationTxt = `Lokacija: ${reportForEmail.location}%0D%0A`
+                            }
                             const googleMapsLinkElement = document.createElement("a");
-                            googleMapsLinkElement.href = `//google.com/maps/?q=${coordinates}`
+                            googleMapsLinkElement.href = `//google.com/maps/?q=${reportForEmail.latitude},${reportForEmail.longitude}`
                             var email = document.createElement("a");
 
                             //populating data for email in mailto link
-                            email.href = `mailto:${data.email}?subject=${reportForEmail.title}&body=Lokacija: ${reportForEmail.location} ${googleMapsLinkElement} %0D%0A%0D%0A${desc}
+                            email.href = `mailto:${data.email}?subject=${reportForEmail.title}&body=${locationTxt}${googleMapsLinkElement} %0D%0A%0D%0A${desc}
                                 %0D%0A%0D%0A${imageLinksString}`
 
                             email.click();
@@ -240,17 +249,24 @@ const Form = (props) => {
         setShowImageModal(false)
     }
 
-    function handleGeoLocation(){
+    function handleAddGeoLocation(){
         if ("geolocation" in navigator) {
             console.log("Geolocation is available!")
             navigator.geolocation.getCurrentPosition((position) => {
               console.log(position)
-              setLocation(`GPS koordinate: ${position.coords.latitude},${position.coords.longitude}  ${location}`)
+              setLatitude(position.coords.latitude)
+              setLongitude(position.coords.longitude)
+              //setLocation(`GPS koordinate: ${position.coords.latitude},${position.coords.longitude}  ${location}`)
             });
           } else {
             console.log("Geolocation is not available!")
       
           }
+    }
+
+    function handleRemoveGeoLocation(){
+        setLatitude()
+        setLongitude()
     }
 
     function submitReportHandler(event) {
@@ -266,7 +282,7 @@ const Form = (props) => {
         headers["Content-Type"] = 'application/json'
         console.log(description)
         var sendData = { "userEmail": props.email, "title": title, "description": description,
-         "location": location, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
+         "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
         console.log(sendData)
         fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
             .then(response => {
@@ -298,7 +314,7 @@ const Form = (props) => {
         var headers = {};
         headers["Content-Type"] = 'application/json'
         var sendData = { "userEmail": props.email, "title": title, "description": description,
-         "location": location, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
+         "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
         console.log(sendData)
         fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
             .then(response => {
@@ -357,7 +373,7 @@ const Form = (props) => {
                     <FontAwesomeIcon onClick={props.onLeaveForm} icon={faCircleXmark} className={classes.boxclose} size = '2x'/>
                     <br />
                     <div>
-                    <label htmlFor="cause">Razlog prijave</label>
+                    <label htmlFor="cause">Razlog prijave*</label>
                     <select id="cause" className={classes['field-select']} value={causeId} onChange={handleChange} required>
                         <option value="DEFAULT" disabled>Izaberite razlog za prijavu...</option>
                         {causes.map((cause, index) => {
@@ -368,14 +384,25 @@ const Form = (props) => {
                     </select>
                     </div>
                     <label htmlFor="title" >Naslov</label>
-                    <input id="title" className={classes['field-long']} type="text" value={title} onChange={handleTitleChange} required /><br />
+                    <input id="title" className={classes['field-long']} type="text" value={title} onChange={handleTitleChange} /><br />
                     <label htmlFor='location' >Adresa ili opis lokacije</label>
                     <div className={classes.locationDiv}>
-                        <input id='location' className={classes['field-long']} type="text" onChange={handleLocationChange} required></input><br />
-                        <small>{location}</small>
-                        <button type="button" onClick={handleGeoLocation}><FontAwesomeIcon icon={faLocationDot} size = 'lg' /></button>
+                        <input id='location' className={classes['field-long']} type="text" value={location} onChange={handleLocationChange}></input>
+                        {!latitude && <button type="button" onClick={handleAddGeoLocation}>
+                                        <span className="fa-layers fa-fw">
+                                            <FontAwesomeIcon icon={faLocationDot} size = 'lg' />
+                                            <FontAwesomeIcon style={{opacity: "0"}} icon={faSlash} size='lg' transform="left-2" />
+                                        </span>
+                                    </button>}
+                        {latitude && <button type="button" onClick={handleRemoveGeoLocation}>
+                                        <span className="fa-layers fa-fw">
+                                            <FontAwesomeIcon icon={faLocationDot} size='lg' />
+                                            <FontAwesomeIcon icon={faSlash} size='lg' transform="left-2" />
+                                        </span>
+                                    </button>}
                     </div>
-                    <label htmlFor="description">Tekst prijave</label>
+                    {latitude &&<small className={classes.gpsCoordinates}>GPS koordinate: {latitude},{longitude}</small>}
+                    <label htmlFor="description">Tekst prijave*</label>
                     <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} value={description} onChange={handleDescriptionChange} required />
                     <div className={classes.imgUploads}>
                         {fileDataURLs.map((fileDataURL, index) => 
