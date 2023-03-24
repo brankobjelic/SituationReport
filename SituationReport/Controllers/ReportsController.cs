@@ -91,6 +91,8 @@ namespace SituationReport.Controllers
                 UserId = user.Id,
                 Title = reportDTO.Title,
                 Location = reportDTO.Location,
+                Latitude = reportDTO.Latitude,
+                Longitude = reportDTO.Longitude,
                 Description = reportDTO.Description,
             };
             if (reportDTO.Pic1 != null)
@@ -166,6 +168,8 @@ namespace SituationReport.Controllers
                 CauseId = reportDTO.causeId,
                 Title = reportDTO.Title,
                 Location = reportDTO.Location,
+                Latitude = reportDTO.Latitude,
+                Longitude = reportDTO.Longitude,
                 Description = reportDTO.Description,
                 Pic1= reportDTO.Pic1,
                 Pic2= reportDTO.Pic2,
