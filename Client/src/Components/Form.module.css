@@ -142,7 +142,7 @@ textarea {
     cursor: pointer;
     font: inherit;
     border: none;
-    background-color: #4d1601;
+    background-color: #1f464d;
     color: white;
     padding: 0.5rem 2rem;
     margin: 0.5rem;
@@ -153,11 +153,11 @@ textarea {
     font-weight: bold;
   }
 
-  /* .button:hover,
+ .button:hover,
   .button:active
 {
-  background-color: #61524d;
-} */
+  background-color: #071f2f;
+}  
 
 button:disabled,
 button[disabled] {
@@ -207,6 +207,10 @@ button[disabled] {
 .locationDiv button {
 	float: right;
 	margin-left: 10px;
+}
+
+.gpsCoordinates {
+	float: right;
 }
 
 .boxclose{
