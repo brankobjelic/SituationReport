@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Data;
 using Microsoft.VisualBasic;
 using static SituationReport.Models.PaginationParameters;
+using System.Globalization;
 
 namespace SituationReport.Repository
 {
@@ -19,8 +20,8 @@ namespace SituationReport.Repository
         }
         public int Create(Report report)
         {
-            string query = "INSERT INTO Reports(CauseId, UserId, DateAndTime, Location, Title, Description, Pic1, Pic2, Pic3) " +
-                "values (@CauseId, @UserId, CURRENT_TIMESTAMP, @Location, @Title, @Description, @Pic1, @Pic2, @Pic3) " +
+            string query = "INSERT INTO Reports(CauseId, UserId, DateAndTime, Location, Latitude, Longitude, Title, Description, Pic1, Pic2, Pic3) " +
+                "values (@CauseId, @UserId, CURRENT_TIMESTAMP, @Location, @Latitude, @Longitude, @Title, @Description, @Pic1, @Pic2, @Pic3) " +
                 "SELECT SCOPE_IDENTITY();";
 
             string connectionString = Configuration.GetConnectionString("AppConnectionString");
@@ -34,6 +35,8 @@ namespace SituationReport.Repository
             command.Parameters.AddWithValue("@CauseId", report.CauseId);
             command.Parameters.AddWithValue("@UserId", report.UserId);
             command.Parameters.AddWithValue("@Location", report.Location);
+            command.Parameters.AddWithValue("@Latitude", report.Latitude ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Longitude", report.Longitude ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@Title", report.Title);
             command.Parameters.AddWithValue("@Description", report.Description);
             command.Parameters.AddWithValue("@Pic1", string.IsNullOrEmpty(report.Pic1) ? (object)DBNull.Value : report.Pic1);
@@ -97,6 +100,12 @@ namespace SituationReport.Repository
                 r.Id = int.Parse(dr["Id"].ToString());
                 r.CauseId = int.Parse(dr["CauseId"].ToString());
                 r.Location = dr["Location"].ToString();
+                decimal lat;
+                Decimal.TryParse(dr["Latitude"].ToString(), out lat);
+                r.Latitude = lat;
+                decimal lon;
+                Decimal.TryParse(dr["Longitude"].ToString(), out lon);
+                r.Longitude = lon;
                 r.UserId = int.Parse(dr["UserId"].ToString());
                 r.Title = dr["Title"].ToString();
                 r.Description = dr["Description"].ToString();
@@ -116,7 +125,7 @@ namespace SituationReport.Repository
         public List<UserReportsDTO> GetAllByUserEmail(string email)
         {
             string query = "select Reports.Id As Id, Institutions.name as Institution, CauseId, Causes.Description " +
-                "as CauseDescription, DateAndTime, Location, Title, Reports.Description as Description, Pic1, Pic2, Pic3 " +
+                "as CauseDescription, DateAndTime, Location, Latitude, Longitude, Title, Reports.Description as Description, Pic1, Pic2, Pic3 " +
                 "from reports left join causes on causeid = causes.id left join institutions " +
                 "on causes.InstitutionId = institutions.id left join users on userid = users.id " +
                 "where users.email = @email ORDER BY DateAndTime DESC;";
@@ -156,6 +165,12 @@ namespace SituationReport.Repository
                 ur.CauseId = Int32.Parse(dr["CauseId"].ToString());
                 ur.CauseDescription = dr["CauseDescription"].ToString();
                 ur.Location = dr["Location"].ToString();
+                decimal lat;
+                Decimal.TryParse(dr["Latitude"].ToString(), out lat);
+                ur.Latitude = lat;
+                decimal lon;
+                Decimal.TryParse(dr["Longitude"].ToString(), out lon);
+                ur.Longitude = lon;
                 ur.Title = dr["Title"].ToString();
                 ur.Description = dr["Description"].ToString();
                 ur.Pic1 = dr["Pic1"].ToString();
@@ -169,7 +184,7 @@ namespace SituationReport.Repository
         public void Update(Report report)
         {
             string query = "Update Reports set CauseId=@CauseId, DateAndTime=CURRENT_TIMESTAMP, Title=@Title, " +
-                "Location=@Location, Description=@Description, Pic1=@Pic1, Pic2=@Pic2, Pic3=@Pic3 where Id=@Id;";
+                "Location=@Location, Latitude=@Latitude, Longitude=@Longitude, Description=@Description, Pic1=@Pic1, Pic2=@Pic2, Pic3=@Pic3 where Id=@Id;";
 
             string connectionString = Configuration.GetConnectionString("AppConnectionString");
 
@@ -182,6 +197,8 @@ namespace SituationReport.Repository
             command.Parameters.AddWithValue("@CauseId", report.CauseId);
             command.Parameters.AddWithValue("@Title", report.Title);
             command.Parameters.AddWithValue("@Location", report.Location);
+            command.Parameters.AddWithValue("@Latitude", report.Latitude ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Longitude", report.Longitude ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@Description", report.Description);
             command.Parameters.AddWithValue("@Id", report.Id);
             command.Parameters.AddWithValue("@Pic1", string.IsNullOrEmpty(report.Pic1) ? (object)DBNull.Value : report.Pic1);
@@ -197,7 +214,7 @@ namespace SituationReport.Repository
         {
             int offset = (paginationParameters.PageNumber - 1) * paginationParameters.PageSize;
             string query = "select Reports.Id As Id, Institutions.name as Institution, CauseId, Causes.Description " +
-                "as CauseDescription, DateAndTime, Location, Title, Reports.Description as Description, Pic1, Pic2, Pic3, " +
+                "as CauseDescription, DateAndTime, Location, Latitude, Longitude, Title, Reports.Description as Description, Pic1, Pic2, Pic3, " +
                 "count(*) OVER() AS full_count " +
                 "from reports left join causes on causeid = causes.id left join institutions " +
                 "on causes.InstitutionId = institutions.id left join users on userid = users.id " +
@@ -242,6 +259,12 @@ namespace SituationReport.Repository
                 ur.CauseId = Int32.Parse(dr["CauseId"].ToString());
                 ur.CauseDescription = dr["CauseDescription"].ToString();
                 ur.Location = dr["Location"].ToString();
+                decimal lat;
+                Decimal.TryParse(dr["Latitude"].ToString(), out lat);
+                ur.Latitude = lat;
+                decimal lon;
+                Decimal.TryParse(dr["Longitude"].ToString(), out lon);
+                ur.Longitude = lon;
                 ur.Title = dr["Title"].ToString();
                 ur.Description = dr["Description"].ToString();
                 ur.Pic1 = dr["Pic1"].ToString();
@@ -249,7 +272,11 @@ namespace SituationReport.Repository
                 ur.Pic3 = dr["Pic3"].ToString();
                 reports.Add(ur);
             }
-            int totalCount = Int32.Parse(dt.Rows[0]["full_count"].ToString());
+            int totalCount = 0;
+            if (dt.Rows.Count > 0)
+            {
+                totalCount = Int32.Parse(dt.Rows[0]["full_count"].ToString());
+            }
 
             return PagedList<UserReportsDTO>.ToPagedList(reports, paginationParameters.PageNumber, paginationParameters.PageSize, totalCount);
         }

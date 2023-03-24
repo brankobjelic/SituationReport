@@ -142,7 +142,7 @@ textarea {
     cursor: pointer;
     font: inherit;
     border: none;
-    background-color: #4d1601;
+    background-color: #1f464d;
     color: white;
     padding: 0.5rem 2rem;
     margin: 0.5rem;
@@ -153,9 +153,17 @@ textarea {
     font-weight: bold;
   }
 
-  .button:hover,
-.button:active {
-  background-color: #2c0d00;
+ .button:hover,
+  .button:active
+{
+  background-color: #071f2f;
+}  
+
+button:disabled,
+button[disabled] {
+  background-color: #cccccc;
+	color: white;
+  pointer-events: none;
 }
 
 .hiddenFileInput > input	{
@@ -199,6 +207,10 @@ textarea {
 .locationDiv button {
 	float: right;
 	margin-left: 10px;
+}
+
+.gpsCoordinates {
+	float: right;
 }
 
 .boxclose{

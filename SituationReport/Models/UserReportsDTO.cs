@@ -8,6 +8,8 @@
         public int CauseId { get; set; }
         public string? CauseDescription { get; set; }
         public string? Location { get; set; }
+        public Decimal? Latitude { get; set; }
+        public Decimal? Longitude { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
         public string? Pic1 { get; set; }
