@@ -2,6 +2,8 @@
   overflow: hidden;
   background-color: #f1f1f1;
   padding: 20px 10px;
+  position:relative;
+  border-radius: 14px;
 }
 .header h1 {
   float: left;
@@ -46,4 +48,12 @@
   border-radius: 50%;
   padding: 5px;
   width: 40px; 
+}
+
+.menuItem {
+  position: absolute;
+  bottom:0;
+  right: 0;
+  cursor: pointer;
+  margin: 0.5rem
 }

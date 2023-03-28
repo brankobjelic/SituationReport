@@ -29,7 +29,7 @@ const Header = (props) => {
             </div>
             </>
         }
-        {!showContactForm && <b onClick={showContactFormHandler}>Kontaktirajte nas</b>}
+        <b className={classes.menuItem} onClick={showContactFormHandler}>Kontaktirajte nas</b>
         {showContactForm && <ContactForm onLeaveContactForm={leaveContactFormHandler} />}
     </header>
   )
