@@ -272,7 +272,7 @@ namespace SituationReport.Repository
                 ur.Pic3 = dr["Pic3"].ToString();
                 reports.Add(ur);
             }
-            int totalCount = 0;
+            int totalCount = 1;
             if (dt.Rows.Count > 0)
             {
                 totalCount = Int32.Parse(dt.Rows[0]["full_count"].ToString());

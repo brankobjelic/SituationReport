@@ -388,13 +388,13 @@ const Form = (props) => {
                     <label htmlFor='location' >Adresa ili opis lokacije</label>
                     <div className={classes.locationDiv}>
                         <input id='location' className={classes['field-long']} type="text" value={location} onChange={handleLocationChange}></input>
-                        {!latitude && <button type="button" onClick={handleAddGeoLocation}>
+                        {!latitude && <button type="button" className={classes.locationButton} onClick={handleAddGeoLocation}>
                                         <span className="fa-layers fa-fw">
                                             <FontAwesomeIcon icon={faLocationDot} size = 'lg' />
                                             <FontAwesomeIcon style={{opacity: "0"}} icon={faSlash} size='lg' transform="left-2" />
                                         </span>
                                     </button>}
-                        {latitude && <button type="button" onClick={handleRemoveGeoLocation}>
+                        {latitude && <button type="button" className={classes.locationButton} onClick={handleRemoveGeoLocation}>
                                         <span className="fa-layers fa-fw">
                                             <FontAwesomeIcon icon={faLocationDot} size='lg' />
                                             <FontAwesomeIcon icon={faSlash} size='lg' transform="left-2" />

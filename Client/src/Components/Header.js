@@ -1,7 +1,20 @@
 import React from 'react'
+import { useState } from 'react';
 import classes from './Header.module.css';
+import ContactForm from './ContactForm';
 
 const Header = (props) => {
+
+  const [showContactForm, setShowContactForm] = useState(false)
+
+  function showContactFormHandler(){
+    setShowContactForm(true)
+  }
+
+  function leaveContactFormHandler(){
+    setShowContactForm(false)
+  }
+
   return (
     <header className={classes.header}>
       <h1>Prijavi problem</h1>
@@ -16,6 +29,8 @@ const Header = (props) => {
             </div>
             </>
         }
+        <b className={classes.menuItem} onClick={showContactFormHandler}>Kontaktirajte nas</b>
+        {showContactForm && <ContactForm onLeaveContactForm={leaveContactFormHandler} />}
     </header>
   )
 }

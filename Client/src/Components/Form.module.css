@@ -138,8 +138,7 @@ textarea {
 }
 
 .button {
- 
-    cursor: pointer;
+    
     font: inherit;
     border: none;
     background-color: #1f464d;
@@ -156,6 +155,7 @@ textarea {
  .button:hover,
   .button:active
 {
+	cursor: pointer;
   background-color: #071f2f;
 }  
 
@@ -218,8 +218,8 @@ button[disabled] {
     margin-top:-13px;
     margin-right:-4px;
 	margin-bottom: 3px;
-	color:grey
-    /* cursor:pointer;
+	color:grey;
+    /*cursor: pointer;
     color: #fff;
     border: 1px solid #AEAEAE;
     border-radius: 20px;
@@ -229,6 +229,14 @@ button[disabled] {
     display: block;
     line-height: 0px;
     padding: 15px 3px;        */
+}
+.boxclose:hover {
+	cursor: pointer;
+	color: #424141;
+}
+
+.locationButton {
+	cursor: pointer;
 }
 
 
