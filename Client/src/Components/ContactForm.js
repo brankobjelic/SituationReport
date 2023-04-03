@@ -1,10 +1,15 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import classes from './Form.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
+import FetchContext from '../Store/fetch-context';
 
 const ContactForm = (props) => {
+
+    const ctx = useContext(FetchContext)
+    const method = "POST"
+    var contactFormEndpoint = "api/contactForm"
 
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -22,8 +27,26 @@ const ContactForm = (props) => {
         setBody(e.target.value)
     }
 
-    function submitContactFormHandler(e){
-        
+    function submitContactFormHandler(event){
+        event.preventDefault()
+        var requestUrl = ctx.protocol + ctx.host + ctx.port + contactFormEndpoint;
+        var headers = {};
+        headers["Content-Type"] = 'application/json'
+        var sendData = { "name": name, "emailAddress": email, "messageContent": body }
+        console.log(sendData)
+        fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
+            .then(response => {
+                if (response.status === 200) {
+                    console.log(response)
+                    console.log("Successfuly sent contact form");
+                    alert("Vaša poruka je uspešno poslata. Odgovorićemo Vam u najkraćem mogućem roku.")
+                } else{
+                    console.log("Error occured with code " + response.status);
+                    console.log(response);
+                    alert("Desila se greska!");
+                }
+                props.onLeaveContactForm()
+            })
     }
 
   return (

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SituationReport.Interfaces;
 using SituationReport.Models;
+using SituationReport.Services;
 using SituationReport.Repository;
 using System.Text.Json;
 
@@ -14,11 +15,13 @@ namespace SituationReport.Controllers
         private readonly IReportRepository _reportRepository;
         private readonly IUserRepository _userRepository;
         private readonly IFileRepository _fileRepository;
-        public ReportsController(IReportRepository reportRepository, IUserRepository userRepository, IFileRepository fileRepository)
+        private readonly IEmailService _emailService;
+        public ReportsController(IReportRepository reportRepository, IUserRepository userRepository, IFileRepository fileRepository, IEmailService emailService)
         {
             _reportRepository = reportRepository;
             _userRepository = userRepository;
             _fileRepository = fileRepository;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -228,6 +231,17 @@ namespace SituationReport.Controllers
             }
             _reportRepository.Delete(id);
             return Ok();    //or return NoContent();
+        }
+
+        [HttpPost]
+        [Route("~/api/contactForm")]
+        public IActionResult SendEmail(ContactForm contactForm)
+        {
+            if (contactForm != null)
+            {
+                _emailService.Send(contactForm.Name, contactForm.EmailAddress, contactForm.MessageContent);
+            }
+            return Ok();
         }
     }
 }
