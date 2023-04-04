@@ -21,6 +21,7 @@ namespace SituationReport.Services
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(Configuration["MailSettings:From"]));
             email.To.Add(MailboxAddress.Parse(Configuration["MailSettings:From"]));
+            email.ReplyTo.Add(MailboxAddress.Parse(senderEmailAddress));
             email.Subject = Configuration["MailSettings:DisplayName"];
             email.Body = new TextPart(TextFormat.Html) 
                 { Text = $"<p>Pošiljalac: {name} (<a href='mailto:{senderEmailAddress}'>{senderEmailAddress}</a>)</p><p>{body}</p>" };
