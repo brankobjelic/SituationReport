@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useContext } from 'react'
+import ReCAPTCHA from 'react-google-recaptcha'
 import classes from './Form.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
@@ -59,11 +60,12 @@ const ContactForm = (props) => {
                     <FontAwesomeIcon onClick={props.onLeaveContactForm} icon={faCircleXmark} className={classes.boxclose} size = '2x'/>
                     <br />
                     <label htmlFor="name" >Ime*</label>
-                    <input id="name" className={classes['field-long']} type="text" onChange={handleNameChange} required /><br />
+                    <input id="name" className={classes['field-long']} type="text" onChange={handleNameChange} maxLength={200} size={200} required /><br />
                     <label htmlFor='email' >Email adresa*</label>
-                    <input id="email" className={classes['field-long']} type="email" onChange={handleEmailChange} required /><br />                    
+                    <input id="email" className={classes['field-long']} type="email" onChange={handleEmailChange} maxLength={200} size={200} required /><br />                    
                     <label htmlFor="body">Ostavite nam poruku*</label>
                     <textarea id="body" className={`${classes['field-long']} ${classes['field-textarea']}`} onChange={handleBodyChange} required />
+                    <ReCAPTCHA sitekey={process.env.REACT_APP_SITE_KEY}/>
                     <button type="submit" name="submitContactForm" className={classes.button} style={{ float: "right" }}>Pošalji poruku</button>
                 </form>
             </>
