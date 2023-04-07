@@ -239,6 +239,10 @@ namespace SituationReport.Controllers
         {
             if (contactForm != null)
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 _emailService.Send(contactForm.Name, contactForm.EmailAddress, contactForm.MessageContent);
             }
             return Ok();

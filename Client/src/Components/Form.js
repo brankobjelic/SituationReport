@@ -384,7 +384,7 @@ const Form = (props) => {
                     </select>
                     </div>
                     <label htmlFor="title" >Naslov</label>
-                    <input id="title" className={classes['field-long']} type="text" value={title} onChange={handleTitleChange} /><br />
+                    <input id="title" className={classes['field-long']} type="text" maxLength={200} size={200} value={title} onChange={handleTitleChange} /><br />
                     <label htmlFor='location' >Adresa ili opis lokacije</label>
                     <div className={classes.locationDiv}>
                         <input id='location' className={classes['field-long']} type="text" value={location} onChange={handleLocationChange}></input>
