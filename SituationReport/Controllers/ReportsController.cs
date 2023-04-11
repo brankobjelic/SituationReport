@@ -243,7 +243,11 @@ namespace SituationReport.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                _emailService.Send(contactForm.Name, contactForm.EmailAddress, contactForm.MessageContent);
+                if (contactForm.ReCaptchaToken != null)
+                {
+                    _emailService.Send(contactForm.Name, contactForm.EmailAddress, contactForm.MessageContent);
+
+                }
             }
             return Ok();
         }
