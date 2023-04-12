@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useContext } from 'react'
+import { useState, useContext, useRef } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import classes from './Form.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -16,6 +16,8 @@ const ContactForm = (props) => {
     const [email, setEmail] = useState('')
     const [body, setBody] = useState('')
 
+    const captchaRef = useRef(null)
+
     function handleNameChange(e){
         setName(e.target.value)
     }
@@ -30,10 +32,11 @@ const ContactForm = (props) => {
 
     function submitContactFormHandler(event){
         event.preventDefault()
+        const token = captchaRef.current.getValue()
         var requestUrl = ctx.protocol + ctx.host + ctx.port + contactFormEndpoint;
         var headers = {};
         headers["Content-Type"] = 'application/json'
-        var sendData = { "name": name, "emailAddress": email, "messageContent": body }
+        var sendData = { "name": name, "emailAddress": email, "messageContent": body, "reCaptchaToken": token }
         console.log(sendData)
         fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
             .then(response => {
@@ -41,10 +44,12 @@ const ContactForm = (props) => {
                     console.log(response)
                     console.log("Successfuly sent contact form");
                     alert("Vaša poruka je uspešno poslata. Odgovorićemo Vam u najkraćem mogućem roku.")
+                    captchaRef.current.reset()
                 } else{
                     console.log("Error occured with code " + response.status);
                     console.log(response);
                     alert("Desila se greska!");
+                    captchaRef.current.reset()
                 }
                 props.onLeaveContactForm()
             })
@@ -65,7 +70,7 @@ const ContactForm = (props) => {
                     <input id="email" className={classes['field-long']} type="email" onChange={handleEmailChange} maxLength={200} size={200} required /><br />                    
                     <label htmlFor="body">Ostavite nam poruku*</label>
                     <textarea id="body" className={`${classes['field-long']} ${classes['field-textarea']}`} onChange={handleBodyChange} required />
-                    <ReCAPTCHA sitekey={process.env.REACT_APP_SITE_KEY}/>
+                    <ReCAPTCHA sitekey={process.env.REACT_APP_SITE_KEY} ref={captchaRef} />
                     <button type="submit" name="submitContactForm" className={classes.button} style={{ float: "right" }}>Pošalji poruku</button>
                 </form>
             </>

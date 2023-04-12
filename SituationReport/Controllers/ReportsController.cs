@@ -16,12 +16,14 @@ namespace SituationReport.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IFileRepository _fileRepository;
         private readonly IEmailService _emailService;
-        public ReportsController(IReportRepository reportRepository, IUserRepository userRepository, IFileRepository fileRepository, IEmailService emailService)
+        private readonly IReCaptchaService _reCaptchaService;
+        public ReportsController(IReportRepository reportRepository, IUserRepository userRepository, IFileRepository fileRepository, IEmailService emailService, IReCaptchaService reCaptchaService)
         {
             _reportRepository = reportRepository;
             _userRepository = userRepository;
             _fileRepository = fileRepository;
             _emailService = emailService;
+            _reCaptchaService = reCaptchaService;
         }
 
         [HttpGet]
@@ -243,9 +245,29 @@ namespace SituationReport.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                _emailService.Send(contactForm.Name, contactForm.EmailAddress, contactForm.MessageContent);
+                if (contactForm.ReCaptchaToken != null)
+                {
+                    var isValid = _reCaptchaService.CheckToken(contactForm.ReCaptchaToken).Result;
+                    if (isValid)
+                    {
+                        _emailService.Send(contactForm.Name, contactForm.EmailAddress, contactForm.MessageContent);
+                        return Ok();
+                    }
+                    else
+                    {
+                        return BadRequest("Token not found.");
+                    }
+
+                }
+                else
+                {
+                    return BadRequest("reCaptcha token not received from contact form.");
+                }
             }
-            return Ok();
+            else
+            {
+                return BadRequest("Contact form not received.");
+            }
         }
     }
 }
