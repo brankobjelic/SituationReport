@@ -23,9 +23,14 @@ const Main = (props) => {
     setDeletedReport(!deletedReport)
   }
 
+  const preventIOSScroll = (e) => {
+    e.preventDefault();
+  }
+
   useEffect(() => {
     if (showForm){
       document.body.style.overflow = "hidden";
+      document.body.addEventListener('touchmove', preventIOSScroll);
     }else{
       document.body.style.overflow = "scroll";
     }
