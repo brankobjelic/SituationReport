@@ -13,7 +13,7 @@
 }
 .modal-content {
     position: absolute;
-    top: 50%;
+    top: 42%;
     left: 50%;
     transform: translate(-50%, -50%);
     line-height: 1.4;
@@ -27,7 +27,7 @@
 	min-width: 300px;
 	max-width: 600px;
 
-	max-height: 90vh;
+	max-height: 80vh;
 }
 .imageBig {
 	display: flex;
@@ -214,21 +214,14 @@ button[disabled] {
 }
 
 .boxclose{
+	position: sticky;
+	top: -13px;
+
     float:right;
     margin-top:-13px;
     margin-right:-4px;
 	margin-bottom: 3px;
 	color:grey;
-    /*cursor: pointer;
-    color: #fff;
-    border: 1px solid #AEAEAE;
-    border-radius: 20px;
-    background: #605F61;
-    font-size: 28px;
-    font-weight: bold;
-    display: block;
-    line-height: 0px;
-    padding: 15px 3px;        */
 }
 .boxclose:hover {
 	cursor: pointer;
