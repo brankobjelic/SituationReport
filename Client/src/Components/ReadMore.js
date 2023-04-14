@@ -15,7 +15,7 @@ const ReadMore = ( {children} ) => {
   return (
     <p>
         {fullText ? children : children.substr(0,200)}
-        {children.length < 200 ? '' : <button className={classes.btn} onClick={toggleButton}>{fullText ? '⯇⯇' : '...⯈⯈'}</button>}
+        {children.length < 200 ? '' : <button className={classes.btn} onClick={toggleButton}>{fullText ? '<<' : '...>>'}</button>}
     </p>
   )
 }

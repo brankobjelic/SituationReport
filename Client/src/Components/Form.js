@@ -5,6 +5,7 @@ import { useState, useEffect, useContext } from 'react';
 import FetchContext from '../Store/fetch-context';
 import classes from './Form.module.css'
 import ImageModal from './ImageModal';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 var fileDataUrl
@@ -254,8 +255,8 @@ const Form = (props) => {
             console.log("Geolocation is available!")
             navigator.geolocation.getCurrentPosition((position) => {
               console.log(position)
-              setLatitude(position.coords.latitude)
-              setLongitude(position.coords.longitude)
+              setLatitude(position.coords.latitude.toFixed(9))
+              setLongitude(position.coords.longitude.toFixed(9))
               //setLocation(`GPS koordinate: ${position.coords.latitude},${position.coords.longitude}  ${location}`)
             });
           } else {
@@ -418,6 +419,7 @@ const Form = (props) => {
                             </span>
                         }
                     </div>
+                    <ReCAPTCHA sitekey={process.env.REACT_APP_SITE_KEY}  />
                     <button type="submit" name="submitToServer" className={classes.button}>Sačuvaj</button>
                     <button type="submit" name="sendEmail" className={classes.button} style={{ float: "right" }}>Pošalji prijavu</button>
                 </form>

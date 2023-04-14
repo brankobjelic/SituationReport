@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import classes from './Header.module.css';
 import ContactForm from './ContactForm';
 
@@ -14,6 +14,20 @@ const Header = (props) => {
   function leaveContactFormHandler(){
     setShowContactForm(false)
   }
+
+  //prevents scrolling of background behind modal on IOS devices
+  const preventIOSScroll = (e) => {
+    e.preventDefault();
+  }
+
+  useEffect(() => {
+    if (showContactForm){
+      document.body.style.overflow = "hidden";
+      document.body.addEventListener('touchmove', preventIOSScroll);
+    }else{
+      document.body.style.overflow = "scroll";
+    }
+  },[showContactForm])
 
   return (
     <header className={classes.header}>
