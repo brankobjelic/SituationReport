@@ -49,5 +49,15 @@ ul {
 .paginationDiv {
     text-align: center;
     margin: 1rem;
+}
 
+.paginationDiv button {
+    cursor: pointer;
+}
+.paginationDiv button:hover{
+    background-color: #88D5E9;
+	/* -moz-box-shadow: 0 0 8px #88D5E9;
+	-webkit-box-shadow: 0 0 8px #88D5E9;
+	box-shadow: 0 0 8px #88D5E9; */
+	/*border: 1px solid;*/
 }

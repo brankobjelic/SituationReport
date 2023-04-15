@@ -31,12 +31,12 @@ const Header = (props) => {
 
   return (
     <header className={classes.header}>
-      <h1>Prijavi problem</h1>
-        <div id="signInDiv"></div>
+      <h1>Moj komunalni pomoćnik</h1>
+        <div className={classes.googleSignIn} id="signInDiv"></div>
         {Object.keys(props.user).length !== 0 &&
             <>
         
-            <div>
+            <div className={classes.googleSignIn}>
               <button className={classes.button} onClick={ (e) => props.handleSignOut(e)}>Odjavi se</button>
                 <img className={classes.userImage} src={props.user.picture} alt="" referrerPolicy="no-referrer"></img>
                 <p className={classes.username}>{props.user.name}</p>                
