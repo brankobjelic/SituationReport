@@ -25,8 +25,6 @@ namespace SituationReport.Services
             var reCaptchaForCheckJson = JsonSerializer.Serialize(reCaptchaForCheckObj);
             var request = new HttpRequestMessage(HttpMethod.Post, $"https://www.google.com/recaptcha/api/siteverify?secret={reCaptchaForCheckObj.Secret}&response={reCaptchaForCheckObj.Response}");
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //request.Content = new StringContent(reCaptchaForCheckJson, Encoding.UTF8);
-            //request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             string responseContent = await response.Content.ReadAsStringAsync();
