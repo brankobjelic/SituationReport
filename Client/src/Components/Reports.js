@@ -18,7 +18,10 @@ const Reports = (props) => {
         {results.slice(0).map(report => (
             <li className={classes.reportItem} key={report.id} id={report.id}>
             <p className={classes.liHeader}>{new Date(report.dateAndTime).toLocaleString('sr-RS')}<br />
-            <small>{report.institution} <br /> {report.causeDescription} <br />Lokacija: {report.location}</small> </p><hr />      
+            <small>{report.institution} <br /> {report.causeDescription} <br />
+            {report.location && <span>Lokacija: {report.location} </span>}
+            {!!report.latitude && <span>Gps koordinate: {report.latitude}, {report.longitude}</span>}
+            </small> </p><hr />      
             <p><b>{report.title}</b></p>
             <ReadMore>
               {report.description}
