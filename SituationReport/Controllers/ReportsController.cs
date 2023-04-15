@@ -55,7 +55,6 @@ namespace SituationReport.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Route("~/api/reports/getreport")]
         public IActionResult GetReport(int id)
         {
             var report = _reportRepository.Get(id);
@@ -85,142 +84,177 @@ namespace SituationReport.Controllers
             {
                 return BadRequest(ModelState);
             }
-            User user = _userRepository.getByEmail(reportDTO.userEmail);
-            if (user == null)
+            if (reportDTO.ReCaptchaToken != null)
             {
-                return BadRequest(ModelState);
-            }
-            Report report = new Report()
-            {
-                CauseId = reportDTO.causeId,
-                UserId = user.Id,
-                Title = reportDTO.Title,
-                Location = reportDTO.Location,
-                Latitude = reportDTO.Latitude,
-                Longitude = reportDTO.Longitude,
-                Description = reportDTO.Description,
-            };
-            if (reportDTO.Pic1 != null)
-            {
-                string name1 = _fileRepository.GetImageName(reportDTO.Pic1, user.Id);
-                if (!System.IO.File.Exists($@"Content\Images\{name1}"))
+                var isValid = _reCaptchaService.CheckToken(reportDTO.ReCaptchaToken).Result;
+                if (isValid)
                 {
-                    report.Pic1 = _fileRepository.Save(reportDTO.Pic1, user.Id);
+                    User user = _userRepository.getByEmail(reportDTO.userEmail);
+                    if (user == null)
+                    {
+                        return BadRequest(ModelState);
+                    }
+                    Report report = new Report()
+                    {
+                        CauseId = reportDTO.causeId,
+                        UserId = user.Id,
+                        Title = reportDTO.Title,
+                        Location = reportDTO.Location,
+                        Latitude = reportDTO.Latitude,
+                        Longitude = reportDTO.Longitude,
+                        Description = reportDTO.Description,
+                    };
+                    if (reportDTO.Pic1 != null)
+                    {
+                        string name1 = _fileRepository.GetImageName(reportDTO.Pic1, user.Id);
+                        if (!System.IO.File.Exists($@"Content\Images\{name1}"))
+                        {
+                            report.Pic1 = _fileRepository.Save(reportDTO.Pic1, user.Id);
+                        }
+                        else
+                        {
+                            report.Pic1 = name1;
+                        }
+
+                    }
+                    if (reportDTO.Pic2 != null)
+                    {
+                        string name1 = _fileRepository.GetImageName(reportDTO.Pic2, user.Id);
+                        if (!System.IO.File.Exists($@"Content\Images\{name1}"))
+                        {
+                            report.Pic2 = _fileRepository.Save(reportDTO.Pic2, user.Id);
+
+                        }
+                        else
+                        {
+                            report.Pic2 = name1;
+                        }
+
+                    }
+                    if (reportDTO.Pic3 != null)
+                    {
+                        string name1 = _fileRepository.GetImageName(reportDTO.Pic3, user.Id);
+                        if (!System.IO.File.Exists($@"Content\Images\{name1}"))
+                        {
+                            report.Pic3 = _fileRepository.Save(reportDTO.Pic3, user.Id);
+
+                        }
+                        else
+                        {
+                            report.Pic3 = name1;
+                        }
+
+                    }
+                    int newId = _reportRepository.Create(report);
+                    string uri = $"https://localhost:7281/api/Reports/{newId}";
+                    //return CreatedAtAction("GetReport", new {  id = newId }, report);
+                    return Created(uri, new {Id = newId});
+
                 }
                 else
                 {
-                    report.Pic1 = name1;
-                }
+                    return BadRequest("reCaptcha token not received from contact form.");
 
+                }
             }
-            if (reportDTO.Pic2 != null)
+            else
             {
-                string name1 = _fileRepository.GetImageName(reportDTO.Pic2, user.Id);
-                if (!System.IO.File.Exists($@"Content\Images\{name1}"))
-                {
-                    report.Pic2 = _fileRepository.Save(reportDTO.Pic2, user.Id);
-
-                }
-                else
-                {
-                    report.Pic2 = name1;
-                }
-
+                return BadRequest("Contact form not received.");
             }
-            if (reportDTO.Pic3 != null)
-            {
-                string name1 = _fileRepository.GetImageName(reportDTO.Pic3, user.Id);
-                if (!System.IO.File.Exists($@"Content\Images\{name1}"))
-                {
-                    report.Pic3 = _fileRepository.Save(reportDTO.Pic3, user.Id);
-
-                }
-                else
-                {
-                    report.Pic3 = name1;
-                }
-
-            }
-            int newId = _reportRepository.Create(report);
-            string uri = $"https://localhost:7281/api/Reports/{newId}";
-            //return CreatedAtAction("GetReport", new {  id = newId }, report);
-            return Created(uri, new {Id = newId});
 
         }
 
         [HttpPut("{id}")]
+
         public IActionResult PutReport(int id, ReportDTO reportDTO)
         {
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            User user = _userRepository.getByEmail(reportDTO.userEmail);
-            if (user == null)
+            if (reportDTO.ReCaptchaToken != null)
             {
-                return BadRequest(ModelState);
-            }
-
-            Report r = _reportRepository.Get(id);
-            if (r == null)
-            {
-                return BadRequest(ModelState);
-            }
-            Report report = new Report()
-            {
-                Id = id,
-                CauseId = reportDTO.causeId,
-                Title = reportDTO.Title,
-                Location = reportDTO.Location,
-                Latitude = reportDTO.Latitude,
-                Longitude = reportDTO.Longitude,
-                Description = reportDTO.Description,
-                Pic1= reportDTO.Pic1,
-                Pic2= reportDTO.Pic2,
-                Pic3= reportDTO.Pic3
-            };
-
-            if (report.Pic1 != null)
-            {
-                string name1 = _fileRepository.GetImageName(report.Pic1, user.Id);
-                if (name1 != r.Pic1)
+                var isValid = _reCaptchaService.CheckToken(reportDTO.ReCaptchaToken).Result;
+                if (isValid)
                 {
-                    report.Pic1 = _fileRepository.Save(reportDTO.Pic1, user.Id); //save file to disk
+                    User user = _userRepository.getByEmail(reportDTO.userEmail);
+                    if (user == null)
+                    {
+                        return BadRequest(ModelState);
+                    }
+
+                    Report r = _reportRepository.Get(id);
+                    if (r == null)
+                    {
+                        return BadRequest(ModelState);
+                    }
+                    Report report = new Report()
+                    {
+                        Id = id,
+                        CauseId = reportDTO.causeId,
+                        Title = reportDTO.Title,
+                        Location = reportDTO.Location,
+                        Latitude = reportDTO.Latitude,
+                        Longitude = reportDTO.Longitude,
+                        Description = reportDTO.Description,
+                        Pic1 = reportDTO.Pic1,
+                        Pic2 = reportDTO.Pic2,
+                        Pic3 = reportDTO.Pic3
+                    };
+
+                    if (report.Pic1 != null)
+                    {
+                        string name1 = _fileRepository.GetImageName(report.Pic1, user.Id);
+                        if (name1 != r.Pic1)
+                        {
+                            report.Pic1 = _fileRepository.Save(reportDTO.Pic1, user.Id); //save file to disk
+                        }
+                        else
+                        {
+                            report.Pic1 = r.Pic1;
+                        }
+                    }
+                    if (report.Pic2 != null)
+                    {
+                        string name2 = _fileRepository.GetImageName(report.Pic2, user.Id);
+
+                        if (name2 != r.Pic2)
+                        {
+                            report.Pic2 = _fileRepository.Save(reportDTO.Pic2, user.Id); //save file to disk
+                        }
+                        else
+                        {
+                            report.Pic2 = r.Pic2;
+                        }
+                    }
+                    if (report.Pic3 != null)
+                    {
+                        string name3 = _fileRepository.GetImageName(report.Pic3, user.Id);
+
+                        if (name3 != r.Pic3)
+                        {
+                            report.Pic3 = _fileRepository.Save(reportDTO.Pic3, user.Id); //save file to disk
+                        }
+                        else
+                        {
+                            report.Pic3 = r.Pic3;
+                        }
+                    }
+                    _reportRepository.Update(report);
+                    return Ok(report);
+
                 }
                 else
                 {
-                    report.Pic1 = r.Pic1;
-                }
-            }
-            if (report.Pic2 != null)
-            {
-                string name2 = _fileRepository.GetImageName(report.Pic2, user.Id);
+                    return BadRequest("reCaptcha token not received from contact form.");
 
-                if (name2 != r.Pic2)
-                {
-                    report.Pic2 = _fileRepository.Save(reportDTO.Pic2, user.Id); //save file to disk
-                }
-                else
-                {
-                    report.Pic2 = r.Pic2;
                 }
             }
-            if (report.Pic3 != null)
+            else
             {
-                string name3 = _fileRepository.GetImageName(report.Pic3, user.Id);
-
-                if (name3 != r.Pic3)
-                {
-                    report.Pic3 = _fileRepository.Save(reportDTO.Pic3, user.Id); //save file to disk
-                }
-                else
-                {
-                    report.Pic3 = r.Pic3;
-                }
-            }
-            _reportRepository.Update(report);
-            return Ok(report);
+                return BadRequest("Contact form not received.");
+            }           
         }
 
         [HttpDelete("{id}")]

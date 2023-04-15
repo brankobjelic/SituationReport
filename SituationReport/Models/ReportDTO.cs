@@ -19,5 +19,7 @@ namespace SituationReport.Models
         public string? Pic1 { get; set; }
         public string? Pic2 { get; set; }
         public string? Pic3 { get; set; }
+        [Required]
+        public string? ReCaptchaToken { get; set; }
     }
 }

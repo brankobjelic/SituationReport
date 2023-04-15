@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faCircleXmark, faSlash } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import FetchContext from '../Store/fetch-context';
 import classes from './Form.module.css'
 import ImageModal from './ImageModal';
@@ -37,6 +37,8 @@ const Form = (props) => {
 
     const [showImageModal, setShowImageModal] = useState(false)
     const [reportForEmail, setReportForEmail] = useState(false)
+
+    const captchaRef = useRef(null)
 
     if(props.report){
         updatingReportId = props.report.id
@@ -278,29 +280,35 @@ const Form = (props) => {
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
         }
-        var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
-        var headers = {};
-        headers["Content-Type"] = 'application/json'
-        console.log(description)
-        var sendData = { "userEmail": props.email, "title": title, "description": description,
-         "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
-        console.log(sendData)
-        fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
-            .then(response => {
-                if (response.status === 201) {
-                    console.log(response)
-                    console.log("Successfuly added Report");
-                    props.onAddedReport()
-                } else if(response.status === 200){
-                    console.log("Successfuly updated Report");
-                    props.onUpdatedReport()
-                } else{
-                    console.log("Error occured with code " + response.status);
-                    console.log(response);
-                    alert("Desila se greska!");
-                }
-                props.onLeaveForm()
-            })
+        const token = captchaRef.current.getValue()
+        if (token){
+            var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
+            var headers = {};
+            headers["Content-Type"] = 'application/json'
+            console.log(description)
+            var sendData = { "userEmail": props.email, "title": title, "description": description,
+             "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
+            console.log(sendData)
+            fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
+                .then(response => {
+                    if (response.status === 201) {
+                        console.log(response)
+                        console.log("Successfuly added Report");
+                        props.onAddedReport()
+                    } else if(response.status === 200){
+                        console.log("Successfuly updated Report");
+                        props.onUpdatedReport()
+                    } else{
+                        console.log("Error occured with code " + response.status);
+                        console.log(response);
+                        alert("Desila se greska!");
+                    }
+                    props.onLeaveForm()
+                })
+        }
+        else{
+            alert("Morate potvrditi da niste robot.")
+        }
     }
 
     function sendReportHandler(event){
@@ -311,34 +319,40 @@ const Form = (props) => {
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
         }
-        var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
-        var headers = {};
-        headers["Content-Type"] = 'application/json'
-        var sendData = { "userEmail": props.email, "title": title, "description": description,
-         "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2] };
-        console.log(sendData)
-        fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
-            .then(response => {
-                if (response.status === 201) {  //on created report
-                    response.json().then((data) => {
-                        console.log(data)
-                        let reportsEndpoint = "api/Reports/"
-                        requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + data.id
-                        fetchReport(requestUrl) //after succesfully submitting a report to db, fetching the report to email it 
-                    })
-                    console.log("Successfuly added Report");                   
-                    props.onAddedReport()
-                } else if(response.status === 200){     //on updated report
-                    console.log(response)
-                    console.log("Successfuly updated Report");
-                    fetchReport(response.url)   //after succesfully updating a report to db, fetching the report to email it
-                    props.onUpdatedReport()
-                } else{
-                    console.log("Error occured with code " + response.status);
-                    console.log(response);
-                    alert("Desila se greska!");
-                }
-            })
+        const token = captchaRef.current.getValue()
+        if (token){
+            var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
+            var headers = {};
+            headers["Content-Type"] = 'application/json'
+            var sendData = { "userEmail": props.email, "title": title, "description": description,
+             "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
+            console.log(sendData)
+            fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
+                .then(response => {
+                    if (response.status === 201) {  //on created report
+                        response.json().then((data) => {
+                            console.log(data)
+                            let reportsEndpoint = "api/Reports/"
+                            requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + data.id
+                            fetchReport(requestUrl) //after succesfully submitting a report to db, fetching the report to email it 
+                        })
+                        console.log("Successfuly added Report");                   
+                        props.onAddedReport()
+                    } else if(response.status === 200){     //on updated report
+                        console.log(response)
+                        console.log("Successfuly updated Report");
+                        fetchReport(response.url)   //after succesfully updating a report to db, fetching the report to email it
+                        props.onUpdatedReport()
+                    } else{
+                        console.log("Error occured with code " + response.status);
+                        console.log(response);
+                        alert("Desila se greska!");
+                    }
+                })
+        }
+        else{
+            alert("Morate potvrditi da niste robot.")
+        }
     }
 
     //fetching a report from db and and setting data to reportForEmail state
@@ -419,7 +433,7 @@ const Form = (props) => {
                             </span>
                         }
                     </div>
-                    <ReCAPTCHA sitekey={process.env.REACT_APP_SITE_KEY}  />
+                    <ReCAPTCHA sitekey={process.env.REACT_APP_SITE_KEY} ref={captchaRef} />
                     <button type="submit" name="submitToServer" className={classes.button}>Sačuvaj</button>
                     <button type="submit" name="sendEmail" className={classes.button} style={{ float: "right" }}>Pošalji prijavu</button>
                 </form>
