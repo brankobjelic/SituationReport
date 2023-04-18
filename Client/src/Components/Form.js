@@ -28,7 +28,6 @@ const Form = (props) => {
     const [fileDataURLs, setFileDataURLs] = useState([])
 
     const [causes, setCauses] = useState([])
-    //const [causeId, setCauseId] = useState('DEFAULT')
     const [frequentCauses, setFrequentCauses] = useState([])
     const [frequentCauseDisplayed, setFrequentCauseDisplayed] = useState(true)
 
@@ -37,6 +36,10 @@ const Form = (props) => {
     const [location, setLocation] = useState('')
     const [latitude, setLatitude] = useState()
     const [longitude, setLongitude] = useState()
+
+    const [institutionName, setInstitutionName] = useState('')
+    const [institutionEmail, setInstitutionEmail] = useState('')
+    const [institutionPhone, setInstitutionPhone] = useState('')
 
     const [showImageModal, setShowImageModal] = useState(false)
     const [reportForEmail, setReportForEmail] = useState(false)
@@ -77,29 +80,36 @@ const Form = (props) => {
     /* If the form is entered to edit existing report, the form fields are populated here */
     useEffect(() => {
         if(props.report){
-            setFrequentCauseDisplayed(false)
-            causeIdRef.current.value = props.report.causeId
-            setTitle(props.report.title)
-            setLocation(props.report.location)
-            if (props.report.latitude) 
-                setLatitude(props.report.latitude)           
-            if(props.report.longitude)
-                setLongitude(props.report.longitude)
-            setDescription(props.report.description)
-            if(props.report.pic1){
-                getImage(props.report.pic1, 0)
-            }
-            if(props.report.pic2){
-                getImage(props.report.pic2, 1)
+            function tick(){
+                causeIdRef.current.value = props.report.causeId
+                console.log(causeIdRef.current.value)
+                setFrequentCauseDisplayed(false)
+                getInstitutionByCauseId(props.report.causeId)
+                setTitle(props.report.title)
+                setLocation(props.report.location)
+                if (props.report.latitude) 
+                    setLatitude(props.report.latitude)           
+                if(props.report.longitude)
+                    setLongitude(props.report.longitude)
+                setDescription(props.report.description)
+                if(props.report.pic1){
+                    getImage(props.report.pic1, 0)
                 }
-            if(props.report.pic3){
-                getImage(props.report.pic3, 2)
+                if(props.report.pic2){
+                    getImage(props.report.pic2, 1)
+                    }
+                if(props.report.pic3){
+                    getImage(props.report.pic3, 2)
+                }
+
             }
+            setTimeout(tick, 300)
         } else{
             getFrequentCauses()
         }
     }
     , [])
+    
 
     /*Here a report gets prepared for sending to coresponding institution by email*/
     useEffect(() => {
@@ -193,6 +203,7 @@ const Form = (props) => {
         console.log(causeId)
         causeIdRef.current.value = causeId
         setFrequentCauseDisplayed(false)
+        getInstitutionByCauseId(causeId)
     }
 
     /*Fetching image from server*/
@@ -240,10 +251,27 @@ const Form = (props) => {
         .catch(error => console.log(error));
     }
 
+    function getInstitutionByCauseId(causeId){
+        let requestUrl = ctx.protocol + ctx.host + ctx.port + institutionByCauseIdEndpoint + causeId
+        fetch(requestUrl)
+            .then(response => {
+                if(response.status === 200){
+                    response.json()
+                        .then(data => {
+                            console.log(data)
+                            setInstitutionEmail(data.email)
+                            setInstitutionPhone(data.phone)
+                            setInstitutionName(data.name)
+                        })
+                }
+            })
+    }
+
     function handleChange(e) {
-        //setCauseId(e.target.value)
         causeIdRef.current.value = e.target.value
         setFrequentCauseDisplayed(false)
+        getInstitutionByCauseId(e.target.value)
+
     }
 
     function handleTitleChange(e) {
@@ -356,7 +384,7 @@ const Form = (props) => {
             var headers = {};
             headers["Content-Type"] = 'application/json'
             var sendData = { "userEmail": props.email, "title": title, "description": description,
-             "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeIdRef.current, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
+             "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeIdRef.current.value, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
             console.log(sendData)
             fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
                 .then(response => {
@@ -430,11 +458,14 @@ const Form = (props) => {
                     </select>
                     </div>
                     <div>
-                        {frequentCauseDisplayed ? <p>Najčešći razlozi: {frequentCauses.map((cause) => {
-                            return (
-                                <button key={cause.id} type="button" className={classes.frequentCauseButton} onClick={() =>handleSelectFrequentCause(cause.id)}>{cause.description}</button>
-                            )
-                        })}</p> : ''}
+                        {frequentCauseDisplayed ? 
+                            <p>Najčešći razlozi: {frequentCauses.map((cause) => {
+                                return (
+                                    <button key={cause.id} type="button" className={classes.frequentCauseButton} onClick={() =>handleSelectFrequentCause(cause.id)}>{cause.description}</button>
+                                )
+                            })}</p> 
+                            : 
+                            <div className={classes.urgentCallDiv}><strong>Hitno? Pozovite odmah!</strong><p><a className={classes.phoneLink} href={"tel:" + institutionPhone}>📞 {institutionPhone}</a></p><strong>{institutionName}</strong></div>}
                     </div>
                     <label htmlFor="title" >Naslov</label>
                     <input id="title" className={classes['field-long']} type="text" maxLength={200} size={200} value={title} onChange={handleTitleChange} /><br />
