@@ -20,8 +20,7 @@
     background: #f1f1f1;
     padding: 14px 28px;
     border-radius: 14px;
-	overflow:auto;
-
+	overflow-y: auto;
 
     width: 90vw;
 	min-width: 300px;
@@ -29,6 +28,22 @@
 
 	max-height: 80vh;
 }
+
+::-webkit-scrollbar {
+    width: 12px;
+	position: absolute;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+  border-radius: 6px;
+}
+
 .imageBig {
 	display: flex;
 	width: 100%;
@@ -166,6 +181,27 @@ button[disabled] {
   pointer-events: none;
 }
 
+.frequentCauseButton { 
+    font: inherit;
+    border: none;
+    background-color: #1f464d;
+    color: white;
+    padding: 0.25rem 0.25rem;
+    margin: 0.25rem;
+
+    justify-content: space-around;
+    align-items: left;
+    border-radius: 10px;
+    font-weight: normal;
+  }
+
+ .frequentCauseButton:hover,
+  .frequentCauseButton:active
+{
+	cursor: pointer;
+  background-color: #071f2f;
+}  
+
 .hiddenFileInput > input	{
 	height: 100%;
 	width: 100;
@@ -230,6 +266,33 @@ button[disabled] {
 
 .locationButton {
 	cursor: pointer;
+}
+
+.phoneLink {
+	font: inherit;
+	text-decoration: none;
+    border: none;
+    background-color: #1f464d;
+    color: white;
+    padding: 0.5rem 0.5rem;
+    margin: 0.5rem;
+
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 25px;
+    font-weight: bold;
+}
+
+ .phoneLink:hover,
+  .phoneLink:active
+{
+	cursor: pointer;
+  	background-color: #071f2f;
+}
+
+.urgentCallDiv {
+	margin: 0.75rem;
+	text-align: center;
 }
 
 

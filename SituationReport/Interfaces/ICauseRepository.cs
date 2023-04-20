@@ -10,5 +10,6 @@ namespace SituationReport.Interfaces
         void Update(Cause cause);
         void Delete(int id);
         Institution GetInstitutionByCauseId(int id);
+        List<Cause> GetFrequent();
     }
 }

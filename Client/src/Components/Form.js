@@ -21,13 +21,15 @@ const Form = (props) => {
     var imageLinksString = ""
     var locationTxt = ""
     var institutionByCauseIdEndpoint = "api/InstitutionByCauseId?id="
+    var frequentCausesEndpoint = "api/FrequentCauses"
     var method = "POST"
 
     const [file, setFile] = useState(null);
     const [fileDataURLs, setFileDataURLs] = useState([])
 
     const [causes, setCauses] = useState([])
-    const [causeId, setCauseId] = useState('DEFAULT')
+    const [frequentCauses, setFrequentCauses] = useState([])
+    const [frequentCauseDisplayed, setFrequentCauseDisplayed] = useState(true)
 
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
@@ -35,10 +37,15 @@ const Form = (props) => {
     const [latitude, setLatitude] = useState()
     const [longitude, setLongitude] = useState()
 
+    const [institutionName, setInstitutionName] = useState('')
+    const [institutionEmail, setInstitutionEmail] = useState('')
+    const [institutionPhone, setInstitutionPhone] = useState('')
+
     const [showImageModal, setShowImageModal] = useState(false)
     const [reportForEmail, setReportForEmail] = useState(false)
 
     const captchaRef = useRef(null)
+    const causeIdRef = useRef("DEFAULT")
 
     if(props.report){
         updatingReportId = props.report.id
@@ -49,7 +56,7 @@ const Form = (props) => {
         getDataForDropdown()
     }, [])
 
-    /* When new file added to form, its fileDataURL is added to array */
+    /* When new file added to form, it's fileDataURL is added to array */
     useEffect(() => {
         let fileReader, isCancel = false;
         if(file){
@@ -73,26 +80,36 @@ const Form = (props) => {
     /* If the form is entered to edit existing report, the form fields are populated here */
     useEffect(() => {
         if(props.report){
-            setCauseId(props.report.causeId)
-            setTitle(props.report.title)
-            setLocation(props.report.location)
-            if (props.report.latitude) 
-                setLatitude(props.report.latitude)           
-            if(props.report.longitude)
-                setLongitude(props.report.longitude)
-            setDescription(props.report.description)
-            if(props.report.pic1){
-                getImage(props.report.pic1, 0)
-            }
-            if(props.report.pic2){
-                getImage(props.report.pic2, 1)
+            function tick(){
+                causeIdRef.current.value = props.report.causeId
+                console.log(causeIdRef.current.value)
+                setFrequentCauseDisplayed(false)
+                getInstitutionByCauseId(props.report.causeId)
+                setTitle(props.report.title)
+                setLocation(props.report.location)
+                if (props.report.latitude) 
+                    setLatitude(props.report.latitude)           
+                if(props.report.longitude)
+                    setLongitude(props.report.longitude)
+                setDescription(props.report.description)
+                if(props.report.pic1){
+                    getImage(props.report.pic1, 0)
                 }
-            if(props.report.pic3){
-                getImage(props.report.pic3, 2)
+                if(props.report.pic2){
+                    getImage(props.report.pic2, 1)
+                    }
+                if(props.report.pic3){
+                    getImage(props.report.pic3, 2)
+                }
+
             }
+            setTimeout(tick, 300)
+        } else{
+            getFrequentCauses()
         }
     }
     , [])
+    
 
     /*Here a report gets prepared for sending to coresponding institution by email*/
     useEffect(() => {
@@ -165,6 +182,30 @@ const Form = (props) => {
             .catch(error => console.log(error));
     }
 
+    function getFrequentCauses() {
+        var requesturl = ctx.protocol + ctx.host + ctx.port + frequentCausesEndpoint;
+        var headers = {};
+        fetch(requesturl, { headers: headers })
+            .then((response) => {
+                if (response.status === 200) {
+                    response.json()
+                        .then((data) => {
+                            setFrequentCauses(data);
+                        });
+                } else {
+                    console.log(response.status);
+                }
+            })
+            .catch(error => console.log(error));
+    }
+
+    function handleSelectFrequentCause(causeId){
+        console.log(causeId)
+        causeIdRef.current.value = causeId
+        setFrequentCauseDisplayed(false)
+        getInstitutionByCauseId(causeId)
+    }
+
     /*Fetching image from server*/
     function getImage(imageFileName, index){
         var imageEndpoint = "api/reports/getimage?name=" + imageFileName;
@@ -210,8 +251,27 @@ const Form = (props) => {
         .catch(error => console.log(error));
     }
 
+    function getInstitutionByCauseId(causeId){
+        let requestUrl = ctx.protocol + ctx.host + ctx.port + institutionByCauseIdEndpoint + causeId
+        fetch(requestUrl)
+            .then(response => {
+                if(response.status === 200){
+                    response.json()
+                        .then(data => {
+                            console.log(data)
+                            setInstitutionEmail(data.email)
+                            setInstitutionPhone(data.phone)
+                            setInstitutionName(data.name)
+                        })
+                }
+            })
+    }
+
     function handleChange(e) {
-        setCauseId(e.target.value)
+        causeIdRef.current.value = e.target.value
+        setFrequentCauseDisplayed(false)
+        getInstitutionByCauseId(e.target.value)
+
     }
 
     function handleTitleChange(e) {
@@ -259,7 +319,6 @@ const Form = (props) => {
               console.log(position)
               setLatitude(position.coords.latitude.toFixed(9))
               setLongitude(position.coords.longitude.toFixed(9))
-              //setLocation(`GPS koordinate: ${position.coords.latitude},${position.coords.longitude}  ${location}`)
             });
           } else {
             console.log("Geolocation is not available!")
@@ -276,7 +335,7 @@ const Form = (props) => {
         if(event){
             event.preventDefault()
         }
-        if (causeId === 'DEFAULT') {     //form validation - when cause not selected from dropdown menu
+        if (causeIdRef.current.value === 'DEFAULT') {     //form validation - when cause not selected from dropdown menu
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
         }
@@ -287,7 +346,7 @@ const Form = (props) => {
             headers["Content-Type"] = 'application/json'
             console.log(description)
             var sendData = { "userEmail": props.email, "title": title, "description": description,
-             "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
+             "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeIdRef.current.value, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
             console.log(sendData)
             fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
                 .then(response => {
@@ -315,7 +374,7 @@ const Form = (props) => {
         if(event){
             event.preventDefault()
         }
-        if (causeId === 'DEFAULT') {
+        if (causeIdRef.current.value === 'DEFAULT') {
             document.getElementById('cause').style.backgroundColor = "salmon"
             return
         }
@@ -325,7 +384,7 @@ const Form = (props) => {
             var headers = {};
             headers["Content-Type"] = 'application/json'
             var sendData = { "userEmail": props.email, "title": title, "description": description,
-             "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeId, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
+             "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeIdRef.current.value, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
             console.log(sendData)
             fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
                 .then(response => {
@@ -379,7 +438,7 @@ const Form = (props) => {
             {!showImageModal &&
             <>                    
                 <form onSubmit={(e) => {
-                                    const buttonName = e.nativeEvent.submitter.name //having two submit buttons
+                    const buttonName = e.nativeEvent.submitter.name //having two submit buttons
                                     if (buttonName === "submitToServer") submitReportHandler(e)
                                     if (buttonName === "sendEmail") sendReportHandler(e)
                                 }}
@@ -389,7 +448,7 @@ const Form = (props) => {
                     <br />
                     <div>
                     <label htmlFor="cause">Razlog prijave*</label>
-                    <select id="cause" className={classes['field-select']} value={causeId} onChange={handleChange} required>
+                    <select id="cause" className={classes['field-select']} defaultValue={"DEFAULT"} ref={causeIdRef} onChange={handleChange} required>
                         <option value="DEFAULT" disabled>Izaberite razlog za prijavu...</option>
                         {causes.map((cause, index) => {
                             return (
@@ -397,6 +456,16 @@ const Form = (props) => {
                             )
                         })}
                     </select>
+                    </div>
+                    <div>
+                        {frequentCauseDisplayed ? 
+                            <p>Najčešći razlozi: {frequentCauses.map((cause) => {
+                                return (
+                                    <button key={cause.id} type="button" className={classes.frequentCauseButton} onClick={() =>handleSelectFrequentCause(cause.id)}>{cause.description}</button>
+                                )
+                            })}</p> 
+                            : 
+                            <div className={classes.urgentCallDiv}><strong>Hitno? Pozovite odmah!</strong><p><a className={classes.phoneLink} href={"tel:" + institutionPhone}>📞 {institutionPhone}</a></p><strong>{institutionName}</strong></div>}
                     </div>
                     <label htmlFor="title" >Naslov</label>
                     <input id="title" className={classes['field-long']} type="text" maxLength={200} size={200} value={title} onChange={handleTitleChange} /><br />

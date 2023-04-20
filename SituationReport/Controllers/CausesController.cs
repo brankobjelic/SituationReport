@@ -32,5 +32,14 @@ namespace SituationReport.Controllers
             institution = _causeRepository.GetInstitutionByCauseId(id);
             return Ok(institution);
         }
+
+        [HttpGet]
+        [Route("~/api/FrequentCauses")]
+        public IActionResult GetFrequentCauses()
+        {
+            List<Cause> frequentCauses = new List<Cause>();
+            frequentCauses = _causeRepository.GetFrequent();
+            return Ok(frequentCauses);
+        }
     }
 }
