@@ -10,5 +10,7 @@ namespace SituationReport.Interfaces
         void Update(User user);
         void Delete(int id);
         User getByEmail(string email);
+        string GetUserToken(string email);
+        void UpdateToken(string email, string token);
     }
 }

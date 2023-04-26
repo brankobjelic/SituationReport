@@ -10,9 +10,13 @@ function App() {
   const ctx = useContext(FetchContext)
 
   const [ user, setUser] = useState({})
+  const [idToken, setIdToken] = useState('')
+  var idTok;
 
   function handleCallbackResponse(response){
       console.log("Encoded JWT ID token: " + response.credential)
+      setIdToken(response.credential)
+      idTok = response.credential
       var userObject = jwt_decode(response.credential)
       console.log(userObject)
       setUser(userObject)
@@ -21,10 +25,13 @@ function App() {
   }
 
   function sendUserToServer(user){
-    var loginEndpoint = "api/users/check";
+    var loginEndpoint = "api/users/signin";
     var requestUrl = ctx.protocol + ctx.host + ctx.port + loginEndpoint;
+    var headers={'Content-Type':'application/json'}
+    headers.Authorization = 'Bearer ' + idTok;
+    console.log(headers)
     var sendData = {"name": user.name, "email": user.email};
-    fetch(requestUrl, {method: "POST", headers: {'Content-Type':'application/json'}, body: JSON.stringify(sendData)})
+    fetch(requestUrl, {method: "POST", headers: headers, body: JSON.stringify(sendData)})
     .then(response => {
         if(response.status === 200){
             console.log("Successful login on server");

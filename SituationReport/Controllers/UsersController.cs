@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SituationReport.Filters;
 using SituationReport.Interfaces;
 using SituationReport.Models;
 using SituationReport.Services;
@@ -17,21 +18,31 @@ namespace SituationReport.Controllers
         }
 
         [HttpPost]
-        [Route("~/api/users/check")]
-        public IActionResult CheckUser(User user)
+        [Route("~/api/users/signin")]
+        public async Task<IActionResult> CheckUser(User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
+            string token = Request.Headers["Authorization"].ToString().Remove(0, 7); //remove Bearer 
+
+            var payload = await OAuthService.VerifyGoogleTokenId(token);
+            if (payload == null)
+            {
+                return BadRequest("Invalid token");
+            }
+
             User? u = _userRepository.getByEmail(user.Email);
             if (u.Email is null)
             {
                 _userRepository.Create(user);
+                _userRepository.UpdateToken(user.Email, token);
                 return Ok();
             }
             else
             {
+                _userRepository.UpdateToken(user.Email, token);
                 return Ok();
             }
 

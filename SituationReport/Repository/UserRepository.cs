@@ -128,5 +128,59 @@ namespace SituationReport.Repository
             }
             return u;
         }
+
+        public string GetUserToken(string email)
+        {
+            string query = "select Token from Users where Email='" + email + "'";
+
+            string connectionString = Configuration.GetConnectionString("AppConnectionString");
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = connection.CreateCommand();
+
+            connection.Open();
+
+            command.CommandText = query;
+
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = command;
+
+            adapter.Fill(ds, "Users");
+            dt = ds.Tables["Users"];
+
+            command.Dispose();
+            connection.Close();
+
+            string token = string.Empty;
+            foreach (DataRow dr in dt.Rows)
+            {
+                token = dr["Token"].ToString();
+            }
+            return token;
+        }
+
+        public void UpdateToken(string email, string token)
+        {
+            string query = "update users set Token=@token where Email=@email";
+
+            string connectionString = Configuration.GetConnectionString("AppConnectionString");
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = connection.CreateCommand();
+
+            connection.Open();
+
+            command.CommandText = query;
+            command.Parameters.AddWithValue("@token", token);
+            command.Parameters.AddWithValue("@Email", email);
+
+            command.ExecuteNonQuery();
+
+            command.Dispose();
+            connection.Close();
+        }
     }
 }
