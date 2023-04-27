@@ -117,8 +117,11 @@ const Form = (props) => {
             console.log(reportForEmail)
             const desc = reportForEmail.description.replace(/\n/g, "%0D%0A")
             let requestUrl = ctx.protocol + ctx.host + ctx.port + institutionByCauseIdEndpoint +reportForEmail.causeId
+            var headers = {};
+            headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
+            headers.From = sessionStorage.getItem('email')
             //fetching institution data
-            fetch(requestUrl)
+            fetch(requestUrl,{headers: headers})
             .then((response) => {
                 if (response.status === 200) {
                     response.json()
@@ -168,6 +171,8 @@ const Form = (props) => {
     function getDataForDropdown() {
         var requesturl = ctx.protocol + ctx.host + ctx.port + causesEndpoint;
         var headers = {};
+        headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
+        headers.From = sessionStorage.getItem('email')
         fetch(requesturl, { headers: headers })
             .then((response) => {
                 if (response.status === 200) {
@@ -185,6 +190,8 @@ const Form = (props) => {
     function getFrequentCauses() {
         var requesturl = ctx.protocol + ctx.host + ctx.port + frequentCausesEndpoint;
         var headers = {};
+        headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
+        headers.From = sessionStorage.getItem('email')
         fetch(requesturl, { headers: headers })
             .then((response) => {
                 if (response.status === 200) {
@@ -210,8 +217,11 @@ const Form = (props) => {
     function getImage(imageFileName, index){
         var imageEndpoint = "api/reports/getimage?name=" + imageFileName;
         var requestUrl = ctx.protocol + ctx.host + ctx.port + imageEndpoint;
+        var headers = {};
+        headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
+        headers.From = sessionStorage.getItem('email')
         console.log(requestUrl)
-        fetch(requestUrl)
+        fetch(requestUrl, {headers: headers})
         .then(response => {
             if(response.status === 200){
                 response.blob().then((data) => {
@@ -253,7 +263,10 @@ const Form = (props) => {
 
     function getInstitutionByCauseId(causeId){
         let requestUrl = ctx.protocol + ctx.host + ctx.port + institutionByCauseIdEndpoint + causeId
-        fetch(requestUrl)
+        var headers = {};
+        headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
+        headers.From = sessionStorage.getItem('email')
+        fetch(requestUrl, {headers: headers})
             .then(response => {
                 if(response.status === 200){
                     response.json()
@@ -344,6 +357,8 @@ const Form = (props) => {
             var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
             var headers = {};
             headers["Content-Type"] = 'application/json'
+            headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
+            headers.From = sessionStorage.getItem('email')
             console.log(description)
             var sendData = { "userEmail": props.email, "title": title, "description": description,
              "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeIdRef.current.value, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
@@ -382,6 +397,8 @@ const Form = (props) => {
         if (token){
             var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + updatingReportId;
             var headers = {};
+            headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
+            headers.From = sessionStorage.getItem('email')
             headers["Content-Type"] = 'application/json'
             var sendData = { "userEmail": props.email, "title": title, "description": description,
              "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeIdRef.current.value, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
@@ -416,7 +433,10 @@ const Form = (props) => {
 
     //fetching a report from db and and setting data to reportForEmail state
     function fetchReport(url){
-        fetch(url)
+        var headers = {};
+        headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
+        headers.From = sessionStorage.getItem('email')
+        fetch(url, {headers: headers})
         .then((response) => {
             if (response.status === 200) {
                 response.json()
