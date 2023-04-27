@@ -7,27 +7,36 @@ import Main from './Components/Main';
 import FetchContext from './Store/fetch-context';
 
 function App() {
+  var userObject
   const ctx = useContext(FetchContext)
 
   const [ user, setUser] = useState({})
+  //const [ userConfirmed, setUserConfirmed] = useState(false)
+
 
   function handleCallbackResponse(response){
       console.log("Encoded JWT ID token: " + response.credential)
-      var userObject = jwt_decode(response.credential)
+      userObject = jwt_decode(response.credential)
+      sessionStorage.setItem('idToken', response.credential)
+      sessionStorage.setItem('email', userObject.email)
       console.log(userObject)
-      setUser(userObject)
       document.getElementById("signInDiv").hidden = true
       sendUserToServer(userObject)
   }
 
   function sendUserToServer(user){
-    var loginEndpoint = "api/users/check";
+    var loginEndpoint = "api/users/signin";
     var requestUrl = ctx.protocol + ctx.host + ctx.port + loginEndpoint;
+    var headers={'Content-Type':'application/json'}
+    headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
+    console.log(headers)
     var sendData = {"name": user.name, "email": user.email};
-    fetch(requestUrl, {method: "POST", headers: {'Content-Type':'application/json'}, body: JSON.stringify(sendData)})
+    fetch(requestUrl, {method: "POST", headers: headers, body: JSON.stringify(sendData)})
     .then(response => {
         if(response.status === 200){
             console.log("Successful login on server");
+            //setUserConfirmed(true)
+            setUser(userObject)
         }else{
             console.log("Error occured with code " + response.status);
             console.log(response);
@@ -39,6 +48,7 @@ function App() {
 
   function handleSignOut(event){
     setUser({})
+    //setUserConfirmed(false)
     document.getElementById("signInDiv").hidden = false
   }
 

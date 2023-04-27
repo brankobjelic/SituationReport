@@ -1,3 +1,4 @@
+using SituationReport.Filters;
 using SituationReport.Interfaces;
 using SituationReport.Repository;
 using SituationReport.Services;
@@ -16,6 +17,8 @@ builder.Services.AddScoped<ICauseRepository, CauseRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IReCaptchaService, ReCaptchaService>();
+
+builder.Services.AddScoped<CustomAuthorizeFilter>();
 
 builder.Services.AddCors(options =>
 {

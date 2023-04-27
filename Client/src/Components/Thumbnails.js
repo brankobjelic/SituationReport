@@ -62,8 +62,10 @@ const Thumbnails = (props) => {
             var imageEndpoint = "api/reports/getimage?name=" + imageFileName;
             var requestUrl = ctx.protocol + ctx.host + ctx.port + imageEndpoint;
             console.log(requestUrl)
-            //console.log(requestUrl)
-            fetch(requestUrl)
+            var headers = {};
+            headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
+            headers.From = sessionStorage.getItem('email')
+            fetch(requestUrl, {headers: headers})
             .then(response => {
                 if(response.status === 200){
                     //console.log(response)

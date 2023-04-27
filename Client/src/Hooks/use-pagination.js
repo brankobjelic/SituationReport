@@ -30,7 +30,10 @@ export const usePaginationFetch = (
         var endpoint = `api/reports/paginatedbyuser?PageNumber=${page}&PageSize=${pageSize}&email=${email}`;
         var requestUrl = ctx.protocol + ctx.host + ctx.port + endpoint;
         console.log(requestUrl)
-        fetch(requestUrl)
+        var headers={'Content-Type':'application/json'}
+        headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
+        headers.From = sessionStorage.getItem('email')
+        fetch(requestUrl, {headers: headers})
         .then(response => {
             let paginationHeader = JSON.parse(response.headers.get('x-pagination'))
            setTotalPages(paginationHeader.TotalPages)
