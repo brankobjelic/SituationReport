@@ -5,11 +5,14 @@ using SituationReport.Models;
 using SituationReport.Services;
 using SituationReport.Repository;
 using System.Text.Json;
+using SituationReport.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SituationReport.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [CustomAuthorize]
     public class ReportsController : ControllerBase
     {
         private readonly IReportRepository _reportRepository;
@@ -37,6 +40,7 @@ namespace SituationReport.Controllers
 
         [HttpGet]
         [Route("~/api/reports/paginatedbyuser")]
+
         public IActionResult GetPaginatedReportsByUserEmail([FromQuery]PaginationParameters paginationParameters, string email)
         {
             var reports = _reportRepository.GetPaginatedByUserEmail(paginationParameters, email);
@@ -271,6 +275,7 @@ namespace SituationReport.Controllers
 
         [HttpPost]
         [Route("~/api/contactForm")]
+        [AllowAnonymous]
         public IActionResult SendEmail(ContactForm contactForm)
         {
             if (contactForm != null)

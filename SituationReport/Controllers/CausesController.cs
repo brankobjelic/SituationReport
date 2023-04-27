@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SituationReport.Filters;
 using SituationReport.Interfaces;
 using SituationReport.Models;
 using SituationReport.Repository;
@@ -8,6 +9,7 @@ namespace SituationReport.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [CustomAuthorize]
     public class CausesController : ControllerBase
     {
         private readonly ICauseRepository _causeRepository;
