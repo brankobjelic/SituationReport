@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SituationReport.Interfaces;
+using System.Net;
 
 namespace SituationReport.Filters
 {
@@ -13,7 +15,7 @@ namespace SituationReport.Filters
 
         }
     }
-    public class CustomAuthorizeFilter : Attribute, IAuthorizationFilter
+    public class CustomAuthorizeFilter : IAuthorizationFilter
     {
         private readonly IUserRepository userRepository;
         public CustomAuthorizeFilter(IUserRepository userRepository)
@@ -22,6 +24,11 @@ namespace SituationReport.Filters
         }
         public void OnAuthorization(AuthorizationFilterContext context)
         {
+            // skip authorization if action is decorated with [AllowAnonymous] attribute
+            var allowAnonymous = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any();
+            if (allowAnonymous)
+                return;
+
             var result = true;
             if(!context.HttpContext.Request.Headers.ContainsKey("Authorization"))
                 result = false;
@@ -31,16 +38,17 @@ namespace SituationReport.Filters
             if (result)
             {
                 token = context.HttpContext.Request.Headers.First(x => x.Key == "Authorization").Value;
-                email = context.HttpContext.Request.Headers.First(x => x.Key == "Email").Value;
+                token = token.Remove(0, 7);
+                email = context.HttpContext.Request.Headers.First(x => x.Key == "From").Value;
                 if(userRepository.GetUserToken(email) != token)
                 {
                     result = false;
                 }
-                if (!result)
-                {
-                    context.ModelState.AddModelError("Unauthorized", "You are not authorized.");
-                    context.Result = new UnauthorizedObjectResult(context.ModelState);
-                }
+            }
+            if (!result)
+            {
+                context.ModelState.AddModelError("Unauthorized", "You are not authorized.");
+                context.Result = new UnauthorizedObjectResult(context.ModelState);
             }
         }
     }
