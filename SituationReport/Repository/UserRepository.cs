@@ -55,46 +55,9 @@ namespace SituationReport.Repository
             throw new NotImplementedException();
         }
 
-        //public User GetByEmail(string email)
-        //{
-        //    string query = "select * from Users where Email=" + email;
-
-        //    string connectionString = Configuration.GetConnectionString("AppConnectionString");
-
-        //    SqlConnection connection = new SqlConnection(connectionString);
-        //    SqlCommand command = connection.CreateCommand();
-
-        //    connection.Open();
-
-        //    command.CommandText = query;
-
-        //    DataSet ds = new DataSet();
-        //    DataTable dt = new DataTable();
-
-        //    SqlDataAdapter adapter = new SqlDataAdapter();
-        //    adapter.SelectCommand = command;
-
-        //    adapter.Fill(ds, "Users");
-        //    dt = ds.Tables["Users"];
-
-        //    command.Dispose();
-        //    connection.Close();
-
-
-
-        //    User u = new User();
-        //    foreach (DataRow dr in dt.Rows)
-        //    {
-        //        u.Id = int.Parse(dr["Id"].ToString());
-        //        u.Name = dr["Name"].ToString();
-        //        u.Email = dr["Email"].ToString();
-        //    }
-        //    return u;
-        //}
-
         public User getByEmail(string email)
         {
-            string query = "select * from Users where Email='" + email + "'";
+            string query = "select * from Users where Email=@email";
 
             string connectionString = Configuration.GetConnectionString("AppConnectionString");
 
@@ -104,6 +67,7 @@ namespace SituationReport.Repository
             connection.Open();
 
             command.CommandText = query;
+            command.Parameters.AddWithValue("@email", email);
 
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
@@ -131,7 +95,7 @@ namespace SituationReport.Repository
 
         public string GetUserToken(string email)
         {
-            string query = "select Token from Users where Email='" + email + "'";
+            string query = "select Token from Users where Email=@email";
 
             string connectionString = Configuration.GetConnectionString("AppConnectionString");
 
@@ -141,6 +105,7 @@ namespace SituationReport.Repository
             connection.Open();
 
             command.CommandText = query;
+            command.Parameters.AddWithValue("@email", email);
 
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
