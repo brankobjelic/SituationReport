@@ -19,7 +19,7 @@ namespace SituationReport.Services
         {
             ReCaptchaForCheck reCaptchaForCheckObj = new ReCaptchaForCheck
             {
-                Secret = Configuration["MailSettings:SecretKey"],
+                Secret = Configuration["ReCaptcha:SecretKey"],
                 Response = token
             };
             var reCaptchaForCheckJson = JsonSerializer.Serialize(reCaptchaForCheckObj);

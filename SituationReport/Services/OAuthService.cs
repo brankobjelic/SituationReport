@@ -14,12 +14,11 @@ namespace SituationReport.Services
         {
             try
             {
-                //uncomment these lines if you want to add settings: 
                  var validationSettings = new GoogleJsonWebSignature.ValidationSettings
                  {
                      Audience = new string[] { Configuration["Google:ClientId"] }
                  };
-                //Add your settings and then get the payload
+                //Add settings and then get the payload
                  GoogleJsonWebSignature.Payload payload = await GoogleJsonWebSignature.ValidateAsync(token, validationSettings);
 
                 // Or Get the payload without settings.
