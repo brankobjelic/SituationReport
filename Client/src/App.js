@@ -11,8 +11,6 @@ function App() {
   const ctx = useContext(FetchContext)
 
   const [ user, setUser] = useState({})
-  //const [ userConfirmed, setUserConfirmed] = useState(false)
-
 
   function handleCallbackResponse(response){
       console.log("Encoded JWT ID token: " + response.credential)
@@ -35,7 +33,6 @@ function App() {
     .then(response => {
         if(response.status === 200){
             console.log("Successful login on server");
-            //setUserConfirmed(true)
             setUser(userObject)
         }else{
             console.log("Error occured with code " + response.status);
@@ -48,7 +45,6 @@ function App() {
 
   function handleSignOut(event){
     setUser({})
-    //setUserConfirmed(false)
     document.getElementById("signInDiv").hidden = false
   }
 
