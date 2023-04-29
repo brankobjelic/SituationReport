@@ -12,6 +12,8 @@ const DeleteReportButton = (props) => {
     //console.log(props.report)
     var requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint;
     var headers = {}
+    headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
+    headers.From = sessionStorage.getItem('email')
     //console.log(requestUrl);
     if(window.confirm("Da li ste sigurni da želite da izbrišete prijavu?")){
       fetch(requestUrl, { method: "DELETE", headers: headers })

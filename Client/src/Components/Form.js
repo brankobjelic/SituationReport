@@ -11,7 +11,6 @@ const imageMimeType = /image\/(png|jpg|jpeg)/i;
 var fileDataUrl
 var imageId
 const maxImages = 3
-var requestUrl
 
 const Form = (props) => {
     const ctx = useContext(FetchContext)
@@ -38,7 +37,7 @@ const Form = (props) => {
     const [longitude, setLongitude] = useState()
 
     const [institutionName, setInstitutionName] = useState('')
-    const [institutionEmail, setInstitutionEmail] = useState('')
+    //const [institutionEmail, setInstitutionEmail] = useState('')
     const [institutionPhone, setInstitutionPhone] = useState('')
 
     const [showImageModal, setShowImageModal] = useState(false)
@@ -272,7 +271,7 @@ const Form = (props) => {
                     response.json()
                         .then(data => {
                             console.log(data)
-                            setInstitutionEmail(data.email)
+                            //setInstitutionEmail(data.email)
                             setInstitutionPhone(data.phone)
                             setInstitutionName(data.name)
                         })
@@ -485,7 +484,7 @@ const Form = (props) => {
                                 )
                             })}</p> 
                             : 
-                            <div className={classes.urgentCallDiv}><strong>Hitno? Pozovite odmah!</strong><p><a className={classes.phoneLink} href={"tel:" + institutionPhone}>📞 {institutionPhone}</a></p><strong>{institutionName}</strong></div>}
+                            <div className={classes.urgentCallDiv}><strong>Hitno? Pozovite odmah!</strong><p><a className={classes.phoneLink} href={"tel:" + institutionPhone}><span role="img" aria-label='phone'>📞</span> {institutionPhone}</a></p><strong>{institutionName}</strong></div>}
                     </div>
                     <label htmlFor="title" >Naslov</label>
                     <input id="title" className={classes['field-long']} type="text" maxLength={200} size={200} value={title} onChange={handleTitleChange} /><br />
