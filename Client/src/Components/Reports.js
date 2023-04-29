@@ -5,11 +5,8 @@ import EditReportButton from './EditReportButton';
 import Thumbnails from './Thumbnails';
 import ReadMore from './ReadMore';
 import {usePaginationFetch} from '../Hooks/use-pagination'
-import { useContext } from 'react';
-import FetchContext from '../Store/fetch-context';
 
 const Reports = (props) => {
-  const ctx = useContext(FetchContext)
   const {results, page, totalPages, nextPage, previousPage, firstPage, lastPage} = usePaginationFetch(props.email, props.addedReport, props.deletedReport, props.updatedReport)
 
   return (
