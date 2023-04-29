@@ -12,9 +12,11 @@ namespace SituationReport.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-        public UsersController(IUserRepository userRepository)
+        private readonly IOAuthService _oAuthService;
+        public UsersController(IUserRepository userRepository, IOAuthService oAuthService)
         {
             _userRepository = userRepository;
+            _oAuthService = oAuthService;
         }
 
         [HttpPost]
@@ -27,7 +29,7 @@ namespace SituationReport.Controllers
             }
             string token = Request.Headers["Authorization"].ToString().Remove(0, 7); //remove Bearer 
 
-            var payload = await OAuthService.VerifyGoogleTokenId(token);
+            var payload = await _oAuthService.VerifyGoogleTokenId(token);
             if (payload == null)
             {
                 return BadRequest("Invalid token");
@@ -53,7 +55,7 @@ namespace SituationReport.Controllers
         {
 
             string token = Request.Headers["Authorization"].ToString().Remove(0, 7); //remove Bearer 
-            var payload = await OAuthService.VerifyGoogleTokenId(token);
+            var payload = await _oAuthService.VerifyGoogleTokenId(token);
             if (payload == null)
             {
                 return BadRequest("Invalid token");
