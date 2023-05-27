@@ -20,13 +20,14 @@ builder.Services.AddScoped<IReCaptchaService, ReCaptchaService>();
 builder.Services.AddScoped<IOAuthService, OAuthService>();
 
 builder.Services.AddScoped<CustomAuthorizeFilter>();
+string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(
+    options.AddPolicy(MyAllowSpecificOrigins,
         builder =>
         {
-            builder.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+            //builder.SetIsOriginAllowed(isOriginAllowed: _ => true).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
         });
 });
 
@@ -39,9 +40,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseCors(MyAllowSpecificOrigins);
 
-app.UseCors();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
