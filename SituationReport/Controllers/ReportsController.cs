@@ -71,7 +71,7 @@ namespace SituationReport.Controllers
                 return Ok(report);
             }
         }
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("~/api/reports/getimage")]
         public IActionResult GetImage(string name)
