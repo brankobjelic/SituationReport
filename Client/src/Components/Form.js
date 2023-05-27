@@ -102,7 +102,7 @@ const Form = (props) => {
                 }
 
             }
-            setTimeout(tick, 300)
+            setTimeout(tick, 500)
         } else{
             getFrequentCauses()
         }
@@ -145,7 +145,9 @@ const Form = (props) => {
                                 locationTxt = `Lokacija: ${reportForEmail.location}%0D%0A`
                             }
                             const googleMapsLinkElement = document.createElement("a");
-                            googleMapsLinkElement.href = `//google.com/maps/?q=${reportForEmail.latitude},${reportForEmail.longitude}`
+                            if(reportForEmail.latitude){
+                                googleMapsLinkElement.href = `//google.com/maps/?q=${reportForEmail.latitude},${reportForEmail.longitude}`
+                            }
                             var email = document.createElement("a");
 
                             //populating data for email in mailto link
@@ -454,7 +456,7 @@ const Form = (props) => {
     return (
         <div className={classes.modal}>
             <div className={classes.overlay}></div>
-            {!showImageModal &&
+            {//!showImageModal &&
             <>                    
                 <form onSubmit={(e) => {
                     const buttonName = e.nativeEvent.submitter.name //having two submit buttons
