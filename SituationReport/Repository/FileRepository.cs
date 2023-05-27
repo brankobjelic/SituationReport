@@ -57,17 +57,18 @@ namespace SituationReport.Repository
 
         public string Save(string file, int userId)
         {
+            String path = Path.GetFullPath("~/Content/Images").Replace("~\\", "");
+
+            //Check if directory exist
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path); //Create directory if it doesn't exist
+            }
             string imageName = GetImageName(file, userId);
             bool found = FindImageInFolder(imageName);
             if (!found)
             {
-                String path = Path.GetFullPath("~/Content/Images").Replace("~\\", "");
 
-                //Check if directory exist
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path); //Create directory if it doesn't exist
-                }
 
                 string base64 = file.Substring(file.IndexOf(',') + 1);
 
