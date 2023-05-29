@@ -157,7 +157,12 @@ const Form = (props) => {
                             email.click();
                             props.onLeaveForm()
                         });
-                } else {
+                }
+                else if (response.status === 401){
+                    alert("Niste ulogovani. U jednom trenutku možete biti ulogovani samo na jednoj instanci aplikacije. Pokušajte ponovo da se ulogujete.")
+                    props.handleSignOut()
+                }
+                else {
                     console.log(response.status);
                 }
             })
@@ -181,7 +186,12 @@ const Form = (props) => {
                         .then((data) => {
                             setCauses(data);
                         });
-                } else {
+                }
+                else if (response.status === 401){
+                    alert("Niste ulogovani. U jednom trenutku možete biti ulogovani samo na jednoj instanci aplikacije. Pokušajte ponovo da se ulogujete.")
+                    props.handleSignOut()
+                }
+                else {
                     console.log(response.status);
                 }
             })
@@ -373,7 +383,12 @@ const Form = (props) => {
                     } else if(response.status === 200){
                         console.log("Successfuly updated Report");
                         props.onUpdatedReport()
-                    } else{
+                    }
+                    else if (response.status === 401){
+                        alert("Niste ulogovani. U jednom trenutku možete biti ulogovani samo na jednoj instanci aplikacije. Pokušajte ponovo da se ulogujete.")
+                        props.handleSignOut()
+                    }
+                    else{
                         console.log("Error occured with code " + response.status);
                         console.log(response);
                         alert("Desila se greska!");
@@ -420,7 +435,12 @@ const Form = (props) => {
                         console.log("Successfuly updated Report");
                         fetchReport(response.url)   //after succesfully updating a report to db, fetching the report to email it
                         props.onUpdatedReport()
-                    } else{
+                    }
+                    else if (response.status === 401){
+                        alert("Niste ulogovani. U jednom trenutku možete biti ulogovani samo na jednoj instanci aplikacije. Pokušajte ponovo da se ulogujete.")
+                        props.handleSignOut()
+                    }
+                    else{
                         console.log("Error occured with code " + response.status);
                         console.log(response);
                         alert("Desila se greska!");
@@ -444,7 +464,12 @@ const Form = (props) => {
                     .then((data) => {
                         setReportForEmail(data);
                     });
-            } else {
+            }
+            else if (response.status === 401){
+                alert("Niste ulogovani. U jednom trenutku možete biti ulogovani samo na jednoj instanci aplikacije. Pokušajte ponovo da se ulogujete.")
+                props.handleSignOut()
+            }
+            else {
                 console.log(response.status);
             }
         })

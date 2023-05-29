@@ -21,7 +21,12 @@ const DeleteReportButton = (props) => {
               if (response.status === 200) {
                   console.log("Succesfuly deleted Report")
                   props.onDel()
-              } else {
+              }
+              else if (response.status === 401){
+                alert("Niste ulogovani. U jednom trenutku možete biti ulogovani samo na jednoj instanci aplikacije. Pokušajte ponovo da se ulogujete.")
+                props.handleSignOut()
+              }
+              else {
                   console.log("Error occured with code " + response.status);
                   alert("Doslo je do greske!");
               }
