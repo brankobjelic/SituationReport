@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import FetchContext from '../Store/fetch-context';
 
 export const usePaginationFetch = (
-    email, addedReport, deletedReport, updatedReport
+    email, addedReport, deletedReport, updatedReport, handleSignOut
   ) => {
     const ctx = useContext(FetchContext)
 
@@ -35,14 +35,19 @@ export const usePaginationFetch = (
         headers.From = sessionStorage.getItem('email')
         fetch(requestUrl, {headers: headers})
         .then(response => {
-            let paginationHeader = JSON.parse(response.headers.get('x-pagination'))
-           setTotalPages(paginationHeader.TotalPages)
             if(response.status === 200){
+                let paginationHeader = JSON.parse(response.headers.get('x-pagination'))
+                setTotalPages(paginationHeader.TotalPages)
                 response.json().then((data) => {
                   console.log(data)
                   setResults(data)
                 });
-            }else{
+            }
+            else if (response.status === 401){
+                alert("Niste ulogovani. U jednom trenutku možete biti ulogovani samo na jednoj instanci aplikacije. Pokušajte ponovo da se ulogujete.")
+                handleSignOut()
+            }
+            else{
                 console.log("Error occured with code " + response.status);
                 console.log(response);
                 alert("Desila se greska!");

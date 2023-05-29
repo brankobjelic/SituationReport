@@ -13,6 +13,7 @@ function App() {
   const [ user, setUser] = useState({})
 
   function handleCallbackResponse(response){
+      console.log(response)
       console.log("Encoded JWT ID token: " + response.credential)
       userObject = jwt_decode(response.credential)
       sessionStorage.setItem('idToken', response.credential)
@@ -67,7 +68,7 @@ function App() {
       <div className="App">
         <Header user={user} handleSignOut={handleSignOut}></Header>
         {Object.keys(user).length !== 0 &&
-          <Main email={user.email}></Main>
+          <Main email={user.email} handleSignOut={handleSignOut}></Main>
         }
       </div>
   );

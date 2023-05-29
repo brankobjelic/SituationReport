@@ -48,8 +48,8 @@ const Main = (props) => {
   return (
     <div>
       {!showForm && <button className={classes.button} onClick={showFormHandler}>Nova prijava</button>}
-      {showForm && <Form onLeaveForm={() => {hideFormHandler()}} email={props.email} onAddedReport={() => {addedReportHandler()}}></Form>}
-      <Reports addedReport={addedReport} deletedReport={deletedReport} updatedReport={updatedReport} email={props.email} onDel={deletedReportHandler} onUpdate={updatedReportHandler} onShowForm={showFormHandler} onLeaveForm={hideFormHandler}></Reports>
+      {showForm && <Form onLeaveForm={() => {hideFormHandler()}} email={props.email} onAddedReport={() => {addedReportHandler()}} handleSignOut={props.handleSignOut}></Form>}
+      <Reports addedReport={addedReport} deletedReport={deletedReport} updatedReport={updatedReport} email={props.email} onDel={deletedReportHandler} onUpdate={updatedReportHandler} onShowForm={showFormHandler} onLeaveForm={hideFormHandler} handleSignOut={props.handleSignOut}></Reports>
     </div>
   )
 }

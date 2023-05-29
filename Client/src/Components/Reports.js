@@ -7,7 +7,7 @@ import ReadMore from './ReadMore';
 import {usePaginationFetch} from '../Hooks/use-pagination'
 
 const Reports = (props) => {
-  const {results, page, totalPages, nextPage, previousPage, firstPage, lastPage} = usePaginationFetch(props.email, props.addedReport, props.deletedReport, props.updatedReport)
+  const {results, page, totalPages, nextPage, previousPage, firstPage, lastPage} = usePaginationFetch(props.email, props.addedReport, props.deletedReport, props.updatedReport, props.handleSignOut)
 
   return (
     <>
@@ -29,10 +29,10 @@ const Reports = (props) => {
               </div>
               <span className={classes.alignRight}>
                 <span className={classes.penIcon}>
-                  <EditReportButton email={props.email} report={report} onUpdatedReport={props.onUpdate} onShowform={props.showFormHandler} showForm={props.showForm} onLeaveForm={props.onLeaveForm}/>
+                  <EditReportButton email={props.email} report={report} onUpdatedReport={props.onUpdate} onShowform={props.showFormHandler} showForm={props.showForm} onLeaveForm={props.onLeaveForm} handleSignOut={props.handleSignOut}/>
                 </span>  
                 <span className={classes.trashIcon}>
-                  <DeleteReportButton onDel={props.onDel} report={report} />
+                  <DeleteReportButton onDel={props.onDel} report={report} handleSignOut={props.handleSignOut}/>
                 </span>
               </span>
             </div>
