@@ -146,7 +146,7 @@ const Form = (props) => {
                             }
                             const googleMapsLinkElement = document.createElement("a");
                             if(reportForEmail.latitude){
-                                googleMapsLinkElement.href = `//google.com/maps/?q=${reportForEmail.latitude},${reportForEmail.longitude}`
+                                googleMapsLinkElement.href = `https://google.com/maps/?q=${reportForEmail.latitude},${reportForEmail.longitude}`
                             }
                             var email = document.createElement("a");
 
