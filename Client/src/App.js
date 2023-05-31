@@ -67,6 +67,18 @@ function App() {
   return (
       <div className="App">
         <Header user={user} handleSignOut={handleSignOut}></Header>
+        <div>
+          {Object.keys(user).length === 0 &&
+          <>
+            <p>Dobrodošli u aplikaciju Moj komunalni pomoćnik. Namena ove aplikacije je da Vam omogući jednostavno
+              prijavljivanje komunalnih i drugih problema sa kojima se svi susrećemo.
+            </p>
+            <p>
+              U aplikaciju se možete ulogovati pomoću svog Google naloga, klikom na dugme u gornjem desnom uglu ekrana. 
+            </p>
+          </>
+          }
+        </div>
         {Object.keys(user).length !== 0 &&
           <Main email={user.email} handleSignOut={handleSignOut}></Main>
         }

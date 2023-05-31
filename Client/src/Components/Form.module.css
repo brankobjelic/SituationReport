@@ -131,6 +131,8 @@ textarea {
 }
 .form-style-1 .field-select{
 	width: 100%;
+	height: 36px;
+	font-size: 14px;
 }
 .form-style-1 .field-textarea{
 	resize: none;
@@ -167,12 +169,15 @@ textarea {
     font-weight: bold;
   }
 
- .button:hover,
-  .button:active
-{
-	cursor: pointer;
-  background-color: #071f2f;
-}  
+  @media (any-hover: hover) {
+		.button:hover
+		/*, .button:active*/
+	{
+		cursor: pointer;
+		background-color: #071f2f;
+	} 
+  }
+
 
 button:disabled,
 button[disabled] {

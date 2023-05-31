@@ -11,6 +11,13 @@ const Reports = (props) => {
 
   return (
     <>
+    {results.length === 0 && 
+      <div>
+        <p>Još uvek nemate kreiranih prijava. Započnite kreiranje prijave pritiskom na dugme Nova prijava koje se nalazi iznad ovog teksta.</p>
+      </div>
+    }
+    {results.length !== 0 && 
+    <>
       <ul>
         {results.slice(0).map(report => (
             <li className={classes.reportItem} key={report.id} id={report.id}>
@@ -46,7 +53,9 @@ const Reports = (props) => {
           <button disabled={page === totalPages} onClick={lastPage} ><b>&gt;&gt;</b></button>
       </div>
     </>
-  )
+  }
+    </>
+    )
 }
 
 export default React.memo(Reports)
