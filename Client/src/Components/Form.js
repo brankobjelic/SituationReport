@@ -102,7 +102,7 @@ const Form = (props) => {
                 }
 
             }
-            setTimeout(tick, 500)
+            setTimeout(tick, 1000)
         } else{
             getFrequentCauses()
         }

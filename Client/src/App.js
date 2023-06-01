@@ -71,10 +71,11 @@ function App() {
           {Object.keys(user).length === 0 &&
           <>
             <p>Dobrodošli u aplikaciju Moj komunalni pomoćnik. Namena ove aplikacije je da Vam omogući jednostavno
-              prijavljivanje komunalnih i drugih problema sa kojima se svi susrećemo.
+              prijavljivanje komunalnih i drugih problema odgovarajućim institucijama.
             </p>
             <p>
-              U aplikaciju se možete ulogovati pomoću svog Google naloga, klikom na dugme u gornjem desnom uglu ekrana. 
+              U aplikaciju se možete ulogovati pomoću svog Google naloga, pritiskom na dugme u gornjem desnom uglu ekrana. 
+              Ukoliko imate bilo kakva pitanja ili sugestije budite slobodni da nas kontaktirate.
             </p>
           </>
           }
