@@ -7,11 +7,12 @@ import ReadMore from './ReadMore';
 import {usePaginationFetch} from '../Hooks/use-pagination'
 
 const Reports = (props) => {
-  const {results, page, totalPages, nextPage, previousPage, firstPage, lastPage} = usePaginationFetch(props.email, props.addedReport, props.deletedReport, props.updatedReport, props.handleSignOut)
+  const {loading, results, page, totalPages, nextPage, previousPage, firstPage, lastPage} = usePaginationFetch(props.email, props.addedReport, props.deletedReport, props.updatedReport, props.handleSignOut)
 
   return (
     <>
-    {results.length === 0 && 
+    {loading && <p>Učitavanje..</p>}
+    {!loading && results.length === 0 && 
       <div>
         <p>Još uvek nemate kreiranih prijava. Započnite kreiranje prijave pritiskom na dugme Nova prijava koje se nalazi iznad ovog teksta.</p>
       </div>
