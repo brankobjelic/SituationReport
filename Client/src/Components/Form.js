@@ -42,6 +42,8 @@ const Form = (props) => {
 
     const [showImageModal, setShowImageModal] = useState(false)
     const [reportForEmail, setReportForEmail] = useState(false)
+    const [processing, setProcessing] = useState(false)
+    const [sending, setSending] = useState(false)
 
     const captchaRef = useRef(null)
     const causeIdRef = useRef("DEFAULT")
@@ -374,6 +376,7 @@ const Form = (props) => {
             var sendData = { "userEmail": props.email, "title": title, "description": description,
              "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeIdRef.current.value, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
             console.log(sendData)
+            setProcessing(true)
             fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
                 .then(response => {
                     if (response.status === 201) {
@@ -393,6 +396,7 @@ const Form = (props) => {
                         console.log(response);
                         alert("Desila se greska!");
                     }
+                    setProcessing(false)
                     props.onLeaveForm()
                 })
         }
@@ -419,6 +423,7 @@ const Form = (props) => {
             var sendData = { "userEmail": props.email, "title": title, "description": description,
              "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeIdRef.current.value, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
             console.log(sendData)
+            setSending(true)
             fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
                 .then(response => {
                     if (response.status === 201) {  //on created report
@@ -439,11 +444,13 @@ const Form = (props) => {
                     else if (response.status === 401){
                         alert("Niste ulogovani. U jednom trenutku možete biti ulogovani samo na jednoj instanci aplikacije. Pokušajte ponovo da se ulogujete.")
                         props.handleSignOut()
+                        setSending(false)
                     }
                     else{
                         console.log("Error occured with code " + response.status);
                         console.log(response);
                         alert("Desila se greska!");
+                        setSending(false)
                     }
                 })
         }
@@ -472,6 +479,7 @@ const Form = (props) => {
             else {
                 console.log(response.status);
             }
+            setSending(false)
         })
         .catch(error => console.log(error)
     );
@@ -481,7 +489,6 @@ const Form = (props) => {
     return (
         <div className={classes.modal}>
             <div className={classes.overlay}></div>
-            {//!showImageModal &&
             <>                    
                 <form onSubmit={(e) => {
                     const buttonName = e.nativeEvent.submitter.name //having two submit buttons
@@ -549,11 +556,11 @@ const Form = (props) => {
                         }
                     </div>
                     <ReCAPTCHA sitekey={process.env.REACT_APP_SITE_KEY} ref={captchaRef} />
-                    <button type="submit" name="submitToServer" className={classes.button}>Sačuvaj</button>
-                    <button type="submit" name="sendEmail" className={classes.button} style={{ float: "right" }}>Pošalji prijavu</button>
+                    <button type="submit" name="submitToServer" className={classes.button}>{processing ? 'Procesuiram...' : 'Sačuvaj'}</button>
+                    <button type="submit" name="sendEmail" className={classes.button} style={{ float: "right" }}>{sending ? 'Procesuiram...' : 'Pošalji prijavu'}</button>
                 </form>
             </>
-            }
+            
             {showImageModal && 
                 <ImageModal 
                     fileDataUrl={fileDataUrl}

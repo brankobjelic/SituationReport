@@ -10,6 +10,7 @@ export const usePaginationFetch = (
     const [page, setPage] = useState(1)
     const [results, setResults] = useState([])
     const [totalPages, setTotalPages] = useState(1)
+    const [loading, setLoading] = useState(false)
     const pageSize = 5
 
     //sets current page to first page if new report added so it's visible on screen
@@ -27,6 +28,7 @@ export const usePaginationFetch = (
     }, [page, deletedReport, addedReport, updatedReport])
 
     function fetchReports(){
+        setLoading(true)
         var endpoint = `api/reports/paginatedbyuser?PageNumber=${page}&PageSize=${pageSize}&email=${email}`;
         var requestUrl = ctx.protocol + ctx.host + ctx.port + endpoint;
         console.log(requestUrl)
@@ -52,6 +54,7 @@ export const usePaginationFetch = (
                 console.log(response);
                 alert("Desila se greska!");
             }
+            setLoading(false)
         })
         .catch(error => console.log(error));
     }
@@ -60,5 +63,5 @@ export const usePaginationFetch = (
     const previousPage = () => {setPage(prevState => Math.max(0, prevState - 1))}
     const firstPage = () => {setPage(1)}
     const lastPage = () => {setPage(totalPages)}
-    return {results, page, totalPages, nextPage, previousPage, firstPage, lastPage}
+    return {loading, results, page, totalPages, nextPage, previousPage, firstPage, lastPage}
   };
