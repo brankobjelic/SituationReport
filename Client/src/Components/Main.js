@@ -49,7 +49,7 @@ const Main = (props) => {
     <div>
       {!showForm && <button className={classes.button} onClick={showFormHandler}><span role="img" aria-label="add">➕</span> Nova prijava</button>}
       {showForm && <Form onLeaveForm={() => {hideFormHandler()}} email={props.email} onAddedReport={() => {addedReportHandler()}} handleSignOut={props.handleSignOut}></Form>}
-      <Reports addedReport={addedReport} deletedReport={deletedReport} updatedReport={updatedReport} email={props.email} onDel={deletedReportHandler} onUpdate={updatedReportHandler} onShowForm={showFormHandler} onLeaveForm={hideFormHandler} handleSignOut={props.handleSignOut}></Reports>
+      <Reports addedReport={addedReport} deletedReport={deletedReport} updatedReport={updatedReport} email={props.email} userName={props.userName} onDel={deletedReportHandler} onUpdate={updatedReportHandler} onShowForm={showFormHandler} onLeaveForm={hideFormHandler} handleSignOut={props.handleSignOut}></Reports>
     </div>
   )
 }

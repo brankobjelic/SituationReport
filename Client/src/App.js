@@ -70,7 +70,7 @@ function App() {
         <div>
           {Object.keys(user).length === 0 &&
           <>
-            <p>Dobrodošli u aplikaciju Moj komunalni pomoćnik. Namena ove aplikacije je da Vam omogući jednostavno
+            <p>Dobrodošli na platformu Moj komunalni pomoćnik. Namena ove aplikacije je da Vam omogući jednostavno
               prijavljivanje komunalnih i drugih problema odgovarajućim institucijama.
             </p>
             <p>
@@ -81,7 +81,7 @@ function App() {
           }
         </div>
         {Object.keys(user).length !== 0 &&
-          <Main email={user.email} handleSignOut={handleSignOut}></Main>
+          <Main email={user.email} userName={user.name} handleSignOut={handleSignOut}></Main>
         }
       </div>
   );
