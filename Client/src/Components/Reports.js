@@ -4,6 +4,7 @@ import DeleteReportButton from './DeleteReportButton';
 import EditReportButton from './EditReportButton';
 import Thumbnails from './Thumbnails';
 import ReadMore from './ReadMore';
+import PdfDocument from './PdfDocument';
 import {usePaginationFetch} from '../Hooks/use-pagination'
 
 const Reports = (props) => {
@@ -22,7 +23,7 @@ const Reports = (props) => {
       <ul>
         {results.slice(0).map(report => (
             <li className={classes.reportItem} key={report.id} id={report.id}>
-            <p className={classes.liHeader}>{new Date(report.dateAndTime).toLocaleString('sr-RS')}<br />
+            <p className={classes.liHeader}>{new Date(report.dateAndTime).toLocaleString('sr-RS')}<PdfDocument report={report} email={props.email} userName={props.userName} /><br />
             <small>{report.institution} <br /> {report.causeDescription} <br />
             {report.location && <span>Lokacija: {report.location} </span>}
             {!!report.latitude && <span>Gps koordinate: {report.latitude}, {report.longitude}</span>}
