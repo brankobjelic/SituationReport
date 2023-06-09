@@ -5,9 +5,11 @@ import EditReportButton from './EditReportButton';
 import Thumbnails from './Thumbnails';
 import ReadMore from './ReadMore';
 import PdfDocument from './PdfDocument';
+
 import {usePaginationFetch} from '../Hooks/use-pagination'
 
 const Reports = (props) => {
+
   const {loading, results, page, totalPages, nextPage, previousPage, firstPage, lastPage} = usePaginationFetch(props.email, props.addedReport, props.deletedReport, props.updatedReport, props.handleSignOut)
 
   return (
