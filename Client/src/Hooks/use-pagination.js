@@ -31,7 +31,7 @@ export const usePaginationFetch = (
         setLoading(true)
         var endpoint = `api/reports/paginatedbyuser?PageNumber=${page}&PageSize=${pageSize}&email=${email}`;
         var requestUrl = ctx.protocol + ctx.host + ctx.port + endpoint;
-        console.log(requestUrl)
+        //console.log(requestUrl)
         var headers={'Content-Type':'application/json'}
         headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
         headers.From = sessionStorage.getItem('email')
@@ -41,7 +41,7 @@ export const usePaginationFetch = (
                 let paginationHeader = JSON.parse(response.headers.get('x-pagination'))
                 setTotalPages(paginationHeader.TotalPages)
                 response.json().then((data) => {
-                  console.log(data)
+                  //console.log(data)
                   setResults(data)
                 });
             }

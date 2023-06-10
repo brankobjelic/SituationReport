@@ -28,7 +28,7 @@ const Thumbnails = (props) => {
         pics.push(props.pic3)
     }
 
-    console.log(pics)
+    //console.log(pics)
     function handleSetImageViewModal(e){   
       setIndex(e.target.name)
       getImage(e.target.id, e.target.name)
@@ -58,10 +58,10 @@ const Thumbnails = (props) => {
         
 
         function getImage(imageFileName, index){
-            console.log(index)
+            //console.log(index)
             var imageEndpoint = "api/reports/getimage?name=" + imageFileName;
             var requestUrl = ctx.protocol + ctx.host + ctx.port + imageEndpoint;
-            console.log(requestUrl)
+            //console.log(requestUrl)
             var headers = {};
             headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
             headers.From = sessionStorage.getItem('email')
@@ -122,8 +122,8 @@ const Thumbnails = (props) => {
         function handleGetNextImage(){
             getImage(pics[index])   //pic1 ~ index 0
             setIndex(+index + 1)
-            console.log(index)
-            console.log(pics)
+            //console.log(index)
+            //console.log(pics)
         }
 
         function handleGetPreviousImage(){

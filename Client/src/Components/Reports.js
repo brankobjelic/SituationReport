@@ -4,9 +4,11 @@ import DeleteReportButton from './DeleteReportButton';
 import EditReportButton from './EditReportButton';
 import Thumbnails from './Thumbnails';
 import ReadMore from './ReadMore';
+import PdfDocument from './PdfDocument';
 import {usePaginationFetch} from '../Hooks/use-pagination'
 
 const Reports = (props) => {
+
   const {loading, results, page, totalPages, nextPage, previousPage, firstPage, lastPage} = usePaginationFetch(props.email, props.addedReport, props.deletedReport, props.updatedReport, props.handleSignOut)
 
   return (
@@ -21,7 +23,7 @@ const Reports = (props) => {
     <>
       <ul>
         {results.slice(0).map(report => (
-            <li className={classes.reportItem} key={report.id} id={report.id}>
+          <li className={classes.reportItem} key={report.id} id={report.id}>
             <p className={classes.liHeader}>{new Date(report.dateAndTime).toLocaleString('sr-RS')}<br />
             <small>{report.institution} <br /> {report.causeDescription} <br />
             {report.location && <span>Lokacija: {report.location} </span>}
@@ -36,6 +38,9 @@ const Reports = (props) => {
                 <Thumbnails pic1={report.pic1} pic2={report.pic2} pic3={report.pic3} />
               </div>
               <span className={classes.alignRight}>
+                <span className={classes.penIcon}>
+                  <PdfDocument report={report} email={props.email} userName={props.userName} />
+                </span>
                 <span className={classes.penIcon}>
                   <EditReportButton email={props.email} report={report} onUpdatedReport={props.onUpdate} onShowform={props.showFormHandler} showForm={props.showForm} onLeaveForm={props.onLeaveForm} handleSignOut={props.handleSignOut}/>
                 </span>  
