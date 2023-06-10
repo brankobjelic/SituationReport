@@ -7,48 +7,32 @@ import {
     View,
     StyleSheet,
     Link,
-    Font,
-    PDFViewer,
-    Image
+    Font
   } from "@react-pdf/renderer";
-//   import TimesFont from '../Fonts/times.ttf'
-//   import TimesFontB from '../Fonts/timesbd.ttf'
-//   import TimesFontBI from   '../Fonts/timesbi.ttf'
-//   import TimesFontI from   '../Fonts/timesi.ttf'
-//   import RobotoFont from '../Fonts/Roboto-Regular.ttf'
+  import TimesFont from '../Fonts/times.ttf'
+  import TimesFontB from '../Fonts/timesbd.ttf'
+  import TimesFontBI from   '../Fonts/timesbi.ttf'
+  import TimesFontI from   '../Fonts/timesi.ttf'
 
 const PdfDocument = ({report, userName, email}) => {
     var gpsLink = `https://google.com/maps/?q=${report.latitude},${report.longitude}`
     var mailLink = `mailto:${email}`
 
     //Register Font
-    // Font.register({
-    //     family: 'TimesNewRoman',
-    //     fonts: [
-    //         { src: TimesFont }, // font-style: normal, font-weight: normal
-    //         { src: TimesFontB, fontWeight: 700 }, // font-style: normal, font-weight: bold
-    //         { src: TimesFontI, fontStyle: 'italic' },
-    //         { src: TimesFontBI, fontStyle: 'italic', fontWeight: 700 },
-    //        ]
-    // });
+    Font.register({
+        family: 'TimesNewRoman',
+        fonts: [
+            { src: TimesFont }, // font-style: normal, font-weight: normal
+            { src: TimesFontB, fontWeight: 700 }, // font-style: normal, font-weight: bold
+            { src: TimesFontI, fontStyle: 'italic' },
+            { src: TimesFontBI, fontStyle: 'italic', fontWeight: 700 },
+           ]
+    });
 
-    // Font.register({
-    //     family: 'Sylfaen',
-    //     fonts: [
-    //         { src: SylfaenFont }, // font-style: normal, font-weight: normal
-    //        ]
-    // });
-
-    // Font.register({
-    //     family: 'Roboto',
-    //     fonts: [
-    //         { src: 'https://brankobjelic.duckdns.org/static/media/Roboto-Regular.8a36205b.ttf' }, // font-style: normal, font-weight: normal
-    //        ]
-    // });
   // Create styles
   const styles = StyleSheet.create({
     page: {
-      fontFamily: "Helvetica",
+      fontFamily: "TimesNewRoman",
       fontSize: "10px",
     },
     section: {
