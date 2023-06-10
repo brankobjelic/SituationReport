@@ -1,4 +1,6 @@
 import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import {
     Document,
     Page,
@@ -74,7 +76,7 @@ const PdfDocument = ({report, userName, email}) => {
   return (
     <BlobProvider document={MyDoc}>
     {({ blob, url }) => (
-      <a href={url} target="_blank">PDF</a>
+      <a href={url} target="_blank" style={{color: 'black'}}><FontAwesomeIcon icon={faFilePdf} size = 'lg' /></a>
     )}
   </BlobProvider>
   )
