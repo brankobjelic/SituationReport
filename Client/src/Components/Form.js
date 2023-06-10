@@ -37,7 +37,6 @@ const Form = (props) => {
     const [longitude, setLongitude] = useState()
 
     const [institutionName, setInstitutionName] = useState('')
-    //const [institutionEmail, setInstitutionEmail] = useState('')
     const [institutionPhone, setInstitutionPhone] = useState('')
 
     const [showImageModal, setShowImageModal] = useState(false)
@@ -83,7 +82,7 @@ const Form = (props) => {
         if(props.report){
             function tick(){
                 causeIdRef.current.value = props.report.causeId
-                console.log(causeIdRef.current.value)
+                //console.log(causeIdRef.current.value)
                 setFrequentCauseDisplayed(false)
                 getInstitutionByCauseId(props.report.causeId)
                 setTitle(props.report.title)
@@ -115,7 +114,7 @@ const Form = (props) => {
     /*Here a report gets prepared for sending to coresponding institution by email*/
     useEffect(() => {
         if(reportForEmail){
-            console.log(reportForEmail)
+            //console.log(reportForEmail)
             const desc = reportForEmail.description.replace(/\n/g, "%0D%0A")
             let requestUrl = ctx.protocol + ctx.host + ctx.port + institutionByCauseIdEndpoint +reportForEmail.causeId
             var headers = {};
@@ -127,7 +126,7 @@ const Form = (props) => {
                 if (response.status === 200) {
                     response.json()
                         .then((data) => {
-                            console.log(data)
+                            //console.log(data)
                             if(reportForEmail.pic1){
                                 const imageLinkElement1 = document.createElement("a");
                                 imageLinkElement1.href = `${ctx.protocol}${ctx.host}${ctx.port}api/reports/getimage?name=${reportForEmail.pic1}`
@@ -220,7 +219,7 @@ const Form = (props) => {
     }
 
     function handleSelectFrequentCause(causeId){
-        console.log(causeId)
+        //console.log(causeId)
         causeIdRef.current.value = causeId
         setFrequentCauseDisplayed(false)
         getInstitutionByCauseId(causeId)
@@ -233,7 +232,7 @@ const Form = (props) => {
         var headers = {};
         headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
         headers.From = sessionStorage.getItem('email')
-        console.log(requestUrl)
+        //console.log(requestUrl)
         fetch(requestUrl, {headers: headers})
         .then(response => {
             if(response.status === 200){
@@ -284,8 +283,7 @@ const Form = (props) => {
                 if(response.status === 200){
                     response.json()
                         .then(data => {
-                            console.log(data)
-                            //setInstitutionEmail(data.email)
+                            //console.log(data)
                             setInstitutionPhone(data.phone)
                             setInstitutionName(data.name)
                         })
@@ -314,7 +312,7 @@ const Form = (props) => {
 
     function handleAddFile(e) {
         const newFile = e.target.files[0];
-        console.log(newFile)
+        //console.log(newFile)
         if (!newFile.type.match(imageMimeType)) {
           alert("Image mime type is not valid");
           return;
@@ -340,9 +338,9 @@ const Form = (props) => {
 
     function handleAddGeoLocation(){
         if ("geolocation" in navigator) {
-            console.log("Geolocation is available!")
+            //console.log("Geolocation is available!")
             navigator.geolocation.getCurrentPosition((position) => {
-              console.log(position)
+              //console.log(position)
               setLatitude(position.coords.latitude.toFixed(9))
               setLongitude(position.coords.longitude.toFixed(9))
             });
@@ -372,10 +370,10 @@ const Form = (props) => {
             headers["Content-Type"] = 'application/json'
             headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
             headers.From = sessionStorage.getItem('email')
-            console.log(description)
+            //console.log(description)
             var sendData = { "userEmail": props.email, "title": title, "description": description,
              "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeIdRef.current.value, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
-            console.log(sendData)
+            //console.log(sendData)
             setProcessing(true)
             fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
                 .then(response => {
@@ -422,13 +420,13 @@ const Form = (props) => {
             headers["Content-Type"] = 'application/json'
             var sendData = { "userEmail": props.email, "title": title, "description": description,
              "location": location, "latitude": latitude, "longitude": longitude, "causeId": causeIdRef.current.value, "pic1": fileDataURLs[0], "pic2": fileDataURLs[1], "pic3": fileDataURLs[2], "reCaptchaToken": token };
-            console.log(sendData)
+            //console.log(sendData)
             setSending(true)
             fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
                 .then(response => {
                     if (response.status === 201) {  //on created report
                         response.json().then((data) => {
-                            console.log(data)
+                            //console.log(data)
                             let reportsEndpoint = "api/Reports/"
                             requestUrl = ctx.protocol + ctx.host + ctx.port + reportsEndpoint + data.id
                             fetchReport(requestUrl) //after succesfully submitting a report to db, fetching the report to email it 

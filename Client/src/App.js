@@ -13,12 +13,12 @@ function App() {
   const [ user, setUser] = useState({})
 
   function handleCallbackResponse(response){
-      console.log(response)
-      console.log("Encoded JWT ID token: " + response.credential)
+      //.log(response)
+      //console.log("Encoded JWT ID token: " + response.credential)
       userObject = jwt_decode(response.credential)
       sessionStorage.setItem('idToken', response.credential)
       sessionStorage.setItem('email', userObject.email)
-      console.log(userObject)
+      //console.log(userObject)
       document.getElementById("signInDiv").hidden = true
       sendUserToServer(userObject)
   }
@@ -28,7 +28,7 @@ function App() {
     var requestUrl = ctx.protocol + ctx.host + ctx.port + loginEndpoint;
     var headers={'Content-Type':'application/json'}
     headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
-    console.log(headers)
+    //console.log(headers)
     var sendData = {"name": user.name, "email": user.email};
     fetch(requestUrl, {method: "POST", headers: headers, body: JSON.stringify(sendData)})
     .then(response => {
@@ -48,21 +48,20 @@ function App() {
     setUser({})
     document.getElementById("signInDiv").hidden = false
   }
+  
+  useEffect(() => {
 
-   useEffect(() => {
-    window.onload = function(e){ 
-    //const google = window.google;
-    window.google.accounts.id.initialize({
-      client_id: "843401142734-cp1pr3dg56c2m9o2g635jq3gmk3t2q0t.apps.googleusercontent.com",
-      callback: handleCallbackResponse
-    
-    })
-
-    window.google.accounts.id.renderButton(
-      document.getElementById("signInDiv"),
-      {theme: "filled_black", size: "large", shape: "pill"}
-    )}
-   }, [])
+      /*global google*/
+      window.google.accounts.id.initialize({
+        client_id: "843401142734-cp1pr3dg56c2m9o2g635jq3gmk3t2q0t.apps.googleusercontent.com",
+        callback: handleCallbackResponse     
+      })
+  
+      window.google.accounts.id.renderButton(
+        document.getElementById("signInDiv"),
+        {theme: "filled_black", size: "large", shape: "pill"}
+      )
+  }, [])
 
   return (
       <div className="App">
