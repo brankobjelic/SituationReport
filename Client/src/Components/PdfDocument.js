@@ -1,6 +1,7 @@
 import React from 'react'
+import { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
+import { faCircleXmark, faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import {
     Document,
     Page,
@@ -9,16 +10,22 @@ import {
     View,
     StyleSheet,
     Link,
-    Font
+    Font,
+    Image
   } from "@react-pdf/renderer";
   import TimesFont from '../Fonts/times.ttf'
   import TimesFontB from '../Fonts/timesbd.ttf'
   import TimesFontBI from   '../Fonts/timesbi.ttf'
   import TimesFontI from   '../Fonts/timesi.ttf'
+  import FetchContext from '../Store/fetch-context';
+
 
 const PdfDocument = ({report, userName, email}) => {
+    const ctx = useContext(FetchContext)
     var gpsLink = `https://google.com/maps/?q=${report.latitude},${report.longitude}`
     var mailLink = `mailto:${email}`
+    const imageEndpoint="api/reports/getimage?name="
+    var requestUrl = ctx.protocol + ctx.host + ctx.port + imageEndpoint
 
     //Register Font
     Font.register({
@@ -35,7 +42,7 @@ const PdfDocument = ({report, userName, email}) => {
   const styles = StyleSheet.create({
     page: {
       fontFamily: "TimesNewRoman",
-      fontSize: "10px",
+      fontSize: "12px",
     },
     section: {
       margin: 10,
@@ -45,9 +52,20 @@ const PdfDocument = ({report, userName, email}) => {
       width: window.innerWidth, //the pdf viewer will take up all of the width and height
       height: window.innerHeight * 0.9,
     },
+    imageSection: {
+      display: 'flex',
+      flexDirection: "row",
+      flexWrap: "wrap",
+      margin: 10,
+      padding: 10,
+    },
     image: {
-      width: '50%',
+      width: '30%',
       height: 'auto',
+      float: 'left',
+      margin: 5,
+      objectFit: 'scale-down',
+      objectPosition: 'top',
     },
   });
   
@@ -69,13 +87,18 @@ const PdfDocument = ({report, userName, email}) => {
                     <Text>Predmet: {report.title}</Text>
                     <Text>{report.description}</Text>
                 </View>
+                <View style={styles.imageSection}>
+                  {report.pic1 &&<Image style={styles.image} src={requestUrl+report.pic1} />}
+                  {report.pic2 &&<Image style={styles.image} src={requestUrl+report.pic2} />}
+                  {report.pic3 &&<Image style={styles.image} src={requestUrl+report.pic3} />}
+                </View>
                 </Page>
         </Document>
     );
 
   return (
     <BlobProvider document={MyDoc}>
-    {({ blob, url }) => (
+    {({ url }) => (
       <a href={url} target="_blank" style={{color: 'black'}}><FontAwesomeIcon icon={faFilePdf} size = 'lg' /></a>
     )}
   </BlobProvider>
