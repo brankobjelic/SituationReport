@@ -81,16 +81,16 @@ const PdfDocument = ({report, userName, email}) => {
                 </View>
                 <View style={styles.section}>
                         <Text>Adresa ili opis lokacije: {report.location}</Text>
-                    <Text>GPS koordinate: <Link src={gpsLink}>{report.latitude},{report.longitude}</Link></Text>
+                    {report.latitude ? <Text>GPS koordinate: <Link src={gpsLink}><Text>{report.latitude},{report.longitude}</Text></Link></Text> : null}
                 </View>
                 <View style={styles.section}>
                     <Text>Predmet: {report.title}</Text>
                     <Text>{report.description}</Text>
                 </View>
                 <View style={styles.imageSection}>
-                  {report.pic1 &&<Link src={requestUrl+report.pic1}><Image style={styles.image} src={requestUrl+report.pic1} /></Link>}
-                  {report.pic2 &&<Link src={requestUrl+report.pic2}><Image style={styles.image} src={requestUrl+report.pic2} /></Link>}
-                  {report.pic3 &&<Link src={requestUrl+report.pic3}><Image style={styles.image} src={requestUrl+report.pic3} /></Link>}
+                  {report.pic1 ? <Link src={requestUrl+report.pic1}><Image style={styles.image} src={requestUrl+report.pic1} /></Link> : null}
+                  {report.pic2 ? <Link src={requestUrl+report.pic2}><Image style={styles.image} src={requestUrl+report.pic2} /></Link> : null}
+                  {report.pic3 ? <Link src={requestUrl+report.pic3}><Image style={styles.image} src={requestUrl+report.pic3} /></Link> : null}
                 </View>
                 </Page>
         </Document>
