@@ -43,6 +43,7 @@ const PdfDocument = ({report, userName, email}) => {
     page: {
       fontFamily: "TimesNewRoman",
       fontSize: "12px",
+      textAlign: "justify",
     },
     section: {
       margin: 10,
@@ -60,12 +61,11 @@ const PdfDocument = ({report, userName, email}) => {
       padding: 10,
     },
     image: {
-      width: '30%',
-      height: 'auto',
+      width: '170',
+      height: '170',
       float: 'left',
       margin: 5,
       objectFit: 'scale-down',
-      objectPosition: 'top',
     },
   });
   
@@ -88,9 +88,9 @@ const PdfDocument = ({report, userName, email}) => {
                     <Text>{report.description}</Text>
                 </View>
                 <View style={styles.imageSection}>
-                  {report.pic1 &&<Image style={styles.image} src={requestUrl+report.pic1} />}
-                  {report.pic2 &&<Image style={styles.image} src={requestUrl+report.pic2} />}
-                  {report.pic3 &&<Image style={styles.image} src={requestUrl+report.pic3} />}
+                  {report.pic1 &&<Link src={requestUrl+report.pic1}><Image style={styles.image} src={requestUrl+report.pic1} /></Link>}
+                  {report.pic2 &&<Link src={requestUrl+report.pic2}><Image style={styles.image} src={requestUrl+report.pic2} /></Link>}
+                  {report.pic3 &&<Link src={requestUrl+report.pic3}><Image style={styles.image} src={requestUrl+report.pic3} /></Link>}
                 </View>
                 </Page>
         </Document>
