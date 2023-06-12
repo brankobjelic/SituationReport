@@ -519,10 +519,10 @@ const Form = (props) => {
                             <div className={classes.urgentCallDiv}><strong>Hitno? Pozovite odmah!</strong><p><a className={classes.phoneLink} href={"tel:" + institutionPhone}><span role="img" aria-label='phone'>📞</span> {institutionPhone}</a></p><strong>{institutionName}</strong></div>}
                     </div>
                     <label htmlFor="title" >Naslov</label>
-                    <input id="title" className={classes['field-long']} type="text" maxLength={200} size={200} value={title} onChange={handleTitleChange} /><br />
+                    <input id="title" className={classes['field-long']} type="text" maxLength={150} size={200} value={title} onChange={handleTitleChange} /><br />
                     <label htmlFor='location' >Adresa ili opis lokacije</label>
                     <div className={classes.locationDiv}>
-                        <input id='location' className={classes['field-long']} type="text" value={location} onChange={handleLocationChange}></input>
+                        <input id='location' className={classes['field-long']} type="text" maxLength={300} value={location} onChange={handleLocationChange}></input>
                         {!latitude && <button type="button" className={classes.locationButton} onClick={handleAddGeoLocation}>
                                         <span className="fa-layers fa-fw">
                                             <FontAwesomeIcon icon={faLocationDot} size = 'lg' />
@@ -538,7 +538,7 @@ const Form = (props) => {
                     </div>
                     {latitude &&<small className={classes.gpsCoordinates}>GPS koordinate: {latitude},{longitude}</small>}
                     <label htmlFor="description">Tekst prijave*</label>
-                    <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} value={description} onChange={handleDescriptionChange} required />
+                    <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} value={description} onChange={handleDescriptionChange} maxLength="2048" required />
                     <div className={classes.imgUploads}>
                         {fileDataURLs.map((fileDataURL, index) => 
                             <span key={index} className={classes.hiddenFileInput}>
