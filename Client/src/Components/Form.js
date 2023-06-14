@@ -43,6 +43,7 @@ const Form = (props) => {
     const [reportForEmail, setReportForEmail] = useState(false)
     const [processing, setProcessing] = useState(false)
     const [sending, setSending] = useState(false)
+    const [isGeoLocationChecked, setIsGeoLocationChecked] = useState(false)
 
     const captchaRef = useRef(null)
     const causeIdRef = useRef("DEFAULT")
@@ -336,6 +337,14 @@ const Form = (props) => {
         setShowImageModal(false)
     }
 
+    useEffect(() => {
+        if (isGeoLocationChecked){
+            handleAddGeoLocation()
+        }else{
+            handleRemoveGeoLocation()
+        }
+    }, [isGeoLocationChecked])
+
     function handleAddGeoLocation(){
         if ("geolocation" in navigator) {
             //console.log("Geolocation is available!")
@@ -523,7 +532,7 @@ const Form = (props) => {
                     <label htmlFor='location' >Adresa ili opis lokacije</label>
                     <div className={classes.locationDiv}>
                         <input id='location' className={classes['field-long']} type="text" maxLength={300} value={location} onChange={handleLocationChange}></input>
-                        {!latitude && <button type="button" className={classes.locationButton} onClick={handleAddGeoLocation}>
+                        {/* {!latitude && <button type="button" className={classes.locationButton} onClick={handleAddGeoLocation}>
                                         <span className="fa-layers fa-fw">
                                             <FontAwesomeIcon icon={faLocationDot} size = 'lg' />
                                             <FontAwesomeIcon style={{opacity: "0"}} icon={faSlash} size='lg' transform="left-2" />
@@ -534,9 +543,13 @@ const Form = (props) => {
                                             <FontAwesomeIcon icon={faLocationDot} size='lg' />
                                             <FontAwesomeIcon icon={faSlash} size='lg' transform="left-2" />
                                         </span>
-                                    </button>}
+                                    </button>} */}
                     </div>
-                    {latitude &&<small className={classes.gpsCoordinates}>GPS koordinate: {latitude},{longitude}</small>}
+                    <label>
+                        <input type="checkbox" checked={isGeoLocationChecked} onChange={() => {setIsGeoLocationChecked(!isGeoLocationChecked)}} />
+                        Pošaljite svoje GPS koordinate u prijavi{latitude &&<span className={classes.gpsCoordinates}> ({latitude},{longitude})</span>}
+                    </label>
+                    
                     <label htmlFor="description">Tekst prijave*</label>
                     <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} value={description} onChange={handleDescriptionChange} maxLength="2048" required />
                     <div className={classes.imgUploads}>

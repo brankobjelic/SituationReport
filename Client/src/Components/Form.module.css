@@ -237,21 +237,21 @@ button[disabled] {
 }
 
 .locationDiv {
-	display:flex; 
-    flex-flow:row wrap;
+/*	display:flex; 
+    flex-flow:row wrap;*/
 }
 
 .locationDiv input {
-	flex: 1;
+/*	flex: 1; */
 }
 
 .locationDiv button {
-	float: right;
-	margin-left: 10px;
+/*	float: right;
+	margin-left: 10px;*/
 }
 
 .gpsCoordinates {
-	float: right;
+	/*float: right;*/
 }
 
 .boxclose{
