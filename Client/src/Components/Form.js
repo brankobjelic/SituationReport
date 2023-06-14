@@ -19,6 +19,7 @@ const Form = (props) => {
     var updatingReportId = ""
     var imageLinksString = ""
     var locationTxt = ""
+    var desc = ""
     var institutionByCauseIdEndpoint = "api/InstitutionByCauseId?id="
     var frequentCausesEndpoint = "api/FrequentCauses"
     var method = "POST"
@@ -116,7 +117,7 @@ const Form = (props) => {
     useEffect(() => {
         if(reportForEmail){
             //console.log(reportForEmail)
-            const desc = reportForEmail.description.replace(/\n/g, "%0D%0A")
+            desc = `${reportForEmail.description.replace(/\n/g, "%0D%0A")}%0D%0A`
             let requestUrl = ctx.protocol + ctx.host + ctx.port + institutionByCauseIdEndpoint +reportForEmail.causeId
             var headers = {};
             headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
@@ -153,7 +154,7 @@ const Form = (props) => {
                             var email = document.createElement("a");
 
                             //populating data for email in mailto link
-                            email.href = `mailto:${data.email}?subject=${reportForEmail.title}&body=${locationTxt}${googleMapsLinkElement} %0D%0A%0D%0A${desc}
+                            email.href = `mailto:${data.email}?subject=${reportForEmail.title}&body=${desc}%0D%0A%0D%0A${locationTxt}${googleMapsLinkElement}
                                 %0D%0A%0D%0A${imageLinksString}`
 
                             email.click();
