@@ -55,6 +55,7 @@ function App() {
       /*global google*/
         window.google.accounts.id.initialize({
           client_id: "843401142734-cp1pr3dg56c2m9o2g635jq3gmk3t2q0t.apps.googleusercontent.com",
+          context: 'signin',
           callback: handleCallbackResponse     
         })
 
