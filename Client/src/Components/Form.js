@@ -45,6 +45,7 @@ const Form = (props) => {
     const [processing, setProcessing] = useState(false)
     const [sending, setSending] = useState(false)
     const [isGeoLocationChecked, setIsGeoLocationChecked] = useState(false)
+    const [geoLocationEdit, setGeoLocationEdit] = useState(false)
 
     const captchaRef = useRef(null)
     const causeIdRef = useRef("DEFAULT")
@@ -82,32 +83,39 @@ const Form = (props) => {
     /* If the form is entered to edit existing report, the form fields are populated here */
     useEffect(() => {
         if(props.report){
-            function tick(){
-                causeIdRef.current.value = props.report.causeId
-                //console.log(causeIdRef.current.value)
-                setFrequentCauseDisplayed(false)
-                getInstitutionByCauseId(props.report.causeId)
-                setTitle(props.report.title)
-                setLocation(props.report.location)
-                if (props.report.latitude) {
-                    setLatitude(props.report.latitude)           
-                    setIsGeoLocationChecked(true)
-                }
-                if(props.report.longitude)
-                    setLongitude(props.report.longitude)
-                setDescription(props.report.description)
-                if(props.report.pic1){
-                    getImage(props.report.pic1, 0)
-                }
-                if(props.report.pic2){
-                    getImage(props.report.pic2, 1)
+            try{
+                function tick(){
+                    causeIdRef.current.value = props.report.causeId
+                    //console.log(causeIdRef.current.value)
+                    setFrequentCauseDisplayed(false)
+                    getInstitutionByCauseId(props.report.causeId)
+                    setTitle(props.report.title)
+                    setLocation(props.report.location)
+                    if (props.report.latitude) {
+                        setLatitude(props.report.latitude)           
+                        setIsGeoLocationChecked(true)
+                        setGeoLocationEdit(true)
                     }
-                if(props.report.pic3){
-                    getImage(props.report.pic3, 2)
+                    if(props.report.longitude)
+                        setLongitude(props.report.longitude)
+                    setDescription(props.report.description)
+                    if(props.report.pic1){
+                        getImage(props.report.pic1, 0)
+                    }
+                    if(props.report.pic2){
+                        getImage(props.report.pic2, 1)
+                        }
+                    if(props.report.pic3){
+                        getImage(props.report.pic3, 2)
+                    }
+    
                 }
-
+                setTimeout(tick, 1000)
             }
-            setTimeout(tick, 1000)
+            catch{
+                alert("Greška pri učitavanju podataka. Pokušajte ponovo.")
+                props.handleSignOut()
+            }
         } else{
             getFrequentCauses()
         }
@@ -331,6 +339,24 @@ const Form = (props) => {
         setShowImageModal(true)
     }
 
+    function handleGeoLocationChange(){
+        if (geoLocationEdit){
+            if (isGeoLocationChecked){
+                if(window.confirm("Ako nastavite izgubićete prethodno obeleženu lokaciju. Da li želite da nastavite?")){
+                    handleRemoveGeoLocation()
+                    setGeoLocationEdit(false)
+                }
+            } else {
+                handleAddGeoLocation()
+            }
+        }else{
+            if (isGeoLocationChecked)
+                handleRemoveGeoLocation()
+            else
+                handleAddGeoLocation()
+        }
+    }
+
     function handleCancelImage(image){
         setFileDataURLs(prev => {return prev.filter(fileDataURL => fileDataURL !== image)})
         handleUnsetShowImageModal()
@@ -340,13 +366,13 @@ const Form = (props) => {
         setShowImageModal(false)
     }
 
-    useEffect(() => {
-        if (isGeoLocationChecked){
-            handleAddGeoLocation()
-        }else{
-            handleRemoveGeoLocation()
-        }
-    }, [isGeoLocationChecked])
+    // useEffect(() => {
+    //     if (isGeoLocationChecked){
+    //         handleAddGeoLocation()
+    //     }else{
+    //         handleRemoveGeoLocation()
+    //     }
+    // }, [isGeoLocationChecked])
 
     function handleAddGeoLocation(){
         if ("geolocation" in navigator) {
@@ -355,16 +381,17 @@ const Form = (props) => {
               //console.log(position)
               setLatitude(position.coords.latitude.toFixed(9))
               setLongitude(position.coords.longitude.toFixed(9))
+              setIsGeoLocationChecked(true)
             });
           } else {
-            console.log("Geolocation is not available!")
-      
+            console.log("Geolocation is not available!")    
           }
     }
 
     function handleRemoveGeoLocation(){
         setLatitude()
         setLongitude()
+        setIsGeoLocationChecked(false)
     }
 
     function submitReportHandler(event) {
@@ -548,11 +575,12 @@ const Form = (props) => {
                                         </span>
                                     </button>} */}
                     </div>
-                    <label>
-                        <input type="checkbox" checked={isGeoLocationChecked} onChange={() => {setIsGeoLocationChecked(!isGeoLocationChecked)}} />
-                        Pošaljite svoje GPS koordinate u prijavi{latitude &&<span className={classes.gpsCoordinates}> ({latitude},{longitude})</span>}
-                    </label>
-                    
+                    <div className={classes.gpsDiv}>
+                        <label>
+                            <input type="checkbox" checked={isGeoLocationChecked} onChange={handleGeoLocationChange} />
+                            Pošaljite svoje GPS koordinate u prijavi{latitude &&<span className={classes.gpsCoordinates}> ({latitude},{longitude})</span>}
+                        </label>
+                    </div>
                     <label htmlFor="description">Tekst prijave*</label>
                     <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} value={description} onChange={handleDescriptionChange} maxLength="2048" required />
                     <div className={classes.imgUploads}>
