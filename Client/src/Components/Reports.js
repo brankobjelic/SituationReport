@@ -21,12 +21,13 @@ const Reports = (props) => {
     }
     {results.length !== 0 && 
     <>
+    <div className={classes.reportListDiv}>
       <ul>
         {results.slice(0).map(report => (
           <li className={classes.reportItem} key={report.id} id={report.id}>
             <p className={classes.liHeader}>{new Date(report.dateAndTime).toLocaleString('sr-RS')}<br />
             <small>{report.institution} <br /> {report.causeDescription} <br />
-            {report.location && <span>Lokacija: {report.location} </span>}
+            {report.location && <span>Lokacija: {report.location} </span>}<br />
             {!!report.latitude && <span>Gps koordinate: {report.latitude}, {report.longitude}</span>}
             </small> </p><hr />      
             <p><b>{report.title}</b></p>
@@ -52,6 +53,8 @@ const Reports = (props) => {
           </li>
         ))}
       </ul>
+
+    </div>
       <div className={classes.paginationDiv}>
           <button disabled={page === 1} onClick={firstPage}><b>&lt;&lt;</b></button>
           <button disabled={page === 1} onClick={previousPage}><b>&lt;</b></button><span> {page}/{totalPages} </span>

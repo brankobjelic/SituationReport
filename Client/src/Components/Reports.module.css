@@ -61,3 +61,7 @@ ul {
 	box-shadow: 0 0 8px #88D5E9; */
 	/*border: 1px solid;*/
 }
+
+.reportListDiv{
+    overflow-wrap: break-word;
+}
