@@ -1,5 +1,5 @@
 import React from 'react'
-import { useEffect, useState, useContext } from 'react';
+import { useLayoutEffect, useState, useContext } from 'react';
 import jwt_decode from "jwt-decode"
 import './App.css';
 import Header from './Components/Header';
@@ -51,19 +51,23 @@ function App() {
   
 
 
-    window.onload = () => {
-      /*global google*/
-        window.google.accounts.id.initialize({
-          client_id: "843401142734-cp1pr3dg56c2m9o2g635jq3gmk3t2q0t.apps.googleusercontent.com",
-          callback: handleCallbackResponse     
-        })
+      function tick(){
+        /*global google*/
+          window.google.accounts.id.initialize({
+            client_id: "843401142734-cp1pr3dg56c2m9o2g635jq3gmk3t2q0t.apps.googleusercontent.com",
+            context: 'signin',
+            callback: handleCallbackResponse     
+          })
+  
+        window.google.accounts.id.renderButton(
+          document.getElementById("signInDiv"),
+          {type: "standard", theme: "filled_black", size: "large", shape: "pill"}
+        )
+      }
+      setTimeout(tick, 1000)
 
-      window.google.accounts.id.renderButton(
-        document.getElementById("signInDiv"),
-        {theme: "filled_black", size: "large", shape: "pill"}
-      )
 
-    }
+
 
 
   return (

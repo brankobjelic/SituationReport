@@ -19,6 +19,7 @@ const Form = (props) => {
     var updatingReportId = ""
     var imageLinksString = ""
     var locationTxt = ""
+    var desc = ""
     var institutionByCauseIdEndpoint = "api/InstitutionByCauseId?id="
     var frequentCausesEndpoint = "api/FrequentCauses"
     var method = "POST"
@@ -43,6 +44,7 @@ const Form = (props) => {
     const [reportForEmail, setReportForEmail] = useState(false)
     const [processing, setProcessing] = useState(false)
     const [sending, setSending] = useState(false)
+    const [isGeoLocationChecked, setIsGeoLocationChecked] = useState(false)
 
     const captchaRef = useRef(null)
     const causeIdRef = useRef("DEFAULT")
@@ -87,8 +89,10 @@ const Form = (props) => {
                 getInstitutionByCauseId(props.report.causeId)
                 setTitle(props.report.title)
                 setLocation(props.report.location)
-                if (props.report.latitude) 
+                if (props.report.latitude) {
                     setLatitude(props.report.latitude)           
+                    setIsGeoLocationChecked(true)
+                }
                 if(props.report.longitude)
                     setLongitude(props.report.longitude)
                 setDescription(props.report.description)
@@ -115,7 +119,7 @@ const Form = (props) => {
     useEffect(() => {
         if(reportForEmail){
             //console.log(reportForEmail)
-            const desc = reportForEmail.description.replace(/\n/g, "%0D%0A")
+            desc = `${reportForEmail.description.replace(/\n/g, "%0D%0A")}%0D%0A`
             let requestUrl = ctx.protocol + ctx.host + ctx.port + institutionByCauseIdEndpoint +reportForEmail.causeId
             var headers = {};
             headers.Authorization = 'Bearer ' + sessionStorage.getItem('idToken');
@@ -152,7 +156,7 @@ const Form = (props) => {
                             var email = document.createElement("a");
 
                             //populating data for email in mailto link
-                            email.href = `mailto:${data.email}?subject=${reportForEmail.title}&body=${locationTxt}${googleMapsLinkElement} %0D%0A%0D%0A${desc}
+                            email.href = `mailto:${data.email}?subject=${reportForEmail.title}&body=${desc}%0D%0A%0D%0A${locationTxt}${googleMapsLinkElement}
                                 %0D%0A%0D%0A${imageLinksString}`
 
                             email.click();
@@ -335,6 +339,14 @@ const Form = (props) => {
     function handleUnsetShowImageModal(){
         setShowImageModal(false)
     }
+
+    useEffect(() => {
+        if (isGeoLocationChecked){
+            handleAddGeoLocation()
+        }else{
+            handleRemoveGeoLocation()
+        }
+    }, [isGeoLocationChecked])
 
     function handleAddGeoLocation(){
         if ("geolocation" in navigator) {
@@ -523,7 +535,7 @@ const Form = (props) => {
                     <label htmlFor='location' >Adresa ili opis lokacije</label>
                     <div className={classes.locationDiv}>
                         <input id='location' className={classes['field-long']} type="text" maxLength={300} value={location} onChange={handleLocationChange}></input>
-                        {!latitude && <button type="button" className={classes.locationButton} onClick={handleAddGeoLocation}>
+                        {/* {!latitude && <button type="button" className={classes.locationButton} onClick={handleAddGeoLocation}>
                                         <span className="fa-layers fa-fw">
                                             <FontAwesomeIcon icon={faLocationDot} size = 'lg' />
                                             <FontAwesomeIcon style={{opacity: "0"}} icon={faSlash} size='lg' transform="left-2" />
@@ -534,9 +546,13 @@ const Form = (props) => {
                                             <FontAwesomeIcon icon={faLocationDot} size='lg' />
                                             <FontAwesomeIcon icon={faSlash} size='lg' transform="left-2" />
                                         </span>
-                                    </button>}
+                                    </button>} */}
                     </div>
-                    {latitude &&<small className={classes.gpsCoordinates}>GPS koordinate: {latitude},{longitude}</small>}
+                    <label>
+                        <input type="checkbox" checked={isGeoLocationChecked} onChange={() => {setIsGeoLocationChecked(!isGeoLocationChecked)}} />
+                        Pošaljite svoje GPS koordinate u prijavi{latitude &&<span className={classes.gpsCoordinates}> ({latitude},{longitude})</span>}
+                    </label>
+                    
                     <label htmlFor="description">Tekst prijave*</label>
                     <textarea id="description" className={`${classes['field-long']} ${classes['field-textarea']}`} value={description} onChange={handleDescriptionChange} maxLength="2048" required />
                     <div className={classes.imgUploads}>
