@@ -89,8 +89,10 @@ const Form = (props) => {
                 getInstitutionByCauseId(props.report.causeId)
                 setTitle(props.report.title)
                 setLocation(props.report.location)
-                if (props.report.latitude) 
+                if (props.report.latitude) {
                     setLatitude(props.report.latitude)           
+                    setIsGeoLocationChecked(true)
+                }
                 if(props.report.longitude)
                     setLongitude(props.report.longitude)
                 setDescription(props.report.description)
