@@ -11,7 +11,8 @@ import {
     StyleSheet,
     Link,
     Font,
-    Image
+    Image,
+    PDFViewer
   } from "@react-pdf/renderer";
   import TimesFont from '../Fonts/times.ttf'
   import TimesFontB from '../Fonts/timesbd.ttf'
@@ -99,9 +100,10 @@ const PdfDocument = ({report, userName, email}) => {
   return (
     <BlobProvider document={MyDoc}>
     {({ url }) => (
-      <a href={url} target="_blank" style={{color: 'black'}}><FontAwesomeIcon icon={faFilePdf} size = 'lg' /></a>
+      <a href={url} target="_blank" rel="noopener noreferrer" style={{color: 'black'}}><FontAwesomeIcon icon={faFilePdf} size = 'lg' /></a>
     )}
   </BlobProvider>
+
   )
 }
 
