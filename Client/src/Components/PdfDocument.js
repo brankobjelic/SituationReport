@@ -50,6 +50,12 @@ const PdfDocument = ({report, userName, email}) => {
       margin: 10,
       padding: 10,
     },
+    dateSection: {
+      marginLeft: 10,
+      marginBottom: 0,
+      marginTop: 10,
+      paddingLeft: 10,
+    },
     viewer: {
       width: window.innerWidth, //the pdf viewer will take up all of the width and height
       height: window.innerHeight * 0.9,
@@ -73,6 +79,9 @@ const PdfDocument = ({report, userName, email}) => {
     const MyDoc = (
         <Document>
             <Page size="A4" style={styles.page}>
+                <View style={styles.dateSection}>
+                    <Text>Datum i vreme:{new Date(report.dateAndTime).toLocaleString('sr-RS')}</Text>
+                </View>
                 <View style={styles.section}>
                     <Text>Ustanova: {report.institution}</Text>
                     <Text>Razlog prijave: {report.causeDescription}</Text>
@@ -100,7 +109,7 @@ const PdfDocument = ({report, userName, email}) => {
   return (
     <BlobProvider document={MyDoc}>
     {({ url }) => (
-      <a href={url} target="_blank" rel="noopener noreferrer" style={{color: 'black'}}><FontAwesomeIcon icon={faFilePdf} size = 'lg' /></a>
+      <a href={url} target="_blank" rel="noopener noreferrer" style={{color: 'black'}}><FontAwesomeIcon icon={faFilePdf} size = 'xl' /></a>
     )}
   </BlobProvider>
 
