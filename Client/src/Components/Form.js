@@ -83,8 +83,8 @@ const Form = (props) => {
     /* If the form is entered to edit existing report, the form fields are populated here */
     useEffect(() => {
         if(props.report){
-            try{
-                function tick(){
+            function tick(){
+                    try{
                     causeIdRef.current.value = props.report.causeId
                     //console.log(causeIdRef.current.value)
                     setFrequentCauseDisplayed(false)
@@ -109,13 +109,13 @@ const Form = (props) => {
                         getImage(props.report.pic3, 2)
                     }
     
+                    }
+                    catch{
+                        alert("Greška pri učitavanju podataka. Pokušajte ponovo.")
+                        props.handleSignOut()
+                    }
                 }
                 setTimeout(tick, 1000)
-            }
-            catch{
-                alert("Greška pri učitavanju podataka. Pokušajte ponovo.")
-                props.handleSignOut()
-            }
         } else{
             getFrequentCauses()
         }
