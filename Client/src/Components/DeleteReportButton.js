@@ -36,7 +36,7 @@ const DeleteReportButton = (props) => {
   }
 
   return (
-      <FontAwesomeIcon icon={faTrashCan} size = 'lg' onClick={deleteReport}/>
+      <FontAwesomeIcon icon={faTrashCan} size = 'xl' onClick={deleteReport}/>
   )
 }
 
