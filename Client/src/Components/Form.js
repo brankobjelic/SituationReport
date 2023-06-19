@@ -84,7 +84,7 @@ const Form = (props) => {
     useEffect(() => {
         if(props.report){
             function tick(){
-                    try{
+                try{
                     causeIdRef.current.value = props.report.causeId
                     //console.log(causeIdRef.current.value)
                     setFrequentCauseDisplayed(false)
@@ -109,12 +109,12 @@ const Form = (props) => {
                         getImage(props.report.pic3, 2)
                     }
     
-                    }
-                    catch{
-                        alert("Greška pri učitavanju podataka. Pokušajte ponovo.")
-                        props.handleSignOut()
-                    }
                 }
+                catch{
+                    alert("Greška pri učitavanju podataka. Pokušajte ponovo.")
+                    props.handleSignOut()
+                }
+            }
                 setTimeout(tick, 1000)
         } else{
             getFrequentCauses()
