@@ -1,4 +1,5 @@
-﻿using SituationReport.Interfaces;
+﻿using Newtonsoft.Json.Linq;
+using SituationReport.Interfaces;
 using SituationReport.Models;
 using System.Data;
 using System.Data.SqlClient;
@@ -88,6 +89,7 @@ namespace SituationReport.Repository
             {
                 u.Id = int.Parse(dr["Id"].ToString());
                 u.Name = dr["Name"].ToString();
+                u.Username = dr["Username"].ToString();
                 u.Email = dr["Email"].ToString();
             }
             return u;
@@ -140,6 +142,27 @@ namespace SituationReport.Repository
 
             command.CommandText = query;
             command.Parameters.AddWithValue("@token", token);
+            command.Parameters.AddWithValue("@Email", email);
+
+            command.ExecuteNonQuery();
+
+            command.Dispose();
+            connection.Close();
+        }
+
+        public void UpdateUsername(string email, string username)
+        {
+            string query = "update users set Username=@username where Email=@email";
+
+            string connectionString = Configuration.GetConnectionString("AppConnectionString");
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = connection.CreateCommand();
+
+            connection.Open();
+
+            command.CommandText = query;
+            command.Parameters.AddWithValue("@username", username);
             command.Parameters.AddWithValue("@Email", email);
 
             command.ExecuteNonQuery();

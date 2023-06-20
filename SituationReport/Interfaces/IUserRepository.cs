@@ -12,5 +12,6 @@ namespace SituationReport.Interfaces
         User getByEmail(string email);
         string GetUserToken(string email);
         void UpdateToken(string email, string token);
+        void UpdateUsername(string email, string username);
     }
 }
