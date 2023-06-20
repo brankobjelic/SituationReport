@@ -41,12 +41,12 @@ namespace SituationReport.Controllers
             {
                 _userRepository.Create(user);
                 _userRepository.UpdateToken(user.Email, token);
-                return Ok();
+                return Ok(u);
             }
             else
             {
                 _userRepository.UpdateToken(user.Email, token);
-                return Ok();
+                return Ok(u);
             }
 
         }
@@ -64,6 +64,18 @@ namespace SituationReport.Controllers
 
 
             return Ok(payload);
+        }
+
+        [HttpPut]
+        [CustomAuthorize]
+        public IActionResult UpdateUsername(User user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            _userRepository.UpdateUsername(user.Email, user.Username);
+            return Ok();
         }
     }
 }
