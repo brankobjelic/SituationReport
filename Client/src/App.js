@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode"
 import './App.css';
 import Header from './Components/Header';
 import Main from './Components/Main';
+import UsernameForm from './Components/UsernameForm';
 import FetchContext from './Store/fetch-context';
 
 function App() {
@@ -11,9 +12,11 @@ function App() {
   const ctx = useContext(FetchContext)
 
   const [ user, setUser] = useState({})
+  const [username, setUsername] = useState('')
+  const [loading, setLoading] = useState(false)
 
   function handleCallbackResponse(response){
-      //.log(response)
+      setLoading(true)
       //console.log("Encoded JWT ID token: " + response.credential)
       userObject = jwt_decode(response.credential)
       sessionStorage.setItem('idToken', response.credential)
@@ -33,8 +36,14 @@ function App() {
     fetch(requestUrl, {method: "POST", headers: headers, body: JSON.stringify(sendData)})
     .then(response => {
         if(response.status === 200){
-            console.log("Successful login on server");
-            setUser(userObject)
+          response.json()
+                        .then((data) => {
+                            //console.log(data)
+                            console.log("Successful login on server");
+                            setUser(userObject)
+                            setUsername(data.username)
+                            setLoading(false)
+                          })
         }else{
             console.log("Error occured with code " + response.status);
             console.log(response);
@@ -51,30 +60,31 @@ function App() {
   
 
 
-      function tick(){
-        /*global google*/
-          window.google.accounts.id.initialize({
-            client_id: "843401142734-cp1pr3dg56c2m9o2g635jq3gmk3t2q0t.apps.googleusercontent.com",
-            context: 'signin',
-            callback: handleCallbackResponse     
-          })
-  
-        window.google.accounts.id.renderButton(
-          document.getElementById("signInDiv"),
-          {type: "standard", theme: "filled_black", size: "large", shape: "pill"}
-        )
-      }
-      setTimeout(tick, 1000)
+  function tick(){
+    /*global google*/
+      window.google.accounts.id.initialize({
+        client_id: "843401142734-cp1pr3dg56c2m9o2g635jq3gmk3t2q0t.apps.googleusercontent.com",
+        context: 'signin',
+        callback: handleCallbackResponse     
+      })
 
+    window.google.accounts.id.renderButton(
+      document.getElementById("signInDiv"),
+      {type: "standard", theme: "filled_black", size: "large", shape: "pill"}
+    )
+  }
+  setTimeout(tick, 1000)
 
-
-
+  function updatedUsernameHandler(name){
+    setUsername(name)
+  }
 
   return (
       <div className="App">
-        <Header user={user} handleSignOut={handleSignOut}></Header>
+        <Header user={user} username={username} handleSignOut={handleSignOut}></Header>
         <div>
-          {Object.keys(user).length === 0 &&
+          {loading && <p>Učitavanje...</p>}
+          {Object.keys(user).length === 0 && !loading &&
           <>
             <p>Dobrodošli na platformu Moj komunalni pomoćnik. Namena ove aplikacije je da Vam omogući jednostavno
               prijavljivanje komunalnih i drugih problema odgovarajućim institucijama.
@@ -87,8 +97,9 @@ function App() {
           }
         </div>
         {Object.keys(user).length !== 0 &&
-          <Main email={user.email} userName={user.name} handleSignOut={handleSignOut}></Main>
+          <Main email={user.email} userName={username} handleSignOut={handleSignOut}></Main>
         }
+        {Object.keys(user).length !== 0 && !username && <UsernameForm email={user.email} name={user.name} onUpdatedUsername={updatedUsernameHandler} />}
       </div>
   );
 }
