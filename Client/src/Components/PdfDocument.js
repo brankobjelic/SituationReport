@@ -1,7 +1,7 @@
 import React from 'react'
 import { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleXmark, faFilePdf } from '@fortawesome/free-solid-svg-icons';
+import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import {
     Document,
     Page,
@@ -80,7 +80,7 @@ const PdfDocument = ({report, userName, email}) => {
         <Document>
             <Page size="A4" style={styles.page}>
                 <View style={styles.dateSection}>
-                    <Text>Datum i vreme:{new Date(report.dateAndTime).toLocaleString('sr-RS')}</Text>
+                    <Text>Datum i vreme: {new Date(report.dateAndTime).toLocaleString('sr-RS')}</Text>
                 </View>
                 <View style={styles.section}>
                     <Text>Ustanova: {report.institution}</Text>

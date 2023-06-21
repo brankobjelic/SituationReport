@@ -44,7 +44,6 @@ const Main = (props) => {
     setShowForm(false)
   }
 
-  //console.log(reports)
   return (
     <div>
       {!showForm && <button className={classes.button} onClick={showFormHandler}><span role="img" aria-label="add">➕</span> Nova prijava</button>}
