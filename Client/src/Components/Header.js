@@ -38,7 +38,7 @@ const Header = (props) => {
               <div className={classes.googleSignOut}>
                 <button className={classes.button} onClick={ (e) => props.handleSignOut(e)}>Odjavi se</button>
                   <img className={classes.userImage} src={props.user.picture} alt="" referrerPolicy="no-referrer"></img>
-                  <p className={classes.username}>{props.user.name}</p>                
+                  <p className={classes.username}>{props.username}</p>                
               </div>
             </>
         }
