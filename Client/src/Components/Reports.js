@@ -6,6 +6,7 @@ import Thumbnails from './Thumbnails';
 import ReadMore from './ReadMore';
 import PdfDocument from './PdfDocument';
 import {usePaginationFetch} from '../Hooks/use-pagination'
+import PulseLoader from 'react-spinners/PulseLoader';
 
 const Reports = (props) => {
 
@@ -13,7 +14,15 @@ const Reports = (props) => {
 
   return (
     <>
-    {loading && <p>Učitavanje..</p>}
+    {loading && <div className={classes.spinner}>
+                  <PulseLoader
+                    color= "#1f464d"
+                    loading={loading}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                </div>
+    }
     {!loading && results.length === 0 && 
       <div>
         <p>Još uvek nemate kreiranih prijava. Započnite kreiranje prijave pritiskom na dugme Nova prijava koje se nalazi iznad ovog teksta.</p>

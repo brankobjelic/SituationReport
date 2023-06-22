@@ -1,11 +1,13 @@
 import React from 'react'
-import { useLayoutEffect, useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import jwt_decode from "jwt-decode"
 import './App.css';
 import Header from './Components/Header';
 import Main from './Components/Main';
 import UsernameForm from './Components/UsernameForm';
 import FetchContext from './Store/fetch-context';
+import PulseLoader from 'react-spinners/PulseLoader';
+
 
 function App() {
   var userObject
@@ -83,7 +85,15 @@ function App() {
       <div className="App">
         <Header user={user} username={username} handleSignOut={handleSignOut}></Header>
         <div>
-          {loading && <p>Učitavanje...</p>}
+          {loading && <div className="App-spinner">
+                        <PulseLoader
+                          color= "#1f464d"
+                          loading={loading}
+                          aria-label="Loading Spinner"
+                          data-testid="loader"
+                        />
+                      </div>
+          }
           {Object.keys(user).length === 0 && !loading &&
           <>
             <p>Dobrodošli na platformu Moj komunalni pomoćnik. Namena ove aplikacije je da Vam omogući jednostavno
