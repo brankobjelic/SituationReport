@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLocationDot, faCircleXmark, faSlash } from '@fortawesome/free-solid-svg-icons'
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
 import { useState, useEffect, useContext, useRef } from 'react';
 import FetchContext from '../Store/fetch-context';
@@ -532,7 +532,7 @@ const Form = (props) => {
                                     if (buttonName === "submitToServer") submitReportHandler(e)
                                     if (buttonName === "sendEmail") sendReportHandler(e)
                                 }}
-                                 className={`${classes['modal-content']} ${classes['form-style-1']}`}
+                                className={`${classes['modal-content']} ${classes['form-style-1']}`}
                 >
                     <FontAwesomeIcon onClick={props.onLeaveForm} icon={faCircleXmark} className={classes.boxclose} size = '2x'/>
                     <br />
@@ -562,18 +562,6 @@ const Form = (props) => {
                     <label htmlFor='location' >Adresa ili opis lokacije</label>
                     <div className={classes.locationDiv}>
                         <input id='location' className={classes['field-long']} type="text" maxLength={300} value={location} onChange={handleLocationChange}></input>
-                        {/* {!latitude && <button type="button" className={classes.locationButton} onClick={handleAddGeoLocation}>
-                                        <span className="fa-layers fa-fw">
-                                            <FontAwesomeIcon icon={faLocationDot} size = 'lg' />
-                                            <FontAwesomeIcon style={{opacity: "0"}} icon={faSlash} size='lg' transform="left-2" />
-                                        </span>
-                                    </button>}
-                        {latitude && <button type="button" className={classes.locationButton} onClick={handleRemoveGeoLocation}>
-                                        <span className="fa-layers fa-fw">
-                                            <FontAwesomeIcon icon={faLocationDot} size='lg' />
-                                            <FontAwesomeIcon icon={faSlash} size='lg' transform="left-2" />
-                                        </span>
-                                    </button>} */}
                     </div>
                     <div className={classes.gpsDiv}>
                         <label>
