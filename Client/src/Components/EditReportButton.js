@@ -20,7 +20,8 @@ const EditReportButton = (props) => {
   if (showEditForm){
     document.body.style.overflow = "hidden";
   }else{
-    document.body.style.overflow = "scroll";
+    document.body.style.overflowX = "auto";
+    document.body.style.overflowY = "scroll";
   }
 
   return (
