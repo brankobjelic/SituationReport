@@ -20,6 +20,7 @@ const Reports = (props) => {
                     loading={loading}
                     aria-label="Loading Spinner"
                     data-testid="loader"
+                    speedMultiplier= "0.75" 
                   />
                 </div>
     }
