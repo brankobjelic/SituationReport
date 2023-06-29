@@ -62,7 +62,7 @@ const ContactForm = (props) => {
 
   return (
     <div className={classes.modal}>
-            <div className={classes.overlay}></div>
+            <div className={classes.overlay} onClick={props.onLeaveContactForm}></div>
             <>                    
                 <form onSubmit={(e) => {submitContactFormHandler(e)}}
                     className={`${classes['modal-content']} ${classes['form-style-1']}`}

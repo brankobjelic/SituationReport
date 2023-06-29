@@ -8,15 +8,14 @@ import UsernameForm from './Components/UsernameForm';
 import FetchContext from './Store/fetch-context';
 import PulseLoader from 'react-spinners/PulseLoader';
 
-
 function App() {
   var userObject
   const ctx = useContext(FetchContext)
 
-  const [ user, setUser] = useState({})
+  const [user, setUser] = useState({})
   const [username, setUsername] = useState('')
   const [loading, setLoading] = useState(false)
-
+  
   function handleCallbackResponse(response){
       setLoading(true)
       //console.log("Encoded JWT ID token: " + response.credential)
@@ -60,8 +59,6 @@ function App() {
     document.getElementById("signInDiv").hidden = false
   }
   
-
-
   function tick(){
     /*global google*/
       window.google.accounts.id.initialize({
@@ -83,8 +80,9 @@ function App() {
 
   return (
       <div className="App">
-        <Header user={user} username={username} handleSignOut={handleSignOut}></Header>
+
         <div>
+          <Header user={user} username={username} handleSignOut={handleSignOut} onUpdatedUsername={updatedUsernameHandler} />
           {loading && <div className="App-spinner">
                         <PulseLoader
                           color= "#1f464d"
