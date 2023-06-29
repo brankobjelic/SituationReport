@@ -1,6 +1,8 @@
 import React from 'react'
 import { useState, useContext } from 'react'
 import classes from './Form.module.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import FetchContext from '../Store/fetch-context'
 
 const UsernameForm = (props) => {
@@ -23,7 +25,6 @@ const UsernameForm = (props) => {
             headers.From = sessionStorage.getItem('email')
             var sendData = { "username": name, "email": props.email };
             //console.log(sendData)
-            //setProcessing(true)
             fetch(requestUrl, { method: method, headers: headers, body: JSON.stringify(sendData) })
                 .then(response => {
                     if(response.status === 200){
@@ -39,18 +40,18 @@ const UsernameForm = (props) => {
                         console.log(response);
                         alert("Desila se greska!");
                     }
-                    //setProcessing(false)
-                    //props.onLeaveForm()
                 })
     }
 
   return (
     <div className={classes.modal}>
-            <div className={classes.overlay}></div>
+        {props.nameChange ? <div className={classes.overlay} onClick={props.onLeaveUsernameForm}></div> : <div className={classes.overlay}></div>}          
             <>                    
                 <form onSubmit={(e) => {submitUsernameFormHandler(e)}}
                     className={`${classes['modal-content-username']} ${classes['form-style-1']}`}
                 >
+                    { props.nameChange && <><FontAwesomeIcon onClick={props.onLeaveUsernameForm} icon={faCircleXmark} className={classes.boxclose} size = '2x'/>
+                    <br /></>}
                     <label htmlFor="name" >Unesite korisničko ime koje ćete koristiti. Preporučujemo da to bude Vaše puno ime i prezime jer će se to ime pojavljivati na vašim prijavama.</label>
                     <input id="name" className={classes['field-long']} type="text" value={name} onChange={handleNameChange} maxLength={150} size={150} required /><br />
                     <button type="submit" name="submitUsernameForm" className={classes.button} style={{ float: "right" }}>Nastavi</button>
