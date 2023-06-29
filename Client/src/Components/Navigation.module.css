@@ -1,0 +1,76 @@
+.menu {
+    position: absolute;
+    bottom:0;
+    right: 0;
+    cursor: pointer;
+    margin: 0.5rem
+  }
+  
+  .hamburger {
+    width: 35px;
+    height: 5px;
+    border-radius: 5px;
+    background-color: black;
+    margin: 6px 6px;
+  }
+
+.navigation nav ul {
+    margin: 0;
+    padding: 0;
+}
+.navigation nav ul li:hover {
+    cursor: pointer;
+    background-color: #1f464d;
+}
+
+.navigation nav ul li:hover b {
+    color: white;
+}
+
+.navigation nav ul li b {
+    margin-left: 5px;
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.modal, .overlay {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+}
+
+.overlay {
+    background: rgba(49,49,49,0.8);
+}
+.modalContent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    line-height: 2;
+    background: #f1f1f1;
+    padding: 28px 28px;
+	overflow-y: clip;
+
+    width: 50vw;
+	min-width: 220px;
+	max-width: 400px;
+
+	height: 100vh;
+}
+
+.boxclose{
+	position: sticky;
+    float:right;
+    margin-top:-13px;
+    margin-right:-13px;
+	color:grey;
+}
+.boxclose:hover {
+	cursor: pointer;
+	color: #424141;
+}
